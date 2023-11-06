@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "1089948969143",
+    "project_id": "heal-with-science",
+    "storage_bucket": "heal-with-science.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1089948969143:android:52266fe1629af33248c532",
+        "android_client_info": {
+          "package_name": "com.healwithscience"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1089948969143-9ncdmu2c6udcp8p62tig4pa9536k3fq7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.healwithscience",
+            "certificate_hash": "cdc23f486a3f80552fb9fe16946e05c88fbb6d48"
+          }
+        },
+        {
+          "client_id": "1089948969143-ikgo7k4lggnquuuigsfneisskm684mic.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeG_CADwOYGfJdAf01RnJHndY4xL0tQc8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1089948969143-ikgo7k4lggnquuuigsfneisskm684mic.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1089948969143-vpfknaloubuott4p7062a8u0uspblb66.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.healwithscience"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
