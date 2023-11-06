@@ -319,7 +319,11 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                             //backward button
                                             InkWell(
                                               onTap: () {
-                                                value.playPrevious();
+                                                if(value.rewardPoint > 0){
+                                                  value.playPrevious();
+                                                }else{
+                                                  rewardPointDialog(context, value);
+                                                }
                                               },
                                               child: RoundButton(
                                                 width: screenWidth * .12,
@@ -358,7 +362,12 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                             SizedBox(width: screenWidth * 0.05),
                                             InkWell(
                                               onTap: () {
-                                                value.playNext();
+                                                if(value.rewardPoint > 0){
+                                                  value.playNext();
+                                                }else{
+                                                  rewardPointDialog(context, value);
+                                                }
+
                                               },
                                               child: RoundButton(
                                                 width: screenWidth * .12,
@@ -679,16 +688,20 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                               children: [
                                                                 InkWell(
                                                                   onTap: () {
-                                                                    value.playingIndex.value = index;
-                                                                    value.isProcessing.value = true;
-                                                                    value.frequencyValue.value = value.frequenciesList[index]!;
-                                                                    value.resetTimer();
-                                                                    Future.delayed(const Duration(seconds: 4), ()
-                                                                    {
-                                                                      value.isProcessing.value = false;
-                                                                      value.playFrequency();
-                                                                      value.startTime();
-                                                                    });
+                                                                    if(value.rewardPoint > 0){
+                                                                      value.playingIndex.value = index;
+                                                                      value.isProcessing.value = true;
+                                                                      value.frequencyValue.value = value.frequenciesList[index]!;
+                                                                      value.resetTimer();
+                                                                      Future.delayed(const Duration(seconds: 4), ()
+                                                                      {
+                                                                        value.isProcessing.value = false;
+                                                                        value.playFrequency();
+                                                                        value.startTime();
+                                                                      });
+                                                                    }else{
+                                                                      rewardPointDialog(context, value);
+                                                                    }
                                                                     // Navigator.of(context).pop();
                                                                   },
                                                                   child: Padding(
@@ -1090,45 +1103,38 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
     );
   }
 
-  void showTextDialog(BuildContext context, FeaturesController value) {
+  void rewardPointDialog(BuildContext context, FeaturesController value) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           content: SizedBox(
             width: screenWidth * .1, // Set the width to 200
-            height: screenHeight * .22, // Set the height to 200
+            height: screenHeight * .2, // Set the height to 200
             child: Column(
               children: [
-                const Center(
-                    child: Text('Personalize the timing',
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black,
-                            fontFamily: 'bold'))),
-                SizedBox(height: screenHeight * .02),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth * .03),
-                  child: TextField(
-                    controller: value.timeController,
-                    style: const TextStyle(
-                        fontSize: 17,
-                        color: Colors.black,
-                        fontFamily: 'medium'),
-                    keyboardType: TextInputType.number,
-                    cursorColor: ThemeProvider.persianGreen,
-                    decoration: const InputDecoration(
-                      hintText: "Enter Time in min",
-                      focusedBorder: UnderlineInputBorder(
-                          borderSide:
-                              BorderSide(color: ThemeProvider.persianGreen)),
-                    ),
-                    maxLength: 1,
-                    textAlign: TextAlign.center,
-                    textAlignVertical: TextAlignVertical.center,
-                  ),
+                CommonTextWidget(
+                  heading: AppString.reward_Point,
+                  fontSize: Dimens.twentyFour,
+                  color: Colors.black,
+                  fontFamily: 'bold',
                 ),
                 SizedBox(height: screenHeight * .02),
+                CommonTextWidget(
+                  heading: AppString.no_points,
+                  fontSize: Dimens.forteen,
+                  color: Colors.black,
+                  fontFamily: 'medium',
+                ),
+                SizedBox(height: screenHeight * .01),
+                CommonTextWidget(
+                  heading: AppString.earn_more,
+                  fontSize: Dimens.forteen,
+                  color: Colors.black,
+                  fontFamily: 'medium',
+                ),
+                SizedBox(height: screenHeight * .04),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -1160,7 +1166,12 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                     ),
                     InkWell(
                       onTap: () {
-
+                        value.isPlaying.value = false;
+                        value.stopFrequency();
+                        value.pauseTimer();
+                        Future.delayed(const Duration(seconds: 2), (){
+                          value.showRewardedAd();
+                        });
                       },
                       child: SizedBox(
                         width: screenWidth * .2, // Adjust the width as needed
@@ -1176,7 +1187,7 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                             ),
                           ),
                           child: CommonTextWidget(
-                            heading: AppString.ok,
+                            heading: AppString.warch_ad,
                             fontSize: Dimens.forteen,
                             color: Colors.black,
                             fontFamily: 'bold',

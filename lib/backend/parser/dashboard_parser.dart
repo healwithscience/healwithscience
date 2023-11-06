@@ -11,4 +11,8 @@ class DashboardParser {
   void logout() {
     sharedPreferencesManager.clearAll();
   }
+
+  String getUserId(){
+    return sharedPreferencesManager.getString('uid').toString();
+  }
 }

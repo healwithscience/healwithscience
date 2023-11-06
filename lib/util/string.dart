@@ -141,4 +141,8 @@ class AppString {
   static String heart_rate = "Heart Rate";
   static String custom_frequency = "Custom Frequency";
   static String add_frequency = "Add Frequency";
+  static String reward_Point = "Reward Point";
+  static String warch_ad = "Watch Ad";
+  static String no_points = "You have 0 reward points left.";
+  static String earn_more = "Watch Ad to earn 5 reward point";
 }

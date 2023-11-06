@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:heal_with_science/backend/parser/features_parser.dart';
 import '../model/Category.dart';
 import '../util/all_constants.dart';
+import '../util/utils.dart';
 
 class FeaturesController extends GetxController {
   final FeaturesParser parser;
@@ -67,10 +70,21 @@ class FeaturesController extends GetxController {
   RxList<int> downloadButtonClickedList = <int>[].obs;
   List<Category>? categoriesList = [];
 
+  int rewardPoint = 0;
+
+  RewardedAd? _rewardedAd;
+  int _numRewardedLoadAttempts = 0;
+
+  static final AdRequest request = AdRequest(
+    keywords: <String>['foo', 'bar'],
+    contentUrl: 'http://foo.com/bar.html',
+    nonPersonalizedAds: true,
+  );
 
   @override
-  void onInit() {
+  Future<void> onInit() async {
     super.onInit();
+    loadRewardedAd();
     
     final data = Get.arguments;
     frequencyValue.value = data['frequency'];
@@ -88,9 +102,15 @@ class FeaturesController extends GetxController {
     }
 
     currentTheme.value = parser.getTheme();
-    playFrequency();
-    fetchDownloadlist();
-    startTime();
+    rewardPoint = await Utils.getRewardPoints(parser.getUserId());
+
+
+    if(rewardPoint > 0){
+      playFrequency();
+      fetchDownloadlist();
+      startTime();
+    }
+
   }
 
   Future<void> fetchDownloadlist() async {
@@ -131,7 +151,9 @@ class FeaturesController extends GetxController {
         print(currentTimeInSeconds.toString());
       } else {
         if(playType.value == 0){
-          playNext();
+         if(rewardPoint > 0){
+           playNext();
+         }
           // resetTimer();
         }else{
           resetTimer();
@@ -245,6 +267,9 @@ class FeaturesController extends GetxController {
 
   //This function is used to generate sound according to particular frequency value (Native Approach)
   Future<void> playFrequency() async {
+    rewardPoint = rewardPoint - 1;
+    Utils.updateRewardPoints(rewardPoint,parser.getUserId());
+
     changeProgramName();
     isPlaying.value = true;
     Map<String, dynamic> data = {
@@ -278,11 +303,8 @@ class FeaturesController extends GetxController {
   }
 
   //This function is used to play next frequency in the list
-  void playNext() {
-
-    print("Before Playing Value: ${frequencyValue.value}");
+  Future<void> playNext() async {
     // frequencyValue.value = frequenciesList[playingIndex.value + 1]!;
-
     resetTimer();
     isPlaying.value == false;
     if(playingIndex.value + 1 < frequenciesList.length){
@@ -376,13 +398,66 @@ class FeaturesController extends GetxController {
       }
       totalTimeInSeconds = timeValue * 60;
       resetTimer();
-      // playFrequency();
-      // startTime();
   }
 
   void changeProgramName(){
     if(screenName == "playlist" || screenName == "download" ){
       programName.value = programNameList[playingIndex.value] != 'No Name' ?  programNameList[playingIndex.value] : "";
     }
+  }
+
+  void loadRewardedAd() {
+    RewardedAd.load(
+        adUnitId:Platform.isAndroid
+            ? AppConstants.android_ad_id
+            : AppConstants.ios_ad_id,
+        request: request,
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+          onAdLoaded: (RewardedAd ad) {
+            // print('$ad loaded.');
+            _rewardedAd = ad;
+            _numRewardedLoadAttempts = 0;
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            showToast('RewardedAd failed to load: $error');
+            _rewardedAd = null;
+            _numRewardedLoadAttempts += 1;
+            if (_numRewardedLoadAttempts < 10) {
+              loadRewardedAd();
+            }
+          },
+        ));
+  }
+
+  void showRewardedAd() {
+    if (_rewardedAd == null) {
+      print('Warning: attempt to show rewarded before loaded.');
+      return;
+    }
+    Get.back();
+    _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (RewardedAd ad) =>
+          print('ad onAdShowedFullScreenContent.'),
+      onAdDismissedFullScreenContent: (RewardedAd ad) {
+        print('$ad onAdDismissedFullScreenContent.');
+        ad.dispose();
+        loadRewardedAd();
+      },
+      onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
+        print('$ad onAdFailedToShowFullScreenContent: $error');
+        ad.dispose();
+        loadRewardedAd();
+      },
+    );
+
+    _rewardedAd!.setImmersiveMode(true);
+    _rewardedAd!.show(
+        onUserEarnedReward: (AdWithoutView ad, RewardItem reward) async {
+          Utils.updateRewardPoints(5,parser.getUserId());
+          rewardPoint = await Utils.getRewardPoints(parser.getUserId());
+          print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
+        });
+
+    _rewardedAd = null;
   }
 }

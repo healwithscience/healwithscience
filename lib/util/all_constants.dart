@@ -1,11 +1,8 @@
 export 'dart:developer';
 
 export 'package:country_code_picker/country_code_picker.dart';
-
 export 'package:flutter/services.dart';
-// export 'package:flutter_login_facebook/flutter_login_facebook.dart';
 export 'package:flutter_svg/svg.dart';
-export 'package:get/get.dart';
 export 'package:get/get.dart';
 export 'package:get/get_connect/http/src/response/response.dart';
 export 'package:get/get_core/src/get_main.dart';

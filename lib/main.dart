@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:heal_with_science/util/constants.dart';
 
 import 'backend/helper/app_router.dart';
@@ -10,6 +11,7 @@ import 'backend/helper/init.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   await MainBinding().dependencies();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

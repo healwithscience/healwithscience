@@ -154,6 +154,7 @@ class CustomFrequencyController extends GetxController {
       newFrequencyController.clear();
       Get.back();
       successToast('Frequency added successfully');
+      fetchCustomProgram();
     } catch (e) {
       showToast('Error adding value to the "frequency" array: $e');
     }

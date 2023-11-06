@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
@@ -33,7 +34,7 @@ class DashboardController extends GetxController {
     listItem.add(ListItem(name: "Frequencies", imagePath: AssetPath.frequencies));
     listItem.add(ListItem(name: "Heart Rate", imagePath: AssetPath.heart_rate));
     listItem.add(ListItem(name: "Playlist", imagePath: AssetPath.playlist));
-
+    rewardPoint();
     // populateDB();
   }
 
@@ -155,5 +156,23 @@ class DashboardController extends GetxController {
   void onBackRoutes() {
     var context = Get.context as BuildContext;
     Navigator.of(context).pop(true);
+  }
+
+  Future<void> rewardPoint() async {
+    final firestoreInstance = FirebaseFirestore.instance;
+    var userId = parser.getUserId();
+
+    // Create a reference to the document for the specified user
+    final userPoint = firestoreInstance.collection('reward').doc(userId);
+
+    // Check if the document already exists
+    final docSnapshot = await userPoint.get();
+
+    if (!docSnapshot.exists) {
+      // The document doesn't exist, so you can create a new one
+      await userPoint.set({
+        "points": "100",
+      });
+    }
   }
 }
