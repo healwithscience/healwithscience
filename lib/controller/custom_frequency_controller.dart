@@ -161,7 +161,7 @@ class CustomFrequencyController extends GetxController {
 
 
   //This function is used to remove program
-  Future<void> removeProgram(String programName) async {
+  Future<void> removeProgram(String programName)  async {
     try {
       final firestoreInstance = FirebaseFirestore.instance;
       var userId = parser.getUserId();
@@ -173,7 +173,7 @@ class CustomFrequencyController extends GetxController {
           .collection('custom_program')
           .doc(programName);
 
-      // Check if the document exists before attempting to delete it
+      // Check if the document exists before attempting to delete it xsdfsfsf
       final documentSnapshot = await userPlaylistRef.get();
       if (documentSnapshot.exists) {
         // Document exists, delete it
