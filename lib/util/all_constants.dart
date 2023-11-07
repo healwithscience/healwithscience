@@ -12,7 +12,6 @@ export 'package:get/utils.dart';
 export 'package:google_sign_in/google_sign_in.dart';
 export 'package:image_picker/image_picker.dart';
 export 'package:shared_preferences/shared_preferences.dart';
-
 export '../../util/constants.dart';
 export '../../view/splash_screen.dart';
 export '../backend/api/handler.dart';

@@ -8,6 +8,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:heal_with_science/backend/parser/features_parser.dart';
 import '../model/Category.dart';
 import '../util/all_constants.dart';
+import '../util/extensions/static_values.dart';
 import '../util/utils.dart';
 
 class FeaturesController extends GetxController {
@@ -70,12 +71,11 @@ class FeaturesController extends GetxController {
   RxList<int> downloadButtonClickedList = <int>[].obs;
   List<Category>? categoriesList = [];
 
-  int rewardPoint = 0;
 
   RewardedAd? _rewardedAd;
   int _numRewardedLoadAttempts = 0;
 
-  static final AdRequest request = AdRequest(
+   final AdRequest request = const AdRequest(
     keywords: <String>['foo', 'bar'],
     contentUrl: 'http://foo.com/bar.html',
     nonPersonalizedAds: true,
@@ -102,10 +102,13 @@ class FeaturesController extends GetxController {
     }
 
     currentTheme.value = parser.getTheme();
-    rewardPoint = await Utils.getRewardPoints(parser.getUserId());
+    StaticValue.rewardPoint = await Utils.getRewardPoints(parser.getUserId());
 
 
-    if(rewardPoint > 0){
+    if(StaticValue.rewardPoint > 0){
+      StaticValue.rewardPoint =  StaticValue.rewardPoint-1;
+      Utils.updateRewardPoints(StaticValue.rewardPoint ,parser.getUserId());
+
       playFrequency();
       fetchDownloadlist();
       startTime();
@@ -151,8 +154,15 @@ class FeaturesController extends GetxController {
         print(currentTimeInSeconds.toString());
       } else {
         if(playType.value == 0){
-         if(rewardPoint > 0){
+         if(StaticValue.rewardPoint > 0){
            playNext();
+         }else{
+           resetTimer();
+           Future.delayed(Duration(seconds: 3), (){
+             playFrequency();
+             startTime();
+             isPlaying.value = true;
+           });
          }
           // resetTimer();
         }else{
@@ -267,8 +277,6 @@ class FeaturesController extends GetxController {
 
   //This function is used to generate sound according to particular frequency value (Native Approach)
   Future<void> playFrequency() async {
-    rewardPoint = rewardPoint - 1;
-    Utils.updateRewardPoints(rewardPoint,parser.getUserId());
 
     changeProgramName();
     isPlaying.value = true;
@@ -304,6 +312,12 @@ class FeaturesController extends GetxController {
 
   //This function is used to play next frequency in the list
   Future<void> playNext() async {
+    print("Reward Point ${StaticValue.rewardPoint}");
+    if(StaticValue.rewardPoint > 0){
+      print("Reward Point ${StaticValue.rewardPoint}");
+      StaticValue.rewardPoint = StaticValue.rewardPoint - 1;
+      Utils.updateRewardPoints(StaticValue.rewardPoint,parser.getUserId());
+    }
     // frequencyValue.value = frequenciesList[playingIndex.value + 1]!;
     resetTimer();
     isPlaying.value == false;
@@ -327,6 +341,10 @@ class FeaturesController extends GetxController {
 
   //This function is used to play previous frequency in the list
   void playPrevious() {
+    if(StaticValue.rewardPoint != 0){
+      StaticValue.rewardPoint = StaticValue.rewardPoint - 1;
+      Utils.updateRewardPoints(StaticValue.rewardPoint,parser.getUserId());
+    }
     // frequencyValue.value = frequenciesList[playingIndex.value + 1]!;
     resetTimer();
     isPlaying.value == false;
@@ -422,7 +440,7 @@ class FeaturesController extends GetxController {
             showToast('RewardedAd failed to load: $error');
             _rewardedAd = null;
             _numRewardedLoadAttempts += 1;
-            if (_numRewardedLoadAttempts < 10) {
+            if (_numRewardedLoadAttempts < 3) {
               loadRewardedAd();
             }
           },
@@ -454,7 +472,7 @@ class FeaturesController extends GetxController {
     _rewardedAd!.show(
         onUserEarnedReward: (AdWithoutView ad, RewardItem reward) async {
           Utils.updateRewardPoints(5,parser.getUserId());
-          rewardPoint = await Utils.getRewardPoints(parser.getUserId());
+          StaticValue.rewardPoint = await Utils.getRewardPoints(parser.getUserId());
           print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
         });
 

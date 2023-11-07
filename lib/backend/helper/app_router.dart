@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:heal_with_science/backend/binding/category_binding.dart';
 import 'package:heal_with_science/backend/binding/create_playlist_binding.dart';
@@ -90,25 +91,25 @@ class AppRouter {
   static String getCustomFrequencyScreen() => customFrequencyScreen;
 
   static List<GetPage> routes = [
-    GetPage(name: onboardingScreen, page: () => OnBoardScreen(), binding: OnBoardBinding()),
-    GetPage(name: authenticationTypeScreen, page: () => AuthenticationTypeScreen(), binding: AuthenticationTypeBinding()),
-    GetPage(name: addPaymentScreen, page: () => AddPaymentScreen(), binding: AddPaymentBinding()),
-    GetPage(name: splash, page: () => SplashScreen(), binding: SplashBinding()),
-    GetPage(name: register, page: () => RegisterScreen(), binding: RegisterBinding()),
-    GetPage(name: login, page: () => LoginScreen(), binding: LoginBinding()),
-    GetPage(name: dashboardScreen, page: () => DashboardScreen(), binding: DashboardBinding()),
-    GetPage(name: forgotPasswordScreen, page: () => ForgotPasswordScreen(), binding: ForgotPasswordBinding()),
-    GetPage(name: otpVerificationScreen, page: () => OtpVerificationScreen(), binding: OtpVerificationBinding()),
-    GetPage(name: createPasswordScreen, page: () => CreatePasswordScreen(), binding: CreatePasswordBinding()),
-    GetPage(name: passwordSuccessScreen, page: () => PasswordSuccessScreen(), binding: PasswordSuccessBinding()),
-    GetPage(name: categoryScreen, page: () => CategoryScreen(), binding: CategoryBinding()),
-    GetPage(name: frequencyScreen, page: () => FrequencyScreen(), binding: FrequencyBinding()),
-    GetPage(name: featuresScreen, page: () => FeaturesScreen(), binding: FeaturesBinding()),
-    GetPage(name: profileScreen, page: () => ProfileScreen(), binding: ProfileBinding()),
-    GetPage(name: createPlaylistScreen, page: () => CreatePlaylistScreen(), binding: CreatePlaylistBinding()),
-    GetPage(name: playlistScreen, page: () => PlayListScreen(), binding: PlaylistBinding()),
-    GetPage(name: downloadScreen, page: () => DownloadScreen(), binding: DownloadBinding()),
-    GetPage(name: heartScreen, page: () => HeartRateScreen(), binding: HeartBinding()),
-    GetPage(name: customFrequencyScreen, page: () => CustomFrequencyScreen(), binding: CustomFrequencyBinding()),
+    GetPage(name: onboardingScreen, page: () => OnBoardScreen(), binding: OnBoardBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
+    GetPage(name: authenticationTypeScreen, page: () => AuthenticationTypeScreen(), binding: AuthenticationTypeBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
+    GetPage(name: addPaymentScreen, page: () => AddPaymentScreen(), binding: AddPaymentBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
+    GetPage(name: splash, page: () => SplashScreen(), binding: SplashBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
+    GetPage(name: register, page: () => RegisterScreen(), binding: RegisterBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
+    GetPage(name: login, page: () => LoginScreen(), binding: LoginBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
+    GetPage(name: dashboardScreen, page: () => DashboardScreen(), binding: DashboardBinding(),transition: Transition.fadeIn,transitionDuration: const Duration(milliseconds: 400)),
+    GetPage(name: forgotPasswordScreen, page: () => ForgotPasswordScreen(), binding: ForgotPasswordBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
+    GetPage(name: otpVerificationScreen, page: () => OtpVerificationScreen(), binding: OtpVerificationBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
+    GetPage(name: createPasswordScreen, page: () => CreatePasswordScreen(), binding: CreatePasswordBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
+    GetPage(name: passwordSuccessScreen, page: () => PasswordSuccessScreen(), binding: PasswordSuccessBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
+    GetPage(name: categoryScreen, page: () => CategoryScreen(), binding: CategoryBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
+    GetPage(name: frequencyScreen, page: () => FrequencyScreen(), binding: FrequencyBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
+    GetPage(name: featuresScreen, page: () => FeaturesScreen(), binding: FeaturesBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
+    GetPage(name: profileScreen, page: () => ProfileScreen(), binding: ProfileBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
+    GetPage(name: createPlaylistScreen, page: () => CreatePlaylistScreen(), binding: CreatePlaylistBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
+    GetPage(name: playlistScreen, page: () => PlayListScreen(), binding: PlaylistBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
+    GetPage(name: downloadScreen, page: () => DownloadScreen(), binding: DownloadBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
+    GetPage(name: heartScreen, page: () => HeartRateScreen(), binding: HeartBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
+    GetPage(name: customFrequencyScreen, page: () => CustomFrequencyScreen(), binding: CustomFrequencyBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
   ];
 }

@@ -6,8 +6,10 @@ import 'package:heal_with_science/controller/category_controller.dart';
 import 'package:heal_with_science/widgets/CustomGradientDivider.dart';
 import '../util/app_assets.dart';
 import '../util/dimens.dart';
+import '../util/extensions/static_values.dart';
 import '../util/string.dart';
 import '../util/theme.dart';
+import '../widgets/common_reward_dialog.dart';
 import '../widgets/commontext.dart';
 import '../widgets/custom_text_field.dart';
 
@@ -128,7 +130,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 itemBuilder: (context, index) {
                                   return InkWell(
                                     onTap: (){
-                                      value.goToFeatures(value.categories[index].frequency,value.categories[index].name);
+                                      if(StaticValue.rewardPoint > 0){
+                                        value.goToFeatures(value.categories[index].frequency,value.categories[index].name);
+                                      }else{
+                                        showCommonRewardDialog(context ,screenHeight ,screenWidth ,() {
+                                          Future.delayed(const Duration(seconds: 1), () {
+                                            value.showRewardedAd();
+                                          });
+                                        });
+                                      }
                                     },
                                     child: SizedBox(
                                       height: screenHeight * 0.07,

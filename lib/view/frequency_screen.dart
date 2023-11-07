@@ -6,6 +6,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:heal_with_science/controller/category_controller.dart';
 import 'package:heal_with_science/controller/frequency_controller.dart';
+import 'package:heal_with_science/util/extensions/static_values.dart';
 import 'package:heal_with_science/widgets/CustomGradientDivider.dart';
 import 'package:heal_with_science/widgets/round_button.dart';
 import '../backend/helper/app_router.dart';
@@ -13,6 +14,7 @@ import '../util/app_assets.dart';
 import '../util/dimens.dart';
 import '../util/string.dart';
 import '../util/theme.dart';
+import '../widgets/common_reward_dialog.dart';
 import '../widgets/commontext.dart';
 import '../widgets/custom_text_field.dart';
 
@@ -136,15 +138,23 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
                             children: [
                               InkWell(
                                 onTap: () {
-                                  Get.toNamed(
-                                    AppRouter.getFeaturesScreen(),
-                                    arguments: {
-                                      'frequency': value.filteredfrequencies[index],
-                                      'frequenciesList': value.filteredfrequencies,
-                                      'index': index,
-                                      'screenName': 'frequency'// Pass the data you want
-                                    },
-                                  );
+                                   if(StaticValue.rewardPoint > 0){
+                                     Get.toNamed(
+                                       AppRouter.getFeaturesScreen(),
+                                       arguments: {
+                                         'frequency': value.filteredfrequencies[index],
+                                         'frequenciesList': value.filteredfrequencies,
+                                         'index': index,
+                                         'screenName': 'frequency'// Pass the data you want
+                                       },
+                                     );
+                                   }else{
+                                     showCommonRewardDialog(context ,screenHeight ,screenWidth ,() {
+                                       Future.delayed(const Duration(seconds: 1), () {
+                                         value.showRewardedAd();
+                                       });
+                                     });
+                                   }
                                 },
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 15),

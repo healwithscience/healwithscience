@@ -7,6 +7,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:heal_with_science/controller/features_controller.dart';
+import 'package:heal_with_science/widgets/common_reward_dialog.dart';
 import 'package:heal_with_science/widgets/common_slider.dart';
 import 'package:heal_with_science/widgets/ramwave.dart';
 import 'package:heal_with_science/widgets/round_cornor_button.dart';
@@ -17,6 +18,7 @@ import 'package:heal_with_science/widgets/triangularwave.dart';
 import '../backend/helper/app_router.dart';
 import '../util/app_assets.dart';
 import '../util/dimens.dart';
+import '../util/extensions/static_values.dart';
 import '../util/string.dart';
 import '../util/theme.dart';
 import '../widgets/CustomGradientDivider.dart';
@@ -101,6 +103,8 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                   : ThemeProvider.whiteColor,
                               fontFamily: 'bold')),
                           InkWell(
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
                               onTap: () {
                                 showMenu(
                                   context: context,
@@ -318,11 +322,19 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                           children: [
                                             //backward button
                                             InkWell(
+                                              splashColor: Colors.transparent,
+                                              highlightColor: Colors.transparent,
                                               onTap: () {
-                                                if(value.rewardPoint > 0){
+                                                if(StaticValue.rewardPoint > 0){
                                                   value.playPrevious();
                                                 }else{
-                                                  rewardPointDialog(context, value);
+                                                  showCommonRewardDialog(context ,screenHeight ,screenWidth ,() {
+                                                    value.stopFrequency();
+                                                    value.pauseTimer();
+                                                    Future.delayed(const Duration(seconds: 1), () {
+                                                      value.showRewardedAd();
+                                                    });
+                                                  });
                                                 }
                                               },
                                               child: RoundButton(
@@ -337,17 +349,17 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                             // Button to handle play or pause
                                             SizedBox(width: screenWidth * 0.05),
                                             Obx(() => InkWell(
+                                                splashColor: Colors.transparent,
+                                                highlightColor: Colors.transparent,
                                                 onTap: () {
-                                                  Future.delayed(Duration(seconds: 1),
-                                                          () {
-                                                        if (value.isPlaying.value == false) {
-                                                          value.playFrequency();
-                                                          value.startTime();
-                                                        } else {
-                                                          value.stopFrequency();
-                                                          value.pauseTimer();
-                                                        }
-                                                      });
+                                                  if (value.isPlaying.value == false) {
+                                                    value.playFrequency();
+                                                    value.startTime();
+                                                  } else {
+                                                    value.stopFrequency();
+                                                    value.pauseTimer();
+                                                  }
+                                                  Future.delayed(const Duration(seconds: 1),() {});
                                                 },
                                                 child: RoundButton(
                                                   width: screenWidth * .15,
@@ -361,13 +373,20 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                             //forward button
                                             SizedBox(width: screenWidth * 0.05),
                                             InkWell(
+                                              splashColor: Colors.transparent,
+                                              highlightColor: Colors.transparent,
                                               onTap: () {
-                                                if(value.rewardPoint > 0){
+                                                if(StaticValue.rewardPoint > 0){
                                                   value.playNext();
                                                 }else{
-                                                  rewardPointDialog(context, value);
+                                                  showCommonRewardDialog(context ,screenHeight ,screenWidth ,() {
+                                                    value.stopFrequency();
+                                                    value.pauseTimer();
+                                                    Future.delayed(const Duration(seconds: 2), () {
+                                                      value.showRewardedAd();
+                                                    });
+                                                  });
                                                 }
-
                                               },
                                               child: RoundButton(
                                                 width: screenWidth * .12,
@@ -386,6 +405,8 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                           bottom: 0,
                                           left:screenWidth * .13,
                                           child:Obx(() => InkWell(
+                                            splashColor: Colors.transparent,
+                                            highlightColor: Colors.transparent,
                                             onTap: (){
                                               value.playType.value == 1 ? value.playType.value = 0 : value.playType.value = 1;
                                             },
@@ -462,6 +483,8 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                             child: Padding(
                                                               padding: const EdgeInsets.only(top: 20.0, right: 20.0),
                                                               child: InkWell(
+                                                                  splashColor: Colors.transparent,
+                                                                  highlightColor: Colors.transparent,
                                                                   onTap: () {
                                                                     Navigator.of(context).pop();
                                                                   },
@@ -686,9 +709,10 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                             return Column(
                                                               crossAxisAlignment: CrossAxisAlignment.start,
                                                               children: [
+
                                                                 InkWell(
                                                                   onTap: () {
-                                                                    if(value.rewardPoint > 0){
+                                                                    if(StaticValue.rewardPoint > 0){
                                                                       value.playingIndex.value = index;
                                                                       value.isProcessing.value = true;
                                                                       value.frequencyValue.value = value.frequenciesList[index]!;
@@ -700,7 +724,13 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                                         value.startTime();
                                                                       });
                                                                     }else{
-                                                                      rewardPointDialog(context, value);
+                                                                      showCommonRewardDialog(context ,screenHeight ,screenWidth ,() {
+                                                                        value.stopFrequency();
+                                                                        value.pauseTimer();
+                                                                        Future.delayed(const Duration(seconds: 2), () {
+                                                                          value.showRewardedAd();
+                                                                        });
+                                                                      });
                                                                     }
                                                                     // Navigator.of(context).pop();
                                                                   },
@@ -721,7 +751,6 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                                             Padding(
                                                                                 padding: EdgeInsets.all(screenWidth * .05),
                                                                                 child: CommonTextWidget(
-                                                                                  lineHeight: 1.3,
                                                                                   heading: "${value.frequenciesList[index]} HZ",
                                                                                   fontSize: Dimens.sixteen,
                                                                                   color: Colors.black,
@@ -980,8 +1009,7 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
     });
   }
 
-  void _showBottomSheet(BuildContext context, FeaturesController value,
-      String frequency, String programName) {
+  void _showBottomSheet(BuildContext context, FeaturesController value, String frequency, String programName) {
     showModalBottomSheet(
       backgroundColor: Colors.transparent,
       context: context,
@@ -1103,105 +1131,105 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
     );
   }
 
-  void rewardPointDialog(BuildContext context, FeaturesController value) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: SizedBox(
-            width: screenWidth * .1, // Set the width to 200
-            height: screenHeight * .2, // Set the height to 200
-            child: Column(
-              children: [
-                CommonTextWidget(
-                  heading: AppString.reward_Point,
-                  fontSize: Dimens.twentyFour,
-                  color: Colors.black,
-                  fontFamily: 'bold',
-                ),
-                SizedBox(height: screenHeight * .02),
-                CommonTextWidget(
-                  heading: AppString.no_points,
-                  fontSize: Dimens.forteen,
-                  color: Colors.black,
-                  fontFamily: 'medium',
-                ),
-                SizedBox(height: screenHeight * .01),
-                CommonTextWidget(
-                  heading: AppString.earn_more,
-                  fontSize: Dimens.forteen,
-                  color: Colors.black,
-                  fontFamily: 'medium',
-                ),
-                SizedBox(height: screenHeight * .04),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: SizedBox(
-                        width: screenWidth * .2, // Adjust the width as needed
-                        height: 40,
-                        child: Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            // Adjust the border radius as needed
-                            border: Border.all(
-                              width: 1.0,
-                              color: ThemeProvider.persianGreen,
-                            ),
-                          ),
-                          child: CommonTextWidget(
-                            heading: AppString.cancel,
-                            fontSize: Dimens.forteen,
-                            color: Colors.black,
-                            fontFamily: 'bold',
-                          ),
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        value.isPlaying.value = false;
-                        value.stopFrequency();
-                        value.pauseTimer();
-                        Future.delayed(const Duration(seconds: 2), (){
-                          value.showRewardedAd();
-                        });
-                      },
-                      child: SizedBox(
-                        width: screenWidth * .2, // Adjust the width as needed
-                        height: 40,
-                        child: Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            // Adjust the border radius as needed
-                            border: Border.all(
-                              width: 1.0,
-                              color: ThemeProvider.persianGreen,
-                            ),
-                          ),
-                          child: CommonTextWidget(
-                            heading: AppString.warch_ad,
-                            fontSize: Dimens.forteen,
-                            color: Colors.black,
-                            fontFamily: 'bold',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
+  // void rewardPointDialog(BuildContext context, FeaturesController value) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         content: SizedBox(
+  //           width: screenWidth * .1, // Set the width to 200
+  //           height: screenHeight * .2, // Set the height to 200
+  //           child: Column(
+  //             children: [
+  //               CommonTextWidget(
+  //                 heading: AppString.reward_Point,
+  //                 fontSize: Dimens.twentyFour,
+  //                 color: Colors.black,
+  //                 fontFamily: 'bold',
+  //               ),
+  //               SizedBox(height: screenHeight * .02),
+  //               CommonTextWidget(
+  //                 heading: AppString.no_points,
+  //                 fontSize: Dimens.forteen,
+  //                 color: Colors.black,
+  //                 fontFamily: 'medium',
+  //               ),
+  //               SizedBox(height: screenHeight * .01),
+  //               CommonTextWidget(
+  //                 heading: AppString.earn_more,
+  //                 fontSize: Dimens.forteen,
+  //                 color: Colors.black,
+  //                 fontFamily: 'medium',
+  //               ),
+  //               SizedBox(height: screenHeight * .04),
+  //
+  //               Row(
+  //                 mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //                 children: [
+  //                   InkWell(
+  //                     onTap: () {
+  //                       Navigator.pop(context);
+  //                     },
+  //                     child: SizedBox(
+  //                       width: screenWidth * .2, // Adjust the width as needed
+  //                       height: 40,
+  //                       child: Container(
+  //                         alignment: Alignment.center,
+  //                         decoration: BoxDecoration(
+  //                           borderRadius: BorderRadius.circular(10),
+  //                           // Adjust the border radius as needed
+  //                           border: Border.all(
+  //                             width: 1.0,
+  //                             color: ThemeProvider.persianGreen,
+  //                           ),
+  //                         ),
+  //                         child: CommonTextWidget(
+  //                           heading: AppString.cancel,
+  //                           fontSize: Dimens.forteen,
+  //                           color: Colors.black,
+  //                           fontFamily: 'bold',
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   InkWell(
+  //                     onTap: () {
+  //                       // value.isPlaying.value = false;
+  //                       value.stopFrequency();
+  //                       value.pauseTimer();
+  //                       Future.delayed(const Duration(seconds: 2), (){
+  //                         value.showRewardedAd();
+  //                       });
+  //                     },
+  //                     child: SizedBox(
+  //                       width: screenWidth * .2, // Adjust the width as needed
+  //                       height: 40,
+  //                       child: Container(
+  //                         alignment: Alignment.center,
+  //                         decoration: BoxDecoration(
+  //                           borderRadius: BorderRadius.circular(10),
+  //                           // Adjust the border radius as needed
+  //                           border: Border.all(
+  //                             width: 1.0,
+  //                             color: ThemeProvider.persianGreen,
+  //                           ),
+  //                         ),
+  //                         child: CommonTextWidget(
+  //                           heading: AppString.warch_ad,
+  //                           fontSize: Dimens.forteen,
+  //                           color: Colors.black,
+  //                           fontFamily: 'bold',
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 }

@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
       navigatorKey: Get.key,
       initialRoute: AppRouter.splash,
       getPages: AppRouter.routes,
+      defaultTransition: Transition.rightToLeft,
     );
   }
 }
