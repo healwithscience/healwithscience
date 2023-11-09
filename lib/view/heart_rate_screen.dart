@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:heal_with_science/controller/heart_controller.dart';
 import 'package:heal_with_science/util/theme.dart';
 import '../controller/dashboard_controller.dart';
 import '../util/app_assets.dart';
@@ -23,7 +24,7 @@ class _HeartRateScreenState extends State<HeartRateScreen> {
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
-    return GetBuilder<DashboardController>(builder: (value) {
+    return GetBuilder<HeartController>(builder: (value) {
       return SafeArea(
         child: Scaffold(
           backgroundColor: Colors.white,
@@ -35,18 +36,23 @@ class _HeartRateScreenState extends State<HeartRateScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        width: screenWidth * .1,
-                        height: screenWidth * .1,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                              color: ThemeProvider.borderColor,
-                            ),
-                            borderRadius:
-                            const BorderRadius.all(Radius.circular(10))),
-                        child: Padding(
-                          padding:  EdgeInsets.all(screenWidth * .02),
-                          child: SvgPicture.asset(AssetPath.back_arrow),
+                      InkWell(
+                        onTap: (){
+                          value.onBackRoutes();
+                        },
+                        child: Container(
+                          width: screenWidth * .1,
+                          height: screenWidth * .1,
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                color: ThemeProvider.borderColor,
+                              ),
+                              borderRadius:
+                              const BorderRadius.all(Radius.circular(10))),
+                          child: Padding(
+                            padding:  EdgeInsets.all(screenWidth * .02),
+                            child: SvgPicture.asset(AssetPath.back_arrow),
+                          ),
                         ),
                       ),
                       CommonTextWidget(
@@ -57,7 +63,7 @@ class _HeartRateScreenState extends State<HeartRateScreen> {
                           fontFamily: 'bold'),
                       InkWell(
                         onTap: (){
-                          value.onBackRoutes();
+
                         },
                         child: Padding(
                           padding:  EdgeInsets.all(screenWidth * .02),

@@ -10,6 +10,8 @@ import 'package:heal_with_science/backend/parser/features_parser.dart';
 import 'package:heal_with_science/backend/parser/frequency_parser.dart';
 import 'package:heal_with_science/backend/parser/playlist_parser.dart';
 import 'package:heal_with_science/backend/parser/profile_parser.dart';
+import 'package:heal_with_science/backend/parser/reward_parser.dart';
+import 'package:heal_with_science/backend/parser/subsription_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../util/environment.dart';
 import '../api/api.dart';
@@ -57,5 +59,7 @@ class MainBinding extends Bindings {
     Get.lazyPut(() => DownloadParser(apiService: Get.find(), sharedPreferencesManager: Get.find()), fenix: true);
     Get.lazyPut(() => HeartParser(apiService: Get.find(), sharedPreferencesManager: Get.find()), fenix: true);
     Get.lazyPut(() => CustomFrequencyParser(apiService: Get.find(), sharedPreferencesManager: Get.find()), fenix: true);
+    Get.lazyPut(() => RewardParser(apiService: Get.find(), sharedPreferencesManager: Get.find()), fenix: true);
+    Get.lazyPut(() => SubscriptionParser(apiService: Get.find(), sharedPreferencesManager: Get.find()), fenix: true);
   }
 }

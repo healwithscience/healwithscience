@@ -7,6 +7,8 @@ import 'package:heal_with_science/backend/binding/download_binding.dart';
 import 'package:heal_with_science/backend/binding/features_binding.dart';
 import 'package:heal_with_science/backend/binding/heart_binding.dart';
 import 'package:heal_with_science/backend/binding/playlist_binding.dart';
+import 'package:heal_with_science/backend/binding/reward_binding.dart';
+import 'package:heal_with_science/backend/binding/subscription_binding.dart';
 import 'package:heal_with_science/view/category_screen.dart';
 import 'package:heal_with_science/view/create_playlist_screen.dart';
 import 'package:heal_with_science/view/custom_frequency_screen.dart';
@@ -15,6 +17,8 @@ import 'package:heal_with_science/view/features_screen.dart';
 import 'package:heal_with_science/view/frequency_screen.dart';
 import 'package:heal_with_science/view/heart_rate_screen.dart';
 import 'package:heal_with_science/view/playlist_screen.dart';
+import 'package:heal_with_science/view/reward_screen.dart';
+import 'package:heal_with_science/view/subscription_screen.dart';
 import '../../view/add_payment_screen.dart';
 import '../../view/authentication_typescreen.dart';
 import '../../view/create_password_screen.dart';
@@ -65,7 +69,8 @@ class AppRouter {
   static const String downloadScreen = '/download_screen';
   static const String heartScreen = '/heart_screen';
   static const String customFrequencyScreen = '/custom_frequency_screen';
-
+  static const String rewardScreen = '/reward_screen';
+  static const String subscriptionScreen = '/subscription_screen';
 
   static String onBoardingRoute() => onboardingScreen;
   static String phoneVerificationRoute() => phoneVerification;
@@ -89,6 +94,8 @@ class AppRouter {
   static String getDownloadScreen() => downloadScreen;
   static String getHeartScreen() => heartScreen;
   static String getCustomFrequencyScreen() => customFrequencyScreen;
+  static String getRewardScreen() => rewardScreen;
+  static String getSubscriptionScreen() => subscriptionScreen;
 
   static List<GetPage> routes = [
     GetPage(name: onboardingScreen, page: () => OnBoardScreen(), binding: OnBoardBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
@@ -111,5 +118,7 @@ class AppRouter {
     GetPage(name: downloadScreen, page: () => DownloadScreen(), binding: DownloadBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
     GetPage(name: heartScreen, page: () => HeartRateScreen(), binding: HeartBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
     GetPage(name: customFrequencyScreen, page: () => CustomFrequencyScreen(), binding: CustomFrequencyBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
+    GetPage(name: rewardScreen, page: () => RewardScreen(), binding: RewardBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
+    GetPage(name: subscriptionScreen, page: () => SubscriptionScreen(), binding: SubscriptionBinding(),transition: Transition.rightToLeft,transitionDuration: const Duration(milliseconds: 400)),
   ];
 }

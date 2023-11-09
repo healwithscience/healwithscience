@@ -32,6 +32,9 @@ class CategoryController extends GetxController {
   RewardedAd? _rewardedAd;
   int _numRewardedLoadAttempts = 0;
 
+  RxBool visibility = false.obs;
+  RxString alphabet = "A".obs;
+
   final AdRequest request = const AdRequest(
     keywords: <String>['foo', 'bar'],
     contentUrl: 'http://foo.com/bar.html',

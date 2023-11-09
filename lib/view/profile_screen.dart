@@ -31,64 +31,64 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return GetBuilder<ProfileController>(builder: (value) {
       return SafeArea(
           child: Scaffold(
-        body: Padding(
-          padding: EdgeInsets.all(screenWidth * .04),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            body: Padding(
+              padding: EdgeInsets.all(screenWidth * .04),
+              child: Column(
                 children: [
-                  InkWell(
-                    onTap: () {
-                      value.onBackRoutes();
-                    },
-                    child: Container(
-                      width: screenWidth * .1,
-                      height: screenWidth * .1,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                            color: ThemeProvider.borderColor,
-                          ),
-                          borderRadius:
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          value.onBackRoutes();
+                        },
+                        child: Container(
+                          width: screenWidth * .1,
+                          height: screenWidth * .1,
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                color: ThemeProvider.borderColor,
+                              ),
+                              borderRadius:
                               const BorderRadius.all(Radius.circular(10))),
-                      child: Padding(
-                        padding: EdgeInsets.all(screenWidth * .02),
-                        child: SvgPicture.asset(AssetPath.back_arrow),
+                          child: Padding(
+                            padding: EdgeInsets.all(screenWidth * .02),
+                            child: SvgPicture.asset(AssetPath.back_arrow),
+                          ),
+                        ),
                       ),
-                    ),
+                      CommonTextWidget(
+                          lineHeight: 1.3,
+                          heading: AppString.profile,
+                          fontSize: Dimens.twentyFour,
+                          color: Colors.black,
+                          fontFamily: 'bold'),
+                      SizedBox(
+                        width: screenWidth * .1,
+                        height: screenWidth * .1,
+                      )
+                    ],
                   ),
-                  CommonTextWidget(
-                      lineHeight: 1.3,
-                      heading: AppString.profile,
-                      fontSize: Dimens.twentyFour,
-                      color: Colors.black,
-                      fontFamily: 'bold'),
-                  SizedBox(
-                    width: screenWidth * .1,
-                    height: screenWidth * .1,
-                  )
-                ],
-              ),
-              SizedBox(height: screenHeight * .03),
-              // Profile Image
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    width: screenWidth * .3,
-                    height: screenWidth * .3,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        width: screenWidth * .008,
-                        color: ThemeProvider
-                            .persianGreen, // Change 'Colors.red' to your desired border color
-                      ),
-                      borderRadius: BorderRadius.circular(
-                          screenWidth), // Half of width and height to make it circular
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(screenWidth),
-                      child: Obx(() => Image.network(
+                  SizedBox(height: screenHeight * .03),
+                  // Profile Image
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(
+                        width: screenWidth * .3,
+                        height: screenWidth * .3,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: screenWidth * .008,
+                            color: ThemeProvider
+                                .persianGreen, // Change 'Colors.red' to your desired border color
+                          ),
+                          borderRadius: BorderRadius.circular(
+                              screenWidth), // Half of width and height to make it circular
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(screenWidth),
+                          child: Obx(() => Image.network(
                             value.profileImage.value,
                             width: screenWidth * .3,
                             height: screenWidth * .3,
@@ -102,108 +102,118 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               );
                             },
                           )),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: screenWidth * .01,
-                    right: 0,
-                    child: InkWell(
-                      onTap: () {
-                        _showDialog(value);
-                      },
-                      child: Container(
-                        width: screenWidth * .1,
-                        // Adjust the size as needed
-                        height: screenWidth * .1,
-                        // Adjust the size as needed
-                        decoration: const BoxDecoration(
-                          color: ThemeProvider.persianGreen,
-                          // Change 'Colors.blue' to your desired button color
-                          shape: BoxShape.circle,
                         ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.edit,
-                            // You can use any edit icon you prefer
-                            color: Colors
-                                .white, // Change 'Colors.white' to your desired icon color
+                      ),
+                      Positioned(
+                        bottom: screenWidth * .01,
+                        right: 0,
+                        child: InkWell(
+                          onTap: () {
+                            _showDialog(value);
+                          },
+                          child: Container(
+                            width: screenWidth * .1,
+                            // Adjust the size as needed
+                            height: screenWidth * .1,
+                            // Adjust the size as needed
+                            decoration: const BoxDecoration(
+                              color: ThemeProvider.persianGreen,
+                              // Change 'Colors.blue' to your desired button color
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Center(
+                              child: Icon(
+                                Icons.edit,
+                                // You can use any edit icon you prefer
+                                color: Colors
+                                    .white, // Change 'Colors.white' to your desired icon color
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                ],
-              ),
-
-              SizedBox(height: screenHeight * .03),
-
-              //Name Field
-              CommonTextWidget(
-                  heading: value.username,
-                  fontSize: Dimens.twentyTwo,
-                  color: Colors.black,
-                  fontFamily: 'bold'),
-
-              //Email Field
-              CommonTextWidget(
-                  lineHeight: 1.3,
-                  heading: value.email,
-                  fontSize: Dimens.sixteen,
-                  color: ThemeProvider.greyColor,
-                  fontFamily: 'medium'),
-
-              SizedBox(height: screenHeight * .03),
-
-              const Divider(
-                color: ThemeProvider.borderColor,
-              ),
-
-              // SizedBox(height: screenHeight * .01),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      CommonMenuWidget(
-                          screenWidth: screenWidth,
-                          userIconAssetPath: AssetPath.user_icon,
-                          accountText: AppString.account),
-                      CommonMenuWidget(
-                          screenWidth: screenWidth,
-                          userIconAssetPath: AssetPath.user_icon,
-                          accountText: AppString.change_password),
-                      CommonMenuWidget(
-                          screenWidth: screenWidth,
-                          userIconAssetPath: AssetPath.user_icon,
-                          accountText: AppString.earn_point),
-                      InkWell(
-                          onTap: () { Get.toNamed(AppRouter.getDownloadScreen());},
-                          child: CommonMenuWidget(
-                              screenWidth: screenWidth,
-                              userIconAssetPath: AssetPath.user_icon,
-                              accountText: AppString.download)),
-                      CommonMenuWidget(
-                          screenWidth: screenWidth,
-                          userIconAssetPath: AssetPath.user_icon,
-                          accountText: AppString.privacy_policy),
-                      CommonMenuWidget(
-                          screenWidth: screenWidth,
-                          userIconAssetPath: AssetPath.user_icon,
-                          accountText: AppString.notification),
-                      InkWell(
-                          onTap: () {
-                            value.signOut();
-                          },
-                          child: CommonMenuWidget(
-                              screenWidth: screenWidth,
-                              userIconAssetPath: AssetPath.user_icon,
-                              accountText: AppString.sign_out)),
                     ],
                   ),
-                ),
-              )
-            ],
-          ),
-        ),
+
+                  SizedBox(height: screenHeight * .03),
+
+                  //Name Field
+                  CommonTextWidget(
+                      heading: value.username,
+                      fontSize: Dimens.twentyTwo,
+                      color: Colors.black,
+                      fontFamily: 'bold'),
+
+                  //Email Field
+                  CommonTextWidget(
+                      lineHeight: 1.3,
+                      heading: value.email,
+                      fontSize: Dimens.sixteen,
+                      color: ThemeProvider.greyColor,
+                      fontFamily: 'medium'),
+
+                  SizedBox(height: screenHeight * .03),
+
+                  const Divider(
+                    color: ThemeProvider.borderColor,
+                  ),
+
+                  // SizedBox(height: screenHeight * .01),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          CommonMenuWidget(
+                              screenWidth: screenWidth,
+                              userIconAssetPath: AssetPath.user_icon,
+                              accountText: AppString.account),
+                          CommonMenuWidget(
+                              screenWidth: screenWidth,
+                              userIconAssetPath: AssetPath.user_icon,
+                              accountText: AppString.change_password),
+                          InkWell(
+                            onTap: (){
+                              Get.toNamed(AppRouter.getRewardScreen());
+                            },
+                            child: CommonMenuWidget(
+                                screenWidth: screenWidth,
+                                userIconAssetPath: AssetPath.user_icon,
+                                accountText: AppString.earn_point),
+                          ),
+                          InkWell(
+                              onTap: () { Get.toNamed(AppRouter.getDownloadScreen());},
+                              child: CommonMenuWidget(
+                                  screenWidth: screenWidth,
+                                  userIconAssetPath: AssetPath.user_icon,
+                                  accountText: AppString.download)),
+                          InkWell(
+                            onTap: (){
+                              Get.toNamed(AppRouter.getSubscriptionScreen());
+                            },
+                            child: CommonMenuWidget(
+                                screenWidth: screenWidth,
+                                userIconAssetPath: AssetPath.user_icon,
+                                accountText: AppString.privacy_policy),
+                          ),
+                          CommonMenuWidget(
+                              screenWidth: screenWidth,
+                              userIconAssetPath: AssetPath.user_icon,
+                              accountText: AppString.notification),
+                          InkWell(
+                              onTap: () {
+                                value.signOut();
+                              },
+                              child: CommonMenuWidget(
+                                  screenWidth: screenWidth,
+                                  userIconAssetPath: AssetPath.user_icon,
+                                  accountText: AppString.sign_out)),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
       ));
     });
   }

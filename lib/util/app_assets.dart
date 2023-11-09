@@ -49,6 +49,11 @@ class AssetPath {
   static final create_playlist = _iconPath("create_playlist.svg");
   static final repeat = _iconPath("repeat.svg");
   static final repeat_again = _iconPath("repeat_again.svg");
+  static final reward = _iconPath("reward.svg");
+  static final free_plan = _iconPath("free_plan.svg");
+  static final pain_plan = _iconPath("paid_plan.svg");
+  static final featured_plan = _iconPath("featured_plan.svg");
+  static final dot = _iconPath("dot.svg");
 
 
   static final onbarding_image1 = _imagesPath("onboard1.png");

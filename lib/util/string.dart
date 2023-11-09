@@ -145,4 +145,18 @@ class AppString {
   static String warch_ad = "Watch Ad";
   static String no_points = "You have 0 reward points left.";
   static String earn_more = "Watch Ad to earn 5 reward point";
+  static String earn_points = "Earn Points";
+  static String total_point = "Total Earn Points";
+  static String choose_plan = "Choose Plan";
+  static String free_plan = "Beginner(free plan)";
+  static String paid_plan = "Intermediate(paid plan)";
+  static String featured_plan = "Advanced(fully featured plan)";
+  static String free_plan_point1 = "Activated when users sign up with the application";
+  static String free_plan_point2 = "Users can play limited audio without restrictions";
+  static String free_plan_point3 = "Ads will appear at intervals, and there is a maximum of 1 hour of weekly playtime";
+  static String paid_plan_point1 = "Users can play all audio but cannot customize the waveform";
+  static String paid_plan_point2 = "Offline audio playback is not available";
+  static String featured_plan_point1 = "Users can customize the waveform";
+  static String featured_plan_point2 = "Can create playlists";
+  static String featured_plan_point3 = "Play audio even when offline";
 }

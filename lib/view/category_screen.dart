@@ -35,10 +35,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(top: 10.0,left: 10.0,right: 10.0),
+                  padding: const EdgeInsets.only(top: 10.0,left: 10.0,right: 10.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+
+
                       InkWell(
                         onTap: () {
                           value.onBackRoutes();
@@ -128,7 +130,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 controller: value.scrollController,
                                 itemCount: value.categories.length,
                                 itemBuilder: (context, index) {
-                                  return InkWell(
+                                  return  InkWell(
                                     onTap: (){
                                       if(StaticValue.rewardPoint > 0){
                                         value.goToFeatures(value.categories[index].frequency,value.categories[index].name);
@@ -147,12 +149,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                                              child: CommonTextWidget(
-                                                  textOverflow: TextOverflow.ellipsis,
-                                                  heading: value.categories[index].name,
-                                                  fontSize: Dimens.sixteen,
-                                                  color: Colors.black,
-                                                  fontFamily: 'medium'),
+                                            child: CommonTextWidget(
+                                                textOverflow: TextOverflow.ellipsis,
+                                                heading: value.categories[index].name,
+                                                fontSize: Dimens.sixteen,
+                                                color: Colors.black,
+                                                fontFamily: 'medium'),
                                           ),
                                           SizedBox(
                                               width: screenWidth * .8,
@@ -166,6 +168,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                   );
                                 },
                               ),
+
+
                               Positioned(
                                 right: 0,
                                 child:SingleChildScrollView(
@@ -175,11 +179,18 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                     height: screenHeight * .75,
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: value.alphabets.map((alphabet) => InkWell(
-                                        onTap: () {
-                                          value.scrollToCategoryByAlphabet(alphabet,screenHeight);
-                                        },
-                                        child: CommonTextWidget(
+                                      children: value.alphabets.map((alphabet) =>
+                                          InkWell(
+                                            onTap: () {
+                                              value.visibility.value = true;
+                                              value.scrollToCategoryByAlphabet(alphabet,screenHeight);
+                                              value.alphabet.value = alphabet;
+                                              Future.delayed(const Duration(seconds: 1), () {
+                                                value.visibility.value = false;
+                                              });
+
+                                            },
+                                            child: CommonTextWidget(
                                             heading: alphabet,
                                             fontSize: Dimens.thrteen,
                                             color: ThemeProvider.alphabatic_gray,
@@ -188,7 +199,26 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                     ),
                                   ),
                                 ),
-                              )
+                              ),
+
+                              Positioned(
+                                  child: Obx(() => value.visibility.value ? Center(
+                                    child: Material(
+                                      elevation: 10, // Adjust the elevation to control the shadow
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12.0), // Adjust the value for the desired corner radius
+                                      ),
+                                      child:Padding(
+                                        padding: EdgeInsets.all(screenWidth * 0.07),
+                                        child: CommonTextWidget(
+                                            heading: value.alphabet.value,
+                                            fontSize: Dimens.thirty,
+                                            color: Colors.black,
+                                            fontFamily: 'bold'),
+                                      ),
+                                    ),
+                                  ) : const SizedBox()) ),
+
                             ],
                           ),
                         );
