@@ -169,7 +169,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               accountText: AppString.account),
                           CommonMenuWidget(
                               screenWidth: screenWidth,
-                              userIconAssetPath: AssetPath.user_icon,
+                              userIconAssetPath: AssetPath.change_password,
                               accountText: AppString.change_password),
                           InkWell(
                             onTap: (){
@@ -177,14 +177,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             },
                             child: CommonMenuWidget(
                                 screenWidth: screenWidth,
-                                userIconAssetPath: AssetPath.user_icon,
+                                userIconAssetPath: AssetPath.earn_point,
                                 accountText: AppString.earn_point),
                           ),
                           InkWell(
                               onTap: () { Get.toNamed(AppRouter.getDownloadScreen());},
                               child: CommonMenuWidget(
                                   screenWidth: screenWidth,
-                                  userIconAssetPath: AssetPath.user_icon,
+                                  userIconAssetPath: AssetPath.new_download,
                                   accountText: AppString.download)),
                           InkWell(
                             onTap: (){
@@ -192,12 +192,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             },
                             child: CommonMenuWidget(
                                 screenWidth: screenWidth,
-                                userIconAssetPath: AssetPath.user_icon,
+                                userIconAssetPath: AssetPath.policy,
                                 accountText: AppString.privacy_policy),
                           ),
                           CommonMenuWidget(
                               screenWidth: screenWidth,
-                              userIconAssetPath: AssetPath.user_icon,
+                              userIconAssetPath: AssetPath.notification,
                               accountText: AppString.notification),
                           InkWell(
                               onTap: () {
@@ -205,7 +205,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               },
                               child: CommonMenuWidget(
                                   screenWidth: screenWidth,
-                                  userIconAssetPath: AssetPath.user_icon,
+                                  userIconAssetPath: AssetPath.sign_out,
                                   accountText: AppString.sign_out)),
                         ],
                       ),

@@ -25,7 +25,7 @@ class FeaturesController extends GetxController {
   final double minDutyCycle = 0.0;
   final double maxDutyCycle = 1.0;
 
-  final RxDouble amplitude = 30.0.obs;
+  final RxDouble amplitude = 45.0.obs;
   final double maxAmplitude = 70.0;
   final double minAmplitude = 30.0;
 
@@ -220,14 +220,14 @@ class FeaturesController extends GetxController {
   //Increase Amplitude
   void onIncreaseAmplitude() {
     if (amplitude.value < maxAmplitude) {
-      amplitude.value = (amplitude.value + 5.0).clamp(30.0, 70.0);
+      amplitude.value = (amplitude.value + 2.0).clamp(30.0, 70.0);
     }
   }
 
   //Decrease Duty Cycle
   void onDecreaseAmplitude() {
     if (amplitude.value > minAmplitude) {
-      amplitude.value = (amplitude.value - 5.0).clamp(30.0, 70.0);
+      amplitude.value = (amplitude.value - 2.0).clamp(30.0, 70.0);
     }
   }
 
@@ -285,7 +285,8 @@ class FeaturesController extends GetxController {
       'duty_cycle': dutyCycle.value,
       'amplitude': amplitude.value,
       'offset': offset.value,
-      'phase': phaseControl.value
+      'phase': phaseControl.value,
+      'wavetype':selectedOption.value
     };
 
     var channelName = const MethodChannel("nativeBridge");
@@ -464,7 +465,7 @@ class FeaturesController extends GetxController {
       onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
         print('$ad onAdFailedToShowFullScreenContent: $error');
         ad.dispose();
-        loadRewardedAd();
+        // loadRewardedAd();
       },
     );
 

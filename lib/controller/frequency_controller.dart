@@ -71,10 +71,11 @@ class FrequencyController extends GetxController {
   Future<void> fetchFrequencies() async {
 
     final firestore = FirebaseFirestore.instance;
-    const settings = Settings(persistenceEnabled: false);
-    firestore.settings = settings;
+   // const settings = Settings(persistenceEnabled: false);
+   // firestore.settings = settings;
     firestore
         .collection('frequencies') // Replace with your collection name
+       // .get(GetOptions(source: Source.cache))
         .get()
         .then((QuerySnapshot querySnapshot) {
       if (querySnapshot.docs.isNotEmpty) {

@@ -55,6 +55,13 @@ class AssetPath {
   static final featured_plan = _iconPath("featured_plan.svg");
   static final dot = _iconPath("dot.svg");
 
+  static final sign_out = _iconPath("sign_out.svg");
+  static final policy = _iconPath("policy.svg");
+  static final notification = _iconPath("notification.svg");
+  static final new_download = _iconPath("new_download.svg");
+  static final earn_point = _iconPath("earn_point.svg");
+  static final change_password = _iconPath("change_password.svg");
+
 
   static final onbarding_image1 = _imagesPath("onboard1.png");
   static final onbarding_image2 = _imagesPath("onboard2.png");

@@ -3,9 +3,6 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:heal_with_science/controller/features_controller.dart';
 import 'package:heal_with_science/widgets/common_reward_dialog.dart';
 import 'package:heal_with_science/widgets/common_slider.dart';
@@ -515,6 +512,12 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                                   groupValue: value.selectedOption.value,
                                                                   onChanged: (int?newValue) {
                                                                     value.selectedOption(newValue);
+                                                                    Get.back();
+                                                                    Future.delayed(const Duration(seconds: 3), ()
+                                                                    {
+                                                                      value.playFrequency();
+                                                                      value.startTime();
+                                                                    });
                                                                   },
                                                                 )),
                                                           ),
@@ -540,7 +543,15 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                                   value: 2,
                                                                   activeColor: ThemeProvider.primary,
                                                                   groupValue: value.selectedOption.value,
-                                                                  onChanged: (int?newValue) {value.selectedOption(newValue);
+                                                                  onChanged: (int?newValue) {
+                                                                    value.selectedOption(newValue);
+                                                                    value.resetTimer();
+                                                                    Get.back();
+                                                                    Future.delayed(const Duration(seconds: 3), ()
+                                                                    {
+                                                                      value.playFrequency();
+                                                                      value.startTime();
+                                                                    });
                                                                   },
                                                                 )),
                                                           ),
@@ -566,12 +577,19 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                                     value: 3,
                                                                     activeColor: ThemeProvider.primary,
                                                                     groupValue: value.selectedOption.value,
-                                                                    onChanged: (int?newValue) {value.selectedOption(newValue);
+                                                                    onChanged: (int?newValue) {
+                                                                      value.selectedOption(newValue);
+                                                                      value.resetTimer();
+                                                                      Get.back();
+                                                                      Future.delayed(const Duration(seconds: 3), ()
+                                                                      {
+                                                                        value.playFrequency();
+                                                                        value.startTime();
+                                                                      });
                                                                     })),
                                                           ),
                                                           //Saw wave radio button
-                                                          const SizedBox(
-                                                              height: 10),
+                                                          const SizedBox(height: 10),
                                                           ListTile(
                                                             title: Column(
                                                               mainAxisAlignment: MainAxisAlignment.start,
@@ -593,6 +611,13 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                                   groupValue: value.selectedOption.value,
                                                                   onChanged: (int?newValue) {
                                                                     value.selectedOption(newValue);
+                                                                    value.resetTimer();
+                                                                    Get.back();
+                                                                    Future.delayed(const Duration(seconds: 3), ()
+                                                                    {
+                                                                      value.playFrequency();
+                                                                      value.startTime();
+                                                                    });
                                                                   },
                                                                 )),
                                                           ),
@@ -622,6 +647,13 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                                   groupValue: value.selectedOption.value,
                                                                   onChanged: (int?newValue) {
                                                                     value.selectedOption(newValue);
+                                                                    value.resetTimer();
+                                                                    Get.back();
+                                                                    Future.delayed(const Duration(seconds: 3), ()
+                                                                    {
+                                                                      value.playFrequency();
+                                                                      value.startTime();
+                                                                    });
                                                                   },
                                                                 )),
                                                           ),
@@ -1036,12 +1068,10 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                   fontFamily: 'bold',
                 ),
               ),
-
               const Divider(
                 color: ThemeProvider.borderColor,
                 thickness: 1.0,
               ),
-
               InkWell(
                 onTap: () {
                   Get.back();
