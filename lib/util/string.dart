@@ -117,6 +117,10 @@ class AppString {
   static String ram_wave = "Ram Wave";
   static String saw_wave = "Saw Wave";
   static String triangular_wave = "Triangular Wave";
+  static String golden_wave = "Golden Wave";
+  static String harmonic_wave = "Harmonic Wave";
+  static String fabonnaci_wave = "Fibonacci Wave";
+  static String Wobble_wave = "Wobble Wave";
   static String light_mode = "Light Mode";
   static String dark_mode = "Dark Mode";
   static String profile = "Profile";

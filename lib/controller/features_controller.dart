@@ -40,6 +40,9 @@ class FeaturesController extends GetxController {
 
   final RxInt currentTheme = 0.obs;
 
+  late AnimationController animatedcontroller;
+
+
   var sliderProgress = 0.0.obs;
   Timer? timer;
   int currentTimeInSeconds = 0;
@@ -70,7 +73,6 @@ class FeaturesController extends GetxController {
 
   RxList<int> downloadButtonClickedList = <int>[].obs;
   List<Category>? categoriesList = [];
-
 
   RewardedAd? _rewardedAd;
   int _numRewardedLoadAttempts = 0;
@@ -113,6 +115,7 @@ class FeaturesController extends GetxController {
       fetchDownloadlist();
       startTime();
     }
+
 
   }
 

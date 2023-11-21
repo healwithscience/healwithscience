@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:heal_with_science/controller/features_controller.dart';
 import 'package:heal_with_science/widgets/common_reward_dialog.dart';
 import 'package:heal_with_science/widgets/common_slider.dart';
+import 'package:heal_with_science/widgets/bubble_wave.dart';
 import 'package:heal_with_science/widgets/ramwave.dart';
 import 'package:heal_with_science/widgets/round_cornor_button.dart';
 import 'package:heal_with_science/widgets/sawtoothwave.dart';
@@ -253,7 +254,14 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                   phase: value.phaseControl.value,
                                   offset: value.offset.value,
                                 )
-                                    : TriangularWavePainter(
+                                     : value.selectedOption.value == 5
+                                    ? TriangularWavePainter(
+                                  frequency: value.frequencyValue.value,
+                                  amplitude: value.amplitude.value,
+                                  dutyCycle: value.dutyCycle.value,
+                                  phase: value.phaseControl.value,
+                                  offset: value.offset.value,
+                                ) : BubbleWavePainter(
                                   frequency: value.frequencyValue.value,
                                   amplitude: value.amplitude.value,
                                   dutyCycle: value.dutyCycle.value,
@@ -461,205 +469,355 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                               context: context,
                                               builder: (BuildContext context) {
                                                 return Container(
-                                                  decoration: const BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius: BorderRadius.only(
-                                                      topLeft: Radius.circular(20.0),
-                                                      topRight: Radius.circular(20.0),
-                                                    ),
-                                                  ),
-                                                  child: Theme(
-                                                      data: Theme.of(context).copyWith(
-                                                        unselectedWidgetColor: ThemeProvider.primary,
-                                                        disabledColor: ThemeProvider.primary,
+                                                    decoration: const BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius: BorderRadius.only(
+                                                        topLeft: Radius.circular(20.0),
+                                                        topRight: Radius.circular(20.0),
                                                       ),
-                                                      child: Column(
-                                                        children: [
-                                                          Align(
-                                                            alignment: Alignment.centerRight,
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.only(top: 20.0, right: 20.0),
-                                                              child: InkWell(
-                                                                  splashColor: Colors.transparent,
-                                                                  highlightColor: Colors.transparent,
-                                                                  onTap: () {
-                                                                    Navigator.of(context).pop();
-                                                                  },
-                                                                  child: SvgPicture.asset(AssetPath.close, width: 15, height: 15)),
+                                                    ),
+                                                    child: Theme(
+                                                        data: Theme.of(context).copyWith(
+                                                          unselectedWidgetColor: ThemeProvider.primary,
+                                                          disabledColor: ThemeProvider.primary,
+                                                        ),
+                                                        child: Column(
+                                                          children: [
+                                                            Align(
+                                                              alignment: Alignment.centerRight,
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.only(top: 20.0, right: 20.0),
+                                                                child: InkWell(
+                                                                    splashColor: Colors.transparent,
+                                                                    highlightColor: Colors.transparent,
+                                                                    onTap: () {
+                                                                      Navigator.of(context).pop();
+                                                                    },
+                                                                    child: SvgPicture.asset(AssetPath.close, width: 15, height: 15)),
+                                                              ),
                                                             ),
-                                                          ),
-                                                          //Sin wave radio button
-                                                          ListTile(
-                                                            title: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.start,
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: [
-                                                                CommonTextWidget(
-                                                                  heading: AppString.sin_wave,
-                                                                  fontSize: Dimens.forteen,
-                                                                  color: ThemeProvider.blackColor,
-                                                                  fontFamily: 'light',
-                                                                ),
-                                                                const SizedBox(height: 10),
-                                                                // Adjust spacing as needed
-                                                                SvgPicture.asset(AssetPath.sin),
-                                                              ],
-                                                            ),
-                                                            leading: Obx(
-                                                                    () => Radio<int>(
-                                                                  value: 1,
-                                                                  activeColor: ThemeProvider.primary,
-                                                                  groupValue: value.selectedOption.value,
-                                                                  onChanged: (int?newValue) {
-                                                                    value.selectedOption(newValue);
-                                                                    Get.back();
-                                                                    Future.delayed(const Duration(seconds: 3), ()
-                                                                    {
-                                                                      value.playFrequency();
-                                                                      value.startTime();
-                                                                    });
-                                                                  },
-                                                                )),
-                                                          ),
-                                                          const SizedBox(
-                                                              height: 10),
-                                                          //Square wave radio button
-                                                          ListTile(
-                                                            title: Column(mainAxisAlignment: MainAxisAlignment.start,
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: [
-                                                                CommonTextWidget(
-                                                                  heading: AppString.square_wave,
-                                                                  fontSize: Dimens.forteen,
-                                                                  color: ThemeProvider.blackColor,
-                                                                  fontFamily: 'light',
-                                                                ),
-                                                                const SizedBox(height: 10),
-                                                                SvgPicture.asset(AssetPath.square,)
-                                                              ],
-                                                            ),
-                                                            leading: Obx(
-                                                                    () => Radio<int>(
-                                                                  value: 2,
-                                                                  activeColor: ThemeProvider.primary,
-                                                                  groupValue: value.selectedOption.value,
-                                                                  onChanged: (int?newValue) {
-                                                                    value.selectedOption(newValue);
-                                                                    value.resetTimer();
-                                                                    Get.back();
-                                                                    Future.delayed(const Duration(seconds: 3), ()
-                                                                    {
-                                                                      value.playFrequency();
-                                                                      value.startTime();
-                                                                    });
-                                                                  },
-                                                                )),
-                                                          ),
-                                                          const SizedBox(height: 10),
-                                                          //Ram wave radio button
-                                                          ListTile(
-                                                            title: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.start,
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: [
-                                                                CommonTextWidget(
-                                                                  heading: AppString.ram_wave,
-                                                                  fontSize: Dimens.forteen,
-                                                                  color: ThemeProvider.blackColor,
-                                                                  fontFamily: 'light',
-                                                                ),
-                                                                const SizedBox(height: 10),
-                                                                SvgPicture.asset(AssetPath.ram,)
-                                                              ],
-                                                            ),
-                                                            leading: Obx(
-                                                                    () => Radio<int>(
-                                                                    value: 3,
-                                                                    activeColor: ThemeProvider.primary,
-                                                                    groupValue: value.selectedOption.value,
-                                                                    onChanged: (int?newValue) {
-                                                                      value.selectedOption(newValue);
-                                                                      value.resetTimer();
-                                                                      Get.back();
-                                                                      Future.delayed(const Duration(seconds: 3), ()
-                                                                      {
-                                                                        value.playFrequency();
-                                                                        value.startTime();
-                                                                      });
-                                                                    })),
-                                                          ),
-                                                          //Saw wave radio button
-                                                          const SizedBox(height: 10),
-                                                          ListTile(
-                                                            title: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.start,
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: [
-                                                                CommonTextWidget(heading: AppString.saw_wave,
-                                                                  fontSize: Dimens.forteen,
-                                                                  color: ThemeProvider.blackColor,
-                                                                  fontFamily: 'light',
-                                                                ),
-                                                                const SizedBox(height: 10),
-                                                                SvgPicture.asset(AssetPath.saw,)
-                                                              ],
-                                                            ),
-                                                            leading: Obx(
-                                                                    () => Radio<int>(
-                                                                  value: 4,
-                                                                  activeColor: ThemeProvider.primary,
-                                                                  groupValue: value.selectedOption.value,
-                                                                  onChanged: (int?newValue) {
-                                                                    value.selectedOption(newValue);
-                                                                    value.resetTimer();
-                                                                    Get.back();
-                                                                    Future.delayed(const Duration(seconds: 3), ()
-                                                                    {
-                                                                      value.playFrequency();
-                                                                      value.startTime();
-                                                                    });
-                                                                  },
-                                                                )),
-                                                          ),
-                                                          //Triangular wave radio button
-                                                          const SizedBox(
-                                                              height: 10),
-                                                          ListTile(
-                                                            title: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.start,
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: [
-                                                                CommonTextWidget(
-                                                                  heading: AppString.triangular_wave,
-                                                                  fontSize: Dimens.forteen,
-                                                                  color: ThemeProvider.blackColor,
-                                                                  fontFamily: 'light',
-                                                                ),
-                                                                const SizedBox(height: 10),
-                                                                SvgPicture.asset(AssetPath.triangular,
-                                                                )
-                                                              ],
-                                                            ),
-                                                            leading: Obx(
-                                                                    () => Radio<int>(
-                                                                  value: 5,
-                                                                  activeColor: ThemeProvider.primary,
-                                                                  groupValue: value.selectedOption.value,
-                                                                  onChanged: (int?newValue) {
-                                                                    value.selectedOption(newValue);
-                                                                    value.resetTimer();
-                                                                    Get.back();
-                                                                    Future.delayed(const Duration(seconds: 3), ()
-                                                                    {
-                                                                      value.playFrequency();
-                                                                      value.startTime();
-                                                                    });
-                                                                  },
-                                                                )),
-                                                          ),
-                                                        ],
-                                                      )),
-                                                );
+                                                             Expanded(
+                                                               child: SingleChildScrollView(
+                                                                 child: Column(
+                                                                    children: [
+                                                                      //Sin wave radio button
+                                                                      ListTile(
+                                                                        title: Column(
+                                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            CommonTextWidget(
+                                                                              heading: AppString.sin_wave,
+                                                                              fontSize: Dimens.forteen,
+                                                                              color: ThemeProvider.blackColor,
+                                                                              fontFamily: 'light',
+                                                                            ),
+                                                                            const SizedBox(height: 10),
+                                                                            // Adjust spacing as needed
+                                                                            SvgPicture.asset(AssetPath.sin),
+                                                                          ],
+                                                                        ),
+                                                                        leading: Obx(
+                                                                                () => Radio<int>(
+                                                                              value: 1,
+                                                                              activeColor: ThemeProvider.primary,
+                                                                              groupValue: value.selectedOption.value,
+                                                                              onChanged: (int?newValue) {
+                                                                                value.selectedOption(newValue);
+                                                                                value.resetTimer();
+                                                                                Get.back();
+                                                                                Future.delayed(const Duration(seconds: 2), ()
+                                                                                {
+                                                                                  value.playFrequency();
+                                                                                  value.startTime();
+                                                                                });
+                                                                              },
+                                                                            )),
+                                                                      ),
+                                                                      const SizedBox(height: 10),
+                                                                      //Square wave radio button
+                                                                      ListTile(
+                                                                        title: Column(mainAxisAlignment: MainAxisAlignment.start,
+                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            CommonTextWidget(
+                                                                              heading: AppString.square_wave,
+                                                                              fontSize: Dimens.forteen,
+                                                                              color: ThemeProvider.blackColor,
+                                                                              fontFamily: 'light',
+                                                                            ),
+                                                                            const SizedBox(height: 10),
+                                                                            SvgPicture.asset(AssetPath.square,)
+                                                                          ],
+                                                                        ),
+                                                                        leading: Obx(
+                                                                                () => Radio<int>(
+                                                                              value: 2,
+                                                                              activeColor: ThemeProvider.primary,
+                                                                              groupValue: value.selectedOption.value,
+                                                                              onChanged: (int?newValue) {
+                                                                                value.selectedOption(newValue);
+                                                                                value.resetTimer();
+                                                                                Get.back();
+                                                                                Future.delayed(const Duration(seconds: 2), ()
+                                                                                {
+                                                                                  value.playFrequency();
+                                                                                  value.startTime();
+                                                                                });
+                                                                              },
+                                                                            )),
+                                                                      ),
+
+                                                                      //Ram wave radio button
+                                                                      const SizedBox(height: 10),
+                                                                      ListTile(
+                                                                        title: Column(
+                                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            CommonTextWidget(
+                                                                              heading: AppString.ram_wave,
+                                                                              fontSize: Dimens.forteen,
+                                                                              color: ThemeProvider.blackColor,
+                                                                              fontFamily: 'light',
+                                                                            ),
+                                                                            const SizedBox(height: 10),
+                                                                            SvgPicture.asset(AssetPath.ram,)
+                                                                          ],
+                                                                        ),
+                                                                        leading: Obx(
+                                                                                () => Radio<int>(
+                                                                                value: 3,
+                                                                                activeColor: ThemeProvider.primary,
+                                                                                groupValue: value.selectedOption.value,
+                                                                                onChanged: (int?newValue) {
+                                                                                  value.selectedOption(newValue);
+                                                                                  value.resetTimer();
+                                                                                  Get.back();
+                                                                                  Future.delayed(const Duration(seconds: 2), ()
+                                                                                  {
+                                                                                    value.playFrequency();
+                                                                                    value.startTime();
+                                                                                  });
+                                                                                })),
+                                                                      ),
+                                                                      //Saw wave radio button
+                                                                      const SizedBox(height: 10),
+                                                                      ListTile(
+                                                                        title: Column(
+                                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            CommonTextWidget(heading: AppString.saw_wave,
+                                                                              fontSize: Dimens.forteen,
+                                                                              color: ThemeProvider.blackColor,
+                                                                              fontFamily: 'light',
+                                                                            ),
+                                                                            const SizedBox(height: 10),
+                                                                            SvgPicture.asset(AssetPath.saw,)
+                                                                          ],
+                                                                        ),
+                                                                        leading: Obx(
+                                                                                () => Radio<int>(
+                                                                              value: 4,
+                                                                              activeColor: ThemeProvider.primary,
+                                                                              groupValue: value.selectedOption.value,
+                                                                              onChanged: (int?newValue) {
+                                                                                value.selectedOption(newValue);
+                                                                                value.resetTimer();
+                                                                                Get.back();
+                                                                                Future.delayed(const Duration(seconds: 2), ()
+                                                                                {
+                                                                                  value.playFrequency();
+                                                                                  value.startTime();
+                                                                                });
+                                                                              },
+                                                                            )),
+                                                                      ),
+                                                                      //Triangular wave radio button
+                                                                      const SizedBox(height: 10),
+                                                                      ListTile(
+                                                                        title: Column(
+                                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            CommonTextWidget(
+                                                                              heading: AppString.triangular_wave,
+                                                                              fontSize: Dimens.forteen,
+                                                                              color: ThemeProvider.blackColor,
+                                                                              fontFamily: 'light',
+                                                                            ),
+                                                                            const SizedBox(height: 10),
+                                                                            SvgPicture.asset(AssetPath.triangular,
+                                                                            )
+                                                                          ],
+                                                                        ),
+                                                                        leading: Obx(
+                                                                                () => Radio<int>(
+                                                                              value: 5,
+                                                                              activeColor: ThemeProvider.primary,
+                                                                              groupValue: value.selectedOption.value,
+                                                                              onChanged: (int?newValue) {
+                                                                                value.selectedOption(newValue);
+                                                                                value.resetTimer();
+                                                                                Get.back();
+                                                                                Future.delayed(const Duration(seconds: 2), ()
+                                                                                {
+                                                                                  value.playFrequency();
+                                                                                  value.startTime();
+                                                                                });
+                                                                              },
+                                                                            )),
+                                                                      ),
+                                                                      //Golden wave radio button
+                                                                      const SizedBox(height: 10),
+                                                                      ListTile(
+                                                                        title: Column(
+                                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            CommonTextWidget(
+                                                                              heading: AppString.golden_wave,
+                                                                              fontSize: Dimens.forteen,
+                                                                              color: ThemeProvider.blackColor,
+                                                                              fontFamily: 'light',
+                                                                            ),
+                                                                            const SizedBox(height: 10),
+                                                                            SvgPicture.asset(AssetPath.triangular,
+                                                                            )
+                                                                          ],
+                                                                        ),
+                                                                        leading: Obx(
+                                                                                () => Radio<int>(
+                                                                              value: 6,
+                                                                              activeColor: ThemeProvider.primary,
+                                                                              groupValue: value.selectedOption.value,
+                                                                              onChanged: (int?newValue) {
+                                                                                value.selectedOption(newValue);
+                                                                                value.resetTimer();
+                                                                                Get.back();
+                                                                                Future.delayed(const Duration(seconds: 2), ()
+                                                                                {
+                                                                                  value.playFrequency();
+                                                                                  value.startTime();
+                                                                                });
+                                                                              },
+                                                                            )),
+                                                                      ),
+                                                                      //Wobble wave radio button
+                                                                      const SizedBox(height: 10),
+                                                                      ListTile(
+                                                                        title: Column(
+                                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            CommonTextWidget(
+                                                                              heading: AppString.Wobble_wave,
+                                                                              fontSize: Dimens.forteen,
+                                                                              color: ThemeProvider.blackColor,
+                                                                              fontFamily: 'light',
+                                                                            ),
+                                                                            const SizedBox(height: 10),
+                                                                            SvgPicture.asset(AssetPath.triangular,
+                                                                            )
+                                                                          ],
+                                                                        ),
+                                                                        leading: Obx(
+                                                                                () => Radio<int>(
+                                                                              value: 7,
+                                                                              activeColor: ThemeProvider.primary,
+                                                                              groupValue: value.selectedOption.value,
+                                                                              onChanged: (int?newValue) {
+                                                                                value.selectedOption(newValue);
+                                                                                value.resetTimer();
+                                                                                Get.back();
+                                                                                Future.delayed(const Duration(seconds: 2), ()
+                                                                                {
+                                                                                  value.playFrequency();
+                                                                                  value.startTime();
+                                                                                });
+                                                                              },
+                                                                            )),
+                                                                      ),
+                                                                      //Harmonic wave radio button
+                                                                      const SizedBox(height: 10),
+                                                                      ListTile(
+                                                                        title: Column(
+                                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            CommonTextWidget(
+                                                                              heading: AppString.harmonic_wave,
+                                                                              fontSize: Dimens.forteen,
+                                                                              color: ThemeProvider.blackColor,
+                                                                              fontFamily: 'light',
+                                                                            ),
+                                                                            const SizedBox(height: 10),
+                                                                            SvgPicture.asset(AssetPath.triangular,
+                                                                            )
+                                                                          ],
+                                                                        ),
+                                                                        leading: Obx(
+                                                                                () => Radio<int>(
+                                                                              value: 8,
+                                                                              activeColor: ThemeProvider.primary,
+                                                                              groupValue: value.selectedOption.value,
+                                                                              onChanged: (int?newValue) {
+                                                                                value.selectedOption(newValue);
+                                                                                value.resetTimer();
+                                                                                Get.back();
+                                                                                Future.delayed(const Duration(seconds: 2), ()
+                                                                                {
+                                                                                  value.playFrequency();
+                                                                                  value.startTime();
+                                                                                });
+                                                                              },
+                                                                            )),
+                                                                      ),
+                                                                      //Fibonacci wave radio button
+                                                                      const SizedBox(height: 10),
+                                                                      ListTile(
+                                                                        title: Column(
+                                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            CommonTextWidget(
+                                                                              heading: AppString.fabonnaci_wave,
+                                                                              fontSize: Dimens.forteen,
+                                                                              color: ThemeProvider.blackColor,
+                                                                              fontFamily: 'light',
+                                                                            ),
+                                                                            const SizedBox(height: 10),
+                                                                            SvgPicture.asset(AssetPath.triangular,
+                                                                            )
+                                                                          ],
+                                                                        ),
+                                                                        leading: Obx(
+                                                                                () => Radio<int>(
+                                                                              value: 9,
+                                                                              activeColor: ThemeProvider.primary,
+                                                                              groupValue: value.selectedOption.value,
+                                                                              onChanged: (int?newValue) {
+                                                                                value.selectedOption(newValue);
+                                                                                value.resetTimer();
+                                                                                Get.back();
+                                                                                Future.delayed(const Duration(seconds: 2), ()
+                                                                                {
+                                                                                  value.playFrequency();
+                                                                                  value.startTime();
+                                                                                });
+                                                                              },
+                                                                            )),
+                                                                      ),
+
+                                                                    ],
+                                                                  ),
+                                                               ),
+                                                             ),
+                                                          ],
+                                                        )),
+                                                  );
+
                                               },
                                             );
                                           },

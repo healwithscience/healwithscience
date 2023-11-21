@@ -63,19 +63,22 @@ class CategoryController extends GetxController {
      /* const settings = Settings(persistenceEnabled: false);
       firestoreInstance.settings = settings;
 */
-      CollectionReference categoriesCollection = firestoreInstance.collection('categories');
+    CollectionReference categoriesCollection = firestoreInstance.collection('new_categories');
+      // CollectionReference categoriesCollection = firestoreInstance.collection('new_categories');
 
       QuerySnapshot querySnapshot = await categoriesCollection.get();
 
      fetchedCategories = querySnapshot.docs
           .map((doc) => Category.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
-      fetchedCategories.sort((a, b) => a.name.compareTo(b.name));
 
+
+      fetchedCategories.sort((a, b) => a.name.compareTo(b.name));
+      print('Hello Here1 Length======>'+fetchedCategories.length.toString());
 
       categories.assignAll(fetchedCategories);
       isLoading.value = false;
-      print('Hello Here1');
+
       // No need to call update() since RxList automatically triggers UI updates.
     } catch (e) {
       isLoading.value = false;
