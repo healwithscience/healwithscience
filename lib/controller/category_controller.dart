@@ -63,7 +63,7 @@ class CategoryController extends GetxController {
      /* const settings = Settings(persistenceEnabled: false);
       firestoreInstance.settings = settings;
 */
-    CollectionReference categoriesCollection = firestoreInstance.collection('new_categories');
+    CollectionReference categoriesCollection = firestoreInstance.collection('categories');
       // CollectionReference categoriesCollection = firestoreInstance.collection('new_categories');
 
       QuerySnapshot querySnapshot = await categoriesCollection.get();

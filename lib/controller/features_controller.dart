@@ -21,7 +21,7 @@ class FeaturesController extends GetxController {
   // final RxDouble frequency = 0.0.obs;
   final RxInt selectedOption = 1.obs;
 
-  final RxDouble dutyCycle = 1.0.obs;
+  final RxDouble dutyCycle = 0.50.obs;
   final double minDutyCycle = 0.0;
   final double maxDutyCycle = 1.0;
 

@@ -21,6 +21,7 @@ import '../util/string.dart';
 import '../util/theme.dart';
 import '../widgets/CustomGradientDivider.dart';
 import '../widgets/commontext.dart';
+import '../widgets/fabonacciwave.dart';
 import '../widgets/round_button.dart';
 
 class FeaturesScreen extends StatefulWidget {
@@ -261,7 +262,7 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                   dutyCycle: value.dutyCycle.value,
                                   phase: value.phaseControl.value,
                                   offset: value.offset.value,
-                                ) : BubbleWavePainter(
+                                ) : FibonacciWavesPainter(
                                   frequency: value.frequencyValue.value,
                                   amplitude: value.amplitude.value,
                                   dutyCycle: value.dutyCycle.value,
@@ -677,7 +678,7 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                                           crossAxisAlignment: CrossAxisAlignment.start,
                                                                           children: [
                                                                             CommonTextWidget(
-                                                                              heading: AppString.golden_wave,
+                                                                              heading: AppString.fabonnaci_wave,
                                                                               fontSize: Dimens.forteen,
                                                                               color: ThemeProvider.blackColor,
                                                                               fontFamily: 'light',
@@ -782,7 +783,7 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                                           crossAxisAlignment: CrossAxisAlignment.start,
                                                                           children: [
                                                                             CommonTextWidget(
-                                                                              heading: AppString.fabonnaci_wave,
+                                                                              heading: AppString.golden_wave,
                                                                               fontSize: Dimens.forteen,
                                                                               color: ThemeProvider.blackColor,
                                                                               fontFamily: 'light',

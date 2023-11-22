@@ -8,12 +8,8 @@ import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
-import kotlin.math.PI
-import kotlin.math.atan
-import kotlin.math.floor
 import kotlin.math.sin
 import kotlin.math.sqrt
-import kotlin.math.tan
 
 
 class MainActivity : FlutterActivity() {
@@ -21,7 +17,10 @@ class MainActivity : FlutterActivity() {
     private val channelName = "nativeBridge"
     private var isPlaying: Boolean = false
     private lateinit var audioTrack: AudioTrack
-
+    val sampleRate = 22050
+    val durationSeconds = 300
+    val numSamples = sampleRate * durationSeconds
+    private val buffer = ByteArray(2 * durationSeconds * sampleRate)
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
@@ -29,6 +28,8 @@ class MainActivity : FlutterActivity() {
             flutterEngine.dartExecutor.binaryMessenger,
             channelName
         ).setMethodCallHandler { call, result ->
+
+
             // This method is invoked on the main thread.
             if (call.method == "playMusic") {
 
@@ -41,7 +42,6 @@ class MainActivity : FlutterActivity() {
                     val phase = data["phase"] as Double
                     val waveType = data["wavetype"] as Int
 
-//                    Toast.makeText(this, waveType.toString(), Toast.LENGTH_SHORT).show();
 
                     generateAndPlayAudio(frequency, duty_cycle, amplitude, offset, phase, waveType)
                 }
@@ -66,58 +66,30 @@ class MainActivity : FlutterActivity() {
         waveType: Int
     ) {
         isPlaying = true
-        val sampleRate = 5512
-        val durationSeconds = 300
-        val numSamples = sampleRate * durationSeconds
 
-        audioTrack = AudioTrack(
-            AudioManager.STREAM_MUSIC,
-            sampleRate,
-            AudioFormat.CHANNEL_OUT_MONO,
-            AudioFormat.ENCODING_PCM_16BIT,
-            numSamples * 2,
-            AudioTrack.MODE_STREAM
-        )
 
-        val buffer = ShortArray(numSamples)
-
-//        for (i in 0 until numSamples) {
-//            val t = i.toDouble() / sampleRate
-//            val value =
-//                (amplitude * sin(2 * PI * frequency * t + phase) * (if (t % 1 < dutyCycle) 1 else -1) + offset).toFloat()
-//            buffer[i] = (value * Short.MAX_VALUE).toInt().toShort()
-//        }
-        Toast.makeText(this, waveType.toString(), Toast.LENGTH_SHORT).show()
-        for (i in 0 until numSamples) {
-            val t = i.toDouble() / sampleRate
-
-            val value: Float = if (waveType == 1) {
-                generateSineWave(amplitude, frequency, phase, offset, t)
-            } else if (waveType == 2) {
-                generateSquareWave(amplitude, frequency, phase, offset, t)
-            } else if (waveType == 3) {
-                generateRampWave(amplitude, frequency, phase, offset, dutyCycle, t)
-            } else if (waveType == 4) {
-                generateSawtoothWave(amplitude, frequency, phase, offset, t)
-            } else if (waveType == 5) {
-                generateTriangularWave(amplitude, frequency, phase, offset, t)
-            }else if (waveType == 6){
-                generateGoldenWave(amplitude, frequency, phase, offset, t)
-            }else if(waveType == 7){
-                generateWobbleWave(amplitude, frequency, phase, offset, t)
-            }else if (waveType == 8){
-                generateHarmonicWave(amplitude, frequency, phase, offset, t)
-            }else if (waveType == 9){
-                generateFibonacciWave(amplitude, frequency)
-            }
-            else {
-                0.0f // Default value or handle the case for an unknown waveform
-            }
-            buffer[i] = (value * Short.MAX_VALUE).toInt().toShort()
+        if (waveType == 1) {
+            generateSineWave(amplitude, frequency, phase, offset)
+            playSound(offset)
+        }else if (waveType == 2) {
+            generateSquareWave(amplitude, frequency,dutyCycle, phase, offset)
+            playSound(offset)
+        }else if(waveType == 3){
+            generateRampWave(amplitude, frequency, phase, offset)
+            playSound(offset)
+        } else if (waveType == 4) {
+            generateSawtoothWave(amplitude, frequency, phase, offset)
+            playSound(offset)
+        }else if (waveType == 5) {
+            generateTriangularWave(amplitude, frequency, phase, offset)
+            playSound(offset)
+        }else if (waveType == 6) {
+            generateFibonacciWave(amplitude, frequency, phase, offset)
+            playSound(offset)
+        }else if(waveType == 9){
+            generateGoldWave(amplitude, frequency, phase, offset)
+            playSound(offset)
         }
-
-        audioTrack.play()
-        audioTrack.write(buffer, 0, numSamples)
     }
 
     private fun stopAudioPlayback() {
@@ -128,143 +100,107 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    // Used to generate Wobble  Waves
-    private fun generateWobbleWave(amplitude: Double, frequency: Double, phase: Double, offset: Double, t: Double): Float {
-        val epsilon = 0.1 * sin(0.5 * PI * t)
-        val newFrequency = frequency + epsilon
-        return (amplitude * sin(2 * PI * newFrequency * t + phase)).toFloat()
+    fun playSound(offset: Double) {
 
+        // Set up AudioTrack
+        audioTrack = AudioTrack(
+            AudioManager.STREAM_MUSIC,
+            sampleRate, AudioFormat.CHANNEL_OUT_MONO,
+            AudioFormat.ENCODING_PCM_16BIT, buffer.size,
+            AudioTrack.MODE_STATIC
+        )
+
+        // Write the buffer to the track
+        audioTrack.write(buffer, offset.toInt(), buffer.size)
+
+        // Start playback
+        audioTrack.play()
     }
+
+    private fun generateSquareWave(amplitude: Double, frequency: Double, dutyCycle: Double, phase: Double, offset: Double) {
+        val samplesPerPeriod = (sampleRate / frequency).toInt()
+        val highSamples = (samplesPerPeriod * dutyCycle).toInt()
+
+        for (i in 0 until durationSeconds * sampleRate) {
+            val currentSample = (i + phase * sampleRate).toInt() % samplesPerPeriod
+            val value = if (currentSample < highSamples) amplitude else -amplitude
+
+            buffer[2 * i] = value.toInt().toByte()
+            buffer[2 * i + 1] = buffer[2 * i]
+        }
+    }
+
 
     // Used to generate Sine  Waves
-    private fun generateSineWave(amplitude: Double, frequency: Double, phase: Double, offset: Double, t: Double): Float {
-        return (amplitude * sin(2 * PI * frequency * t + phase)).toFloat()
-    }
-
-    // Used to generate Square  Waves
-    private fun generateSquareWave(amplitude: Double, frequency: Double, phase: Double, offset: Double, t: Double): Float {
-        var result = 0.0
-
-        for (n in 1..10) { // Summing the first 10 terms (you can adjust this)
-            result += (4.0 / (PI * (2 * n - 1))) * sin((2 * n - 1) * 2 * PI * frequency * t)
+    private fun generateSineWave(amplitude: Double, frequency: Double, phase: Double, offset: Double){
+        for (i in 0 until durationSeconds * sampleRate) {
+            val angularFrequency = 2 * Math.PI * frequency
+            buffer[2 * i] = (sin(angularFrequency * i / sampleRate) * amplitude).toInt().toByte()
+            buffer[2 * i + 1] = buffer[2 * i]
         }
-
-        return (result * amplitude + offset).toFloat()
     }
 
-    // Used to generate Sawtooth  Waves
-    private fun generateSawtoothWave(amplitude: Double, frequency: Double, phase: Double, offset: Double, t: Double): Float {
-        var result = 0.0
-
-        for (n in 1..10) { // Summing the first 10 terms (you can adjust this)
-            result += (1.0 / n) * sin(n * 2 * PI * frequency * t)
+    private fun generateSawtoothWave(amplitude: Double, frequency: Double, phase: Double, offset: Double) {
+        for (i in 0 until durationSeconds * sampleRate) {
+            val value = ((i.toDouble() / (sampleRate / frequency)) % 1.0) * amplitude
+            buffer[2 * i] = value.toInt().toByte()
+            buffer[2 * i + 1] = buffer[2 * i]
         }
-
-        return (((PI / 2) - 2 * result) * amplitude + offset).toFloat()
     }
 
-    //Used to generate Triangular Waves
-    private fun generateTriangularWave(amplitude: Double, frequency: Double, phase: Double, offset: Double, t: Double): Float {
-        val shiftedSawtooth = (t - floor(t + 0.5)).toFloat() // Absolute value of a shifted sawtooth wave
-
-        // For a triangle wave spanning the range [-1,1]
-        val triangularWave = 2 * shiftedSawtooth - 1
-
-        return (amplitude * triangularWave + offset).toFloat()
-    }
-
-    //Used to generate Ram Waves
-    private fun generateRampWave(amplitude: Double, frequency: Double, phase: Double, offset: Double, dutyCycle: Double, t: Double): Float {
-        return if (t % 1 < dutyCycle) ((2.0 / PI) * atan(tan(PI * frequency * t + phase) + offset)).toFloat() else 0.0f
-    }
-
-    //Used to generate Golden Waves
-    private fun generateGoldenWave(amplitude: Double, frequency: Double, phase: Double, offset: Double, t: Double): Float {
-        val goldenRatio = (1 + sqrt(5.0)) / 2
-        val value = sin(2 * PI * frequency * t + phase) + sin(2 * PI * frequency * goldenRatio * t)
-
-        return ( value).toFloat()
-//        return (amplitude * value + offset).toFloat()
-    }
-
-
-    //Used to generate Golden Waves
-    private fun generateHarmonicWave(amplitude: Double, frequency: Double, phase: Double, offset: Double, t: Double): Float{
-        return  (amplitude * sin(2 * PI * frequency * t + phase)).toFloat()
-    }
-    private fun generateFibonacciWave(initialAmplitude: Double, t: Double): Float {
-        // Generate the Fibonacci number at time t
-        val fibonacciNumber = generateFibonacciNumber(t.toInt())
-
-        // Calculate the amplitude using the Fibonacci number
-        val amplitude = initialAmplitude * fibonacciNumber
-
-        return amplitude.toFloat()
-    }
-
-    private fun generateFibonacciNumber(n: Int): Double {
-        if (n <= 1) {
-            return n.toDouble()
+    private fun generateTriangularWave(amplitude: Double, frequency: Double, phase: Double, offset: Double) {
+        for (i in 0 until durationSeconds * sampleRate) {
+            val value = (2 * Math.abs(((i.toDouble() / (sampleRate / frequency)) % 1.0) - 0.5) - 0.5) * 2 * amplitude
+            buffer[2 * i] = value.toInt().toByte()
+            buffer[2 * i + 1] = buffer[2 * i]
         }
+    }
 
-        var a = 0.0
-        var b = 1.0
+    private fun generateRampWave(amplitude: Double, frequency: Double, phase: Double, offset: Double) {
+        val samplesPerPeriod = (sampleRate / frequency).toInt()
+        val bufferIndex = (phase * sampleRate).toInt()
 
-        repeat(n - 1) {
-            val next = a + b
-            a = b
-            b = next
+        for (i in 0 until durationSeconds * sampleRate) {
+            val index = (bufferIndex + i) % samplesPerPeriod
+            val value = (index.toDouble() / samplesPerPeriod) * 2 * amplitude - amplitude
+
+            buffer[2 * i] = value.toInt().toByte()
+            buffer[2 * i + 1] = buffer[2 * i]
         }
+    }
 
-        return b
+    private fun generateGoldWave(amplitude: Double, frequency: Double, phase: Double, offset: Double){
+        for (i in 0 until durationSeconds * sampleRate) {
+            val phi = (1 + sqrt(5.0)) / 2
+            val angularFrequency = 2 * Math.PI * frequency
+            buffer[2 * i] = (amplitude *  (sin(angularFrequency * (i / sampleRate) + phi) + sin(angularFrequency * (i / sampleRate) * phi))).toInt().toByte()
+            buffer[2 * i + 1] = buffer[2 * i]
+        }
+    }
+
+    private fun generateFibonacciWave(amplitude: Double, frequency: Double, phase: Double, offset: Double) {
+        // Calculate Fibonacci sequence values
+        val fibonacciValues = generateFibonacciSequence(durationSeconds)
+
+        // Scale the Fibonacci values to fit within the amplitude range
+        val scaledValues = fibonacciValues.map { it.toDouble() / fibonacciValues.last() * amplitude }
+
+        // Generate the wave based on the scaled Fibonacci values
+        for (i in 0 until durationSeconds * sampleRate) {
+            val index = (i + phase * sampleRate).toInt() % scaledValues.size
+            buffer[2 * i] = scaledValues[index].toInt().toByte()
+            buffer[2 * i + 1] = buffer[2 * i]
+        }
+    }
+
+    private fun generateFibonacciSequence(length: Int): List<Long> {
+        val fibonacciValues = mutableListOf(0L, 1L)
+        while (fibonacciValues.size < length) {
+            val nextValue = fibonacciValues[fibonacciValues.size - 1] + fibonacciValues[fibonacciValues.size - 2]
+            fibonacciValues.add(nextValue)
+        }
+        return fibonacciValues.take(length)
     }
 
 
-
-
-
-
-
-
-
-
-
-/*    private fun generateSquareWave(
-        amplitude: Double,
-        frequency: Double,
-        phase: Double,
-        offset: Double,
-        t: Double
-    ): Float {
-        val period = 1.0 / frequency
-        val normalizedTime = (t + phase / (2.0 * PI)) % period / period
-
-        return if (normalizedTime < 0.5) {
-            (amplitude + offset).toFloat()
-        } else {
-            (-amplitude + offset).toFloat()
-        }
-    }*/
-
-
-
- /*   private fun generateSawtoothWave(
-        amplitude: Double,
-        frequency: Double,
-        phase: Double,
-        offset: Double,
-        t: Double
-    ): Float {
-        return ((2 / PI) * atan(tan(PI * frequency * t + phase) + offset)).toFloat()
-    }*/
-
- /*   private fun generateTriangularWave(
-        amplitude: Double,
-        frequency: Double,
-        phase: Double,
-        offset: Double,
-        t: Double
-    ): Float {
-        return ((2 / PI) * asin(sin(2 * PI * frequency * t + phase) + offset) * amplitude).toFloat()
-    }*/
 }
