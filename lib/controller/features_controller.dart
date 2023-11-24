@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -42,7 +43,6 @@ class FeaturesController extends GetxController {
 
   late AnimationController animatedcontroller;
 
-
   var sliderProgress = 0.0.obs;
   Timer? timer;
   int currentTimeInSeconds = 0;
@@ -74,10 +74,15 @@ class FeaturesController extends GetxController {
   RxList<int> downloadButtonClickedList = <int>[].obs;
   List<Category>? categoriesList = [];
 
+  RxBool isButtonPressed = false.obs;
+  RxBool isRadioSelected = false.obs;
+
   RewardedAd? _rewardedAd;
   int _numRewardedLoadAttempts = 0;
 
-   final AdRequest request = const AdRequest(
+  Rx<ConnectivityResult> connectivityResult = Rx<ConnectivityResult>(ConnectivityResult.none);
+
+  final AdRequest request = const AdRequest(
     keywords: <String>['foo', 'bar'],
     contentUrl: 'http://foo.com/bar.html',
     nonPersonalizedAds: true,
@@ -86,8 +91,12 @@ class FeaturesController extends GetxController {
   @override
   Future<void> onInit() async {
     super.onInit();
-    loadRewardedAd();
-    
+    connectivityResult.value = await Utils.checkInternetConnection();
+
+    if(connectivityResult.value == ConnectivityResult.wifi || connectivityResult.value == ConnectivityResult.mobile){
+      loadRewardedAd();
+    }
+
     final data = Get.arguments;
     frequencyValue.value = data['frequency'];
     frequenciesList.value = data['frequenciesList'];
@@ -263,11 +272,12 @@ class FeaturesController extends GetxController {
   }
 
   void onBackRoutes() {
-    if (isPlaying.value == true) {
+   /* if (isPlaying.value == true) {
       timer?.cancel();
       stopFrequency();
 
-    }
+    }*/
+    StaticValue.miniPlayer.value = true;
     var context = Get.context as BuildContext;
     Navigator.of(context).pop(true);
   }
@@ -316,58 +326,69 @@ class FeaturesController extends GetxController {
 
   //This function is used to play next frequency in the list
   Future<void> playNext() async {
-    print("Reward Point ${StaticValue.rewardPoint}");
-    if(StaticValue.rewardPoint > 0){
-      print("Reward Point ${StaticValue.rewardPoint}");
-      StaticValue.rewardPoint = StaticValue.rewardPoint - 1;
-      Utils.updateRewardPoints(StaticValue.rewardPoint,parser.getUserId());
-    }
-    // frequencyValue.value = frequenciesList[playingIndex.value + 1]!;
-    resetTimer();
-    isPlaying.value == false;
-    if(playingIndex.value + 1 < frequenciesList.length){
-      playingIndex.value = playingIndex.value + 1;
-      frequencyValue.value = frequenciesList[playingIndex.value] as double;
 
-      print("After Playing Value: ${frequencyValue.value}");
+    if(!isButtonPressed.value){
+      isButtonPressed.value = true;
+      if(StaticValue.rewardPoint > 0){
+        print("Reward Point ${StaticValue.rewardPoint}");
+        StaticValue.rewardPoint = StaticValue.rewardPoint - 1;
+        Utils.updateRewardPoints(StaticValue.rewardPoint,parser.getUserId());
+      }
+      // frequencyValue.value = frequenciesList[playingIndex.value + 1]!;
+      resetTimer();
+      isPlaying.value == false;
+      if(playingIndex.value + 1 < frequenciesList.length){
+        playingIndex.value = playingIndex.value + 1;
+        frequencyValue.value = frequenciesList[playingIndex.value] as double;
+
+        print("After Playing Value: ${frequencyValue.value}");
+      }else{
+        frequencyValue.value = frequenciesList[0]!;
+        playingIndex.value = 0;
+      }
+      changeProgramName();
+
+      Future.delayed(Duration(seconds: 3), (){
+        playFrequency();
+        startTime();
+        isPlaying.value = true;
+        isButtonPressed.value = false;
+      });
     }else{
-      frequencyValue.value = frequenciesList[0]!;
-      playingIndex.value = 0;
+      print("Hello I am disable");
     }
-    changeProgramName();
-
-    Future.delayed(Duration(seconds: 3), (){
-       playFrequency();
-       startTime();
-       isPlaying.value = true;
-    });
   }
 
   //This function is used to play previous frequency in the list
   void playPrevious() {
-    if(StaticValue.rewardPoint != 0){
-      StaticValue.rewardPoint = StaticValue.rewardPoint - 1;
-      Utils.updateRewardPoints(StaticValue.rewardPoint,parser.getUserId());
+    if(!isButtonPressed.value){
+      isButtonPressed.value = true;
+      if(StaticValue.rewardPoint != 0){
+        StaticValue.rewardPoint = StaticValue.rewardPoint - 1;
+        Utils.updateRewardPoints(StaticValue.rewardPoint,parser.getUserId());
+      }
+      // frequencyValue.value = frequenciesList[playingIndex.value + 1]!;
+      resetTimer();
+      isPlaying.value == false;
+      if (playingIndex.value - 1 >= 0) {
+        playingIndex.value = playingIndex.value - 1;
+        frequencyValue.value = frequenciesList[playingIndex.value] as double;
+
+      } else {
+        frequencyValue.value = frequenciesList[frequenciesList.length - 1]!;
+        playingIndex.value = frequenciesList.length - 1;
+      }
+
+      changeProgramName();
+
+      Future.delayed(Duration(seconds: 3), (){
+        playFrequency();
+        startTime();
+        isPlaying.value = true;
+        isButtonPressed.value = false;
+      });
     }
-    // frequencyValue.value = frequenciesList[playingIndex.value + 1]!;
-    resetTimer();
-    isPlaying.value == false;
-    if (playingIndex.value - 1 >= 0) {
-      playingIndex.value = playingIndex.value - 1;
-      frequencyValue.value = frequenciesList[playingIndex.value] as double;
 
-    } else {
-      frequencyValue.value = frequenciesList[frequenciesList.length - 1]!;
-      playingIndex.value = frequenciesList.length - 1;
-    }
-
-    changeProgramName();
-
-    Future.delayed(Duration(seconds: 3), (){
-      playFrequency();
-      startTime();
-      isPlaying.value = true;
-    });
   }
 
   //Function used to fetch custom playlist created by user
@@ -441,7 +462,7 @@ class FeaturesController extends GetxController {
             _numRewardedLoadAttempts = 0;
           },
           onAdFailedToLoad: (LoadAdError error) {
-            showToast('RewardedAd failed to load: $error');
+            showToast('RewardedAd failed to load');
             _rewardedAd = null;
             _numRewardedLoadAttempts += 1;
             if (_numRewardedLoadAttempts < 3) {
@@ -479,7 +500,55 @@ class FeaturesController extends GetxController {
           StaticValue.rewardPoint = await Utils.getRewardPoints(parser.getUserId());
           print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
         });
-
     _rewardedAd = null;
   }
+
+  void selectRadioButton(int? newValue) {
+    if(isRadioSelected.value == false){
+      isRadioSelected.value = true;
+      selectedOption(newValue);
+      resetTimer();
+      Get.back();
+      Future.delayed(const Duration(seconds: 2), ()
+      {
+
+        // playFrequency();
+        // startTime();
+        isRadioSelected.value = false;
+      });
+    }
+
+  }
 }
+
+
+
+/*
+//Fibonacci wave radio button
+const SizedBox(height: 10),
+ListTile(
+title: Column(
+mainAxisAlignment: MainAxisAlignment.start,
+crossAxisAlignment: CrossAxisAlignment.start,
+children: [
+CommonTextWidget(
+heading: AppString.golden_wave,
+fontSize: Dimens.forteen,
+color: ThemeProvider.blackColor,
+fontFamily: 'light',
+),
+const SizedBox(height: 10),
+SvgPicture.asset(AssetPath.triangular,
+)
+],
+),
+leading: Obx(
+() => Radio<int>(
+value: 9,
+activeColor: ThemeProvider.primary,
+groupValue: value.selectedOption.value,
+onChanged: (int?newValue) {
+value.selectRadioButton(newValue);
+},
+)),
+),*/

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
@@ -39,19 +40,26 @@ class FrequencyController extends GetxController {
     nonPersonalizedAds: true,
   );
 
+  // Used to check internet connectivity
+  Rx<ConnectivityResult> connectivityResult = Rx<ConnectivityResult>(ConnectivityResult.none);
+
   @override
   Future<void> onInit() async {
     super.onInit();
-    fetDownloadlist();
-    fetchFrequencies();
+    connectivityResult.value = await Utils.checkInternetConnection();
 
-    loadRewardedAd();
-    StaticValue.rewardPoint = await Utils.getRewardPoints(parser.getUserId());
-
-
+    if(connectivityResult.value == ConnectivityResult.wifi || connectivityResult.value == ConnectivityResult.mobile){
+      fetchDownloadlist();
+      fetchFrequencies();
+      loadRewardedAd();
+      StaticValue.rewardPoint = await Utils.getRewardPoints(parser.getUserId());
+    }else{
+      isLoading.value = false;
+      showToast("No Internet Connection");
+    }
   }
 
-  Future<void> fetDownloadlist() async {
+  Future<void> fetchDownloadlist() async {
     categoriesList =  await parser.fetchList();
   }
 

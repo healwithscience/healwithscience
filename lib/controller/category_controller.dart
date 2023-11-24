@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
@@ -41,13 +42,24 @@ class CategoryController extends GetxController {
     nonPersonalizedAds: true,
   );
 
+  // Used to check internet connectivity
+  Rx<ConnectivityResult> connectivityResult = Rx<ConnectivityResult>(ConnectivityResult.none);
 
   @override
   Future<void> onInit() async {
     super.onInit();
-    fetchCategories();
-    loadRewardedAd();
-    StaticValue.rewardPoint = await Utils.getRewardPoints(parser.getUserId());
+    connectivityResult.value = await Utils.checkInternetConnection();
+
+    if(connectivityResult.value == ConnectivityResult.wifi || connectivityResult.value == ConnectivityResult.mobile) {
+      fetchCategories();
+      loadRewardedAd();
+      StaticValue.rewardPoint = await Utils.getRewardPoints(parser.getUserId());
+    }else{
+      isLoading.value = false;
+      showToast("No Internet Connection");
+    }
+
+
 
     // categories.assignAll(categories); // Initialize with all categories
     searchController.addListener(() {

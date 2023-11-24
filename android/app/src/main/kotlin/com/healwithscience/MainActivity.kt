@@ -86,11 +86,17 @@ class MainActivity : FlutterActivity() {
         }else if (waveType == 6) {
             generateFibonacciWave(amplitude, frequency, phase, offset)
             playSound(offset)
-        }else if(waveType == 9){
-            generateGoldWave(amplitude, frequency, phase, offset)
+        }else if (waveType == 7) {
+            generateHarmonicWave(amplitude, frequency,dutyCycle, phase)
+            playSound(offset)
+        }
+        else if(waveType == 8){
+            generateHSquareWave(amplitude, frequency,dutyCycle, phase, offset)
             playSound(offset)
         }
     }
+
+
 
     private fun stopAudioPlayback() {
         if (isPlaying) {
@@ -140,6 +146,7 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+    //Used to generate Saw Tooth Waves
     private fun generateSawtoothWave(amplitude: Double, frequency: Double, phase: Double, offset: Double) {
         for (i in 0 until durationSeconds * sampleRate) {
             val value = ((i.toDouble() / (sampleRate / frequency)) % 1.0) * amplitude
@@ -148,6 +155,7 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+    //Used to generate Triangle Wave
     private fun generateTriangularWave(amplitude: Double, frequency: Double, phase: Double, offset: Double) {
         for (i in 0 until durationSeconds * sampleRate) {
             val value = (2 * Math.abs(((i.toDouble() / (sampleRate / frequency)) % 1.0) - 0.5) - 0.5) * 2 * amplitude
@@ -156,6 +164,7 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+    //Used to generate Ramp Wafe
     private fun generateRampWave(amplitude: Double, frequency: Double, phase: Double, offset: Double) {
         val samplesPerPeriod = (sampleRate / frequency).toInt()
         val bufferIndex = (phase * sampleRate).toInt()
@@ -178,6 +187,7 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+    //Used to generate Fibonacci Wave
     private fun generateFibonacciWave(amplitude: Double, frequency: Double, phase: Double, offset: Double) {
         // Calculate Fibonacci sequence values
         val fibonacciValues = generateFibonacciSequence(durationSeconds)
@@ -200,6 +210,76 @@ class MainActivity : FlutterActivity() {
             fibonacciValues.add(nextValue)
         }
         return fibonacciValues.take(length)
+    }
+
+    private fun generateHarmonicWave(fundamentalFrequency: Double, amplitude: Double, offset: Double, phase: Double, ) {
+        for (i in 0 until durationSeconds * sampleRate) {
+            var sampleValue = 0.0
+
+            // Add the fundamental frequency
+            sampleValue += sin(2 * Math.PI * fundamentalFrequency * i / sampleRate)
+
+            // Add the harmonics
+            for (harmonic in 2..5) {
+                val harmonicFrequency = fundamentalFrequency * harmonic
+                sampleValue += sin(2 * Math.PI * harmonicFrequency * i / sampleRate) / harmonic
+            }
+
+            // Scale the sample value by the amplitude
+            sampleValue *= amplitude
+
+            // Store the sample value in the buffer
+            buffer[2 * i] = sampleValue.toInt().toByte()
+            buffer[2 * i + 1] = buffer[2 * i]
+        }
+    }
+
+    //Used to generate HSquare
+    private fun generateHSquareWave(amplitude: Double, frequency: Double, dutyCycle: Double, phase: Double, offset: Double) {
+        generateSquareWave(amplitude, frequency, dutyCycle, phase, offset)
+
+        // Get spike height and width dynamically
+        val (spikeHeight, spikeWidth) = getSpikeHeightAndWidth(amplitude, frequency, dutyCycle)
+
+        // Add spikes to the leading and trailing edges
+        val samplesPerPeriod = (sampleRate / frequency).toInt()
+        for (i in 0 until durationSeconds * sampleRate) {
+            val currentSample = (i + phase * sampleRate).toInt() % samplesPerPeriod
+
+            // Check if the wave is on the leading or trailing edge
+            if (currentSample < spikeWidth * samplesPerPeriod || currentSample > (dutyCycle - spikeWidth) * samplesPerPeriod) {
+                // Add the spike height to the amplitude
+                buffer[2 * i] = (amplitude + spikeHeight).toInt().toByte()
+            }
+        }
+    }
+
+
+
+    private fun getSpikeHeightAndWidth(amplitude: Double, frequency: Double, dutyCycle: Double): Pair<Double, Double> {
+        // Generate a random fraction between 0 and 1 for the spike height
+        val spikeHeightFraction = Math.random()
+
+        // Calculate the spike height by multiplying the fraction by the amplitude
+        val spikeHeight = spikeHeightFraction * amplitude
+
+        // Generate a random fraction between 0 and 1 for the spike width
+        val spikeWidthFraction = Math.random()
+
+        // Calculate the period by dividing 1 by the frequency
+        val period = 1 / frequency
+
+        // Calculate the spike width by multiplying the fraction by the period
+        var spikeWidth = spikeWidthFraction * period
+
+        // Check if the spike width is greater than the duty cycle divided by the frequency
+        if (spikeWidth > dutyCycle / frequency) {
+            // Reduce the spike width to the duty cycle divided by the frequency
+            spikeWidth = dutyCycle / frequency
+        }
+
+        // Return the spike height and width as a pair
+        return Pair(spikeHeight, spikeWidth)
     }
 
 

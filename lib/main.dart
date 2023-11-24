@@ -42,6 +42,7 @@ class MyApp extends StatelessWidget {
       initialRoute: AppRouter.splash,
       getPages: AppRouter.routes,
       defaultTransition: Transition.fadeIn,
+
     );
   }
 }

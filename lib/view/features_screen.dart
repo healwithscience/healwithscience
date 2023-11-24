@@ -7,12 +7,14 @@ import 'package:heal_with_science/controller/features_controller.dart';
 import 'package:heal_with_science/widgets/common_reward_dialog.dart';
 import 'package:heal_with_science/widgets/common_slider.dart';
 import 'package:heal_with_science/widgets/bubble_wave.dart';
+import 'package:heal_with_science/widgets/harmonicwaves.dart';
 import 'package:heal_with_science/widgets/ramwave.dart';
 import 'package:heal_with_science/widgets/round_cornor_button.dart';
 import 'package:heal_with_science/widgets/sawtoothwave.dart';
 import 'package:heal_with_science/widgets/sinwave.dart';
 import 'package:heal_with_science/widgets/squarewave.dart';
 import 'package:heal_with_science/widgets/triangularwave.dart';
+import 'package:heal_with_science/widgets/hsquarewaves.dart';
 import '../backend/helper/app_router.dart';
 import '../util/app_assets.dart';
 import '../util/dimens.dart';
@@ -230,45 +232,55 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                   dutyCycle: value.dutyCycle.value,
                                   phase: value.phaseControl.value,
                                   offset: value.offset.value,
-                                )
-                                    : value.selectedOption.value == 2
+                                ) : value.selectedOption.value == 2
                                     ? SquareWavePainter(
                                   frequency: value.frequencyValue.value,
                                   amplitude: value.amplitude.value,
                                   dutyCycle: value.dutyCycle.value,
                                   phase: value.phaseControl.value,
                                   offset: value.offset.value,
-                                )
-                                    : value.selectedOption.value == 3
+                                ) : value.selectedOption.value == 3
                                     ? RamWavePainter(
                                   frequency: value.frequencyValue.value,
                                   amplitude: value.amplitude.value,
                                   dutyCycle: value.dutyCycle.value,
                                   phase: value.phaseControl.value,
                                   offset: value.offset.value,
-                                )
-                                    : value.selectedOption.value == 4
+                                ) : value.selectedOption.value == 4
                                     ? SawToothWavePainter(
                                   frequency: value.frequencyValue.value,
                                   amplitude: value.amplitude.value,
                                   dutyCycle: value.dutyCycle.value,
                                   phase: value.phaseControl.value,
                                   offset: value.offset.value,
-                                )
-                                     : value.selectedOption.value == 5
+                                ) : value.selectedOption.value == 5
                                     ? TriangularWavePainter(
                                   frequency: value.frequencyValue.value,
                                   amplitude: value.amplitude.value,
                                   dutyCycle: value.dutyCycle.value,
                                   phase: value.phaseControl.value,
                                   offset: value.offset.value,
-                                ) : FibonacciWavesPainter(
+                                ) : value.selectedOption.value == 6
+                                    ? FibonacciWavesPainter(
                                   frequency: value.frequencyValue.value,
                                   amplitude: value.amplitude.value,
                                   dutyCycle: value.dutyCycle.value,
                                   phase: value.phaseControl.value,
                                   offset: value.offset.value,
-                                ),
+                                ): value.selectedOption.value == 7
+                                  ? HarmonicWavePainter(
+                                  frequency: value.frequencyValue.value,
+                                  amplitude: value.amplitude.value,
+                                  dutyCycle: value.dutyCycle.value,
+                                  phase: value.phaseControl.value,
+                                  offset: value.offset.value,
+                                ) : HSquareWavePainter(
+                                  frequency: value.frequencyValue.value,
+                                  amplitude: value.amplitude.value,
+                                  dutyCycle: value.dutyCycle.value,
+                                  phase: value.phaseControl.value,
+                                  offset: value.offset.value,
+                                )
                               )),
                             ),
                           ),
@@ -524,19 +536,12 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                                               activeColor: ThemeProvider.primary,
                                                                               groupValue: value.selectedOption.value,
                                                                               onChanged: (int?newValue) {
-                                                                                value.selectedOption(newValue);
-                                                                                value.resetTimer();
-                                                                                Get.back();
-                                                                                Future.delayed(const Duration(seconds: 2), ()
-                                                                                {
-                                                                                  value.playFrequency();
-                                                                                  value.startTime();
-                                                                                });
+                                                                                 value.selectRadioButton(newValue);
                                                                               },
                                                                             )),
                                                                       ),
-                                                                      const SizedBox(height: 10),
                                                                       //Square wave radio button
+                                                                      const SizedBox(height: 10),
                                                                       ListTile(
                                                                         title: Column(mainAxisAlignment: MainAxisAlignment.start,
                                                                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -557,18 +562,10 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                                               activeColor: ThemeProvider.primary,
                                                                               groupValue: value.selectedOption.value,
                                                                               onChanged: (int?newValue) {
-                                                                                value.selectedOption(newValue);
-                                                                                value.resetTimer();
-                                                                                Get.back();
-                                                                                Future.delayed(const Duration(seconds: 2), ()
-                                                                                {
-                                                                                  value.playFrequency();
-                                                                                  value.startTime();
-                                                                                });
+                                                                                value.selectRadioButton(newValue);
                                                                               },
                                                                             )),
                                                                       ),
-
                                                                       //Ram wave radio button
                                                                       const SizedBox(height: 10),
                                                                       ListTile(
@@ -592,14 +589,7 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                                                 activeColor: ThemeProvider.primary,
                                                                                 groupValue: value.selectedOption.value,
                                                                                 onChanged: (int?newValue) {
-                                                                                  value.selectedOption(newValue);
-                                                                                  value.resetTimer();
-                                                                                  Get.back();
-                                                                                  Future.delayed(const Duration(seconds: 2), ()
-                                                                                  {
-                                                                                    value.playFrequency();
-                                                                                    value.startTime();
-                                                                                  });
+                                                                                  value.selectRadioButton(newValue);
                                                                                 })),
                                                                       ),
                                                                       //Saw wave radio button
@@ -624,14 +614,7 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                                               activeColor: ThemeProvider.primary,
                                                                               groupValue: value.selectedOption.value,
                                                                               onChanged: (int?newValue) {
-                                                                                value.selectedOption(newValue);
-                                                                                value.resetTimer();
-                                                                                Get.back();
-                                                                                Future.delayed(const Duration(seconds: 2), ()
-                                                                                {
-                                                                                  value.playFrequency();
-                                                                                  value.startTime();
-                                                                                });
+                                                                                value.selectRadioButton(newValue);
                                                                               },
                                                                             )),
                                                                       ),
@@ -659,18 +642,11 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                                               activeColor: ThemeProvider.primary,
                                                                               groupValue: value.selectedOption.value,
                                                                               onChanged: (int?newValue) {
-                                                                                value.selectedOption(newValue);
-                                                                                value.resetTimer();
-                                                                                Get.back();
-                                                                                Future.delayed(const Duration(seconds: 2), ()
-                                                                                {
-                                                                                  value.playFrequency();
-                                                                                  value.startTime();
-                                                                                });
+                                                                                value.selectRadioButton(newValue);
                                                                               },
                                                                             )),
                                                                       ),
-                                                                      //Golden wave radio button
+                                                                      //Fabonnaci wave radio button
                                                                       const SizedBox(height: 10),
                                                                       ListTile(
                                                                         title: Column(
@@ -694,49 +670,7 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                                               activeColor: ThemeProvider.primary,
                                                                               groupValue: value.selectedOption.value,
                                                                               onChanged: (int?newValue) {
-                                                                                value.selectedOption(newValue);
-                                                                                value.resetTimer();
-                                                                                Get.back();
-                                                                                Future.delayed(const Duration(seconds: 2), ()
-                                                                                {
-                                                                                  value.playFrequency();
-                                                                                  value.startTime();
-                                                                                });
-                                                                              },
-                                                                            )),
-                                                                      ),
-                                                                      //Wobble wave radio button
-                                                                      const SizedBox(height: 10),
-                                                                      ListTile(
-                                                                        title: Column(
-                                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                          children: [
-                                                                            CommonTextWidget(
-                                                                              heading: AppString.Wobble_wave,
-                                                                              fontSize: Dimens.forteen,
-                                                                              color: ThemeProvider.blackColor,
-                                                                              fontFamily: 'light',
-                                                                            ),
-                                                                            const SizedBox(height: 10),
-                                                                            SvgPicture.asset(AssetPath.triangular,
-                                                                            )
-                                                                          ],
-                                                                        ),
-                                                                        leading: Obx(
-                                                                                () => Radio<int>(
-                                                                              value: 7,
-                                                                              activeColor: ThemeProvider.primary,
-                                                                              groupValue: value.selectedOption.value,
-                                                                              onChanged: (int?newValue) {
-                                                                                value.selectedOption(newValue);
-                                                                                value.resetTimer();
-                                                                                Get.back();
-                                                                                Future.delayed(const Duration(seconds: 2), ()
-                                                                                {
-                                                                                  value.playFrequency();
-                                                                                  value.startTime();
-                                                                                });
+                                                                                value.selectRadioButton(newValue);
                                                                               },
                                                                             )),
                                                                       ),
@@ -760,22 +694,15 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                                         ),
                                                                         leading: Obx(
                                                                                 () => Radio<int>(
-                                                                              value: 8,
+                                                                              value: 7,
                                                                               activeColor: ThemeProvider.primary,
                                                                               groupValue: value.selectedOption.value,
                                                                               onChanged: (int?newValue) {
-                                                                                value.selectedOption(newValue);
-                                                                                value.resetTimer();
-                                                                                Get.back();
-                                                                                Future.delayed(const Duration(seconds: 2), ()
-                                                                                {
-                                                                                  value.playFrequency();
-                                                                                  value.startTime();
-                                                                                });
+                                                                                value.selectRadioButton(newValue);
                                                                               },
                                                                             )),
                                                                       ),
-                                                                      //Fibonacci wave radio button
+
                                                                       const SizedBox(height: 10),
                                                                       ListTile(
                                                                         title: Column(
@@ -783,7 +710,7 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                                           crossAxisAlignment: CrossAxisAlignment.start,
                                                                           children: [
                                                                             CommonTextWidget(
-                                                                              heading: AppString.golden_wave,
+                                                                              heading: AppString.hsquare_wave,
                                                                               fontSize: Dimens.forteen,
                                                                               color: ThemeProvider.blackColor,
                                                                               fontFamily: 'light',
@@ -795,18 +722,11 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                                         ),
                                                                         leading: Obx(
                                                                                 () => Radio<int>(
-                                                                              value: 9,
+                                                                              value: 8,
                                                                               activeColor: ThemeProvider.primary,
                                                                               groupValue: value.selectedOption.value,
                                                                               onChanged: (int?newValue) {
-                                                                                value.selectedOption(newValue);
-                                                                                value.resetTimer();
-                                                                                Get.back();
-                                                                                Future.delayed(const Duration(seconds: 2), ()
-                                                                                {
-                                                                                  value.playFrequency();
-                                                                                  value.startTime();
-                                                                                });
+                                                                                value.selectRadioButton(newValue);
                                                                               },
                                                                             )),
                                                                       ),

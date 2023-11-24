@@ -1,16 +1,10 @@
-
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:heal_with_science/util/theme.dart';
-import 'package:heal_with_science/util/toast.dart';
-
-import 'constants.dart';
 
 class Utils {
   static void filedFocusChange(BuildContext context, FocusNode current,
@@ -19,6 +13,7 @@ class Utils {
     FocusScope.of(context).requestFocus(nextFocus);
   }
 
+  //Function used as a common progress bar
   static void showProgressbar(){
     Get.dialog(
         SimpleDialog(
@@ -75,6 +70,12 @@ class Utils {
     await userPoint.update({
       "points": newPoints.toString(),
     });
+  }
+
+  //Function Used to check Internet Connection
+  static Future<ConnectivityResult> checkInternetConnection() async {
+    ConnectivityResult result = await Connectivity().checkConnectivity();
+    return result;
   }
 
 }
