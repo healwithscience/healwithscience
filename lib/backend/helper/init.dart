@@ -13,6 +13,7 @@ import 'package:heal_with_science/backend/parser/profile_parser.dart';
 import 'package:heal_with_science/backend/parser/reward_parser.dart';
 import 'package:heal_with_science/backend/parser/subsription_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../controller/features_controller.dart';
 import '../../util/environment.dart';
 import '../api/api.dart';
 import '../parser/add_payment_parser.dart';
@@ -61,5 +62,8 @@ class MainBinding extends Bindings {
     Get.lazyPut(() => CustomFrequencyParser(apiService: Get.find(), sharedPreferencesManager: Get.find()), fenix: true);
     Get.lazyPut(() => RewardParser(apiService: Get.find(), sharedPreferencesManager: Get.find()), fenix: true);
     Get.lazyPut(() => SubscriptionParser(apiService: Get.find(), sharedPreferencesManager: Get.find()), fenix: true);
+
+    // Get.lazyPut(()=>FeaturesController(parser: Get.find()));
+
   }
 }

@@ -89,8 +89,15 @@ class FeaturesController extends GetxController {
   );
 
   @override
-  Future<void> onInit() async {
+  onInit()  {
     super.onInit();
+    print("Hello i am in main method");
+
+    fetchAllData();
+
+  }
+
+  fetchAllData() async {
     connectivityResult.value = await Utils.checkInternetConnection();
 
     if(connectivityResult.value == ConnectivityResult.wifi || connectivityResult.value == ConnectivityResult.mobile){
@@ -125,8 +132,8 @@ class FeaturesController extends GetxController {
       startTime();
     }
 
-
   }
+
 
   Future<void> fetchDownloadlist() async {
     categoriesList =  await parser.fetchList();
@@ -191,6 +198,7 @@ class FeaturesController extends GetxController {
 
   //used to reset timer
   void resetTimer() {
+    print("HelloHereReset");
     pauseTimer();
     currentTimeInSeconds = 0;
     totalTime.value = "0:00";
@@ -277,7 +285,8 @@ class FeaturesController extends GetxController {
       stopFrequency();
 
     }*/
-    StaticValue.miniPlayer.value = true;
+    // Get.delete<FeaturesController>(force: true);
+    setMiniPlayerValue();
     var context = Get.context as BuildContext;
     Navigator.of(context).pop(true);
   }
@@ -290,6 +299,8 @@ class FeaturesController extends GetxController {
 
   //This function is used to generate sound according to particular frequency value (Native Approach)
   Future<void> playFrequency() async {
+
+
 
     changeProgramName();
     isPlaying.value = true;
@@ -447,6 +458,8 @@ class FeaturesController extends GetxController {
     if(screenName == "playlist" || screenName == "download" ){
       programName.value = programNameList[playingIndex.value] != 'No Name' ?  programNameList[playingIndex.value] : "";
     }
+    StaticValue.frequencyValue.value = frequencyValue.toString();
+    StaticValue.frequencyName.value = programName.value;
   }
 
   void loadRewardedAd() {
@@ -518,6 +531,16 @@ class FeaturesController extends GetxController {
       });
     }
 
+  }
+
+  void setMiniPlayerValue() {
+    StaticValue.miniPlayer.value = true;
+    StaticValue.dutyCycle = dutyCycle.value;
+    StaticValue.amplitude = amplitude.value;
+    StaticValue.offset = offset.value;
+    StaticValue.phaseControl = phaseControl.value;
+    StaticValue.frequencyValue.value = frequencyValue.toString();
+    StaticValue.frequencyName.value = programName.value;
   }
 }
 

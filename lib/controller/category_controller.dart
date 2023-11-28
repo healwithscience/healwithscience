@@ -123,6 +123,7 @@ class CategoryController extends GetxController {
         .cast<double>()
         .toList();
 
+    Get.delete<FeaturesController>(force: false);
     Get.toNamed(AppRouter.getFeaturesScreen(), arguments: {
       'frequency':frequencyList[0],
       'frequenciesList':frequencyList,

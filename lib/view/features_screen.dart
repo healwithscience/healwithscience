@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:heal_with_science/controller/features_controller.dart';
 import 'package:heal_with_science/widgets/common_reward_dialog.dart';
 import 'package:heal_with_science/widgets/common_slider.dart';
-import 'package:heal_with_science/widgets/bubble_wave.dart';
 import 'package:heal_with_science/widgets/harmonicwaves.dart';
 import 'package:heal_with_science/widgets/ramwave.dart';
 import 'package:heal_with_science/widgets/round_cornor_button.dart';
