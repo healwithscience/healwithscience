@@ -58,6 +58,7 @@ class FeaturesController extends GetxController {
   RxInt playingIndex = 0.obs;
   RxString programName = "".obs;
   String screenName = "";
+  String playerType = "";
   RxList playlistNames = <String>[].obs;
 
   List<String> programNameList = <String>[];
@@ -108,7 +109,6 @@ class FeaturesController extends GetxController {
     frequenciesList.value = data['frequenciesList'];
     playingIndex.value = data['index'];
     screenName = data['screenName'];
-
     downloadButtonClickedList.value =  List.filled(frequenciesList.length, 1);
 
     if(screenName == "category"||screenName == "custom_program"){
@@ -118,18 +118,31 @@ class FeaturesController extends GetxController {
       programName.value = programNameList[playingIndex.value] != 'No Name' ?  programNameList[playingIndex.value] : "";
     }
 
-    currentTheme.value = parser.getTheme();
-    StaticValue.rewardPoint = await Utils.getRewardPoints(parser.getUserId());
 
 
-    if(StaticValue.rewardPoint > 0){
+    if(data['type'] != null){
+      playerType = data['type'];
+      isPlaying.value = data['isPlaying'];
+      currentTimeInSeconds = data['currentTimeInSeconds'];
+
+      if(isPlaying.value){
+        startTime();
+      }
+    }else{
+      playFrequency();
+      startTime();
+      //Fetch reward point and update Reward Point
+      StaticValue.rewardPoint = await Utils.getRewardPoints(parser.getUserId());
       StaticValue.rewardPoint =  StaticValue.rewardPoint-1;
       Utils.updateRewardPoints(StaticValue.rewardPoint ,parser.getUserId());
-
-      playFrequency();
-      fetchDownloadlist();
-      startTime();
     }
+
+    fetchDownloadlist();
+
+
+
+    // Fetch current theme
+    currentTheme.value = parser.getTheme();
 
   }
 
@@ -278,14 +291,20 @@ class FeaturesController extends GetxController {
   }
 
   void onBackRoutes() {
-    if (isPlaying.value == true) {
-      timer?.cancel();
-      // stopFrequency();
 
+    if(isButtonPressed.value == false){
+      if (isPlaying.value == true) {
+        timer?.cancel();
+        // stopFrequency();
+      }
+      setMiniPlayerValue();
+      var context = Get.context as BuildContext;
+      Navigator.of(context).pop(true);
+    }else{
+      // var context = Get.context as BuildContext;
+      // Navigator.of(context).pop(false);
     }
-    setMiniPlayerValue();
-    var context = Get.context as BuildContext;
-    Navigator.of(context).pop(true);
+
   }
 
   //Used to update the theme (dark or light)
@@ -450,6 +469,7 @@ class FeaturesController extends GetxController {
   }
 
   void changeProgramName(){
+    print("HelloProgramNameList=====>  "+programNameList.length.toString());
     if(screenName == "playlist" || screenName == "download" ){
       programName.value = programNameList[playingIndex.value] != 'No Name' ?  programNameList[playingIndex.value] : "";
     }

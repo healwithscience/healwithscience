@@ -13,6 +13,7 @@ import '../util/app_assets.dart';
 import '../util/dimens.dart';
 import '../util/string.dart';
 import '../util/theme.dart';
+import '../widgets/common_min_player.dart';
 import '../widgets/common_reward_dialog.dart';
 import '../widgets/commontext.dart';
 import '../widgets/custom_text_field.dart';
@@ -41,7 +42,8 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
+                      padding:
+                          EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -56,8 +58,8 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
                                   border: Border.all(
                                     color: ThemeProvider.borderColor,
                                   ),
-                                  borderRadius:
-                                  const BorderRadius.all(Radius.circular(10))),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10))),
                               child: Padding(
                                 padding: EdgeInsets.all(screenWidth * .02),
                                 child: SvgPicture.asset(AssetPath.back_arrow),
@@ -116,19 +118,17 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
                             child: const CircularProgressIndicator(),
                           ),
                         );
-                      }
-                      else if(value.filteredfrequencies.length == 0){
+                      } else if (value.filteredfrequencies.length == 0) {
                         return Expanded(
                           child: Center(
-                            child:  CommonTextWidget(
+                            child: CommonTextWidget(
                                 heading: AppString.no_data,
                                 fontSize: Dimens.sixteen,
                                 color: Colors.black,
                                 fontFamily: 'light'),
                           ),
                         );
-                      }
-                      else {
+                      } else {
                         return Expanded(
                           //List of Frequqncies
                           child: ListView.builder(
@@ -139,7 +139,7 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
                                 children: [
                                   InkWell(
                                     onTap: () {
-                                      if(StaticValue.rewardPoint > 0){
+                                      if (StaticValue.rewardPoint > 0) {
                                         StaticValue.resetTimer();
                                         Get.toNamed(
                                           AppRouter.getFeaturesScreen(),
@@ -147,40 +147,39 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
                                             'frequency': value.filteredfrequencies[index],
                                             'frequenciesList': value.filteredfrequencies,
                                             'index': index,
-                                            'screenName': 'frequency'// Pass the data you want
+                                            'screenName': 'frequency'
+                                            // Pass the data you want
                                           },
                                         );
-                                      }else{
-                                        showCommonRewardDialog(context ,screenHeight ,screenWidth ,() {
-                                          Future.delayed(const Duration(seconds: 1), () {
-                                            value.showRewardedAd();
+                                      } else {
+                                        showCommonRewardDialog(
+                                            context, screenHeight, screenWidth,
+                                            () {
+                                              Future.delayed(const Duration(seconds: 1), ()
+                                              {
+                                                value.showRewardedAd();
                                           });
                                         });
                                       }
                                     },
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(horizontal: 15),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Row(
                                             children: [
                                               RoundButton(
                                                 width: screenWidth * .05,
                                                 height: screenWidth * .05,
-                                                child: SvgPicture.asset(
-                                                    AssetPath.play),
-                                                borderColor:
-                                                ThemeProvider.borderColor,
+                                                child: SvgPicture.asset(AssetPath.play),
+                                                borderColor: ThemeProvider.borderColor,
                                                 padding: screenWidth * .013,
                                               ),
                                               Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 15, horizontal: 10),
+                                                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                                                 child: CommonTextWidget(
                                                     lineHeight: 1.3,
-                                                    heading:
-                                                    "${value.filteredfrequencies[index]} HZ",
+                                                    heading: "${value.filteredfrequencies[index]} HZ",
                                                     fontSize: Dimens.sixteen,
                                                     color: Colors.black,
                                                     fontFamily: 'medium'),
@@ -190,25 +189,34 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
                                           //
                                           Row(
                                             children: [
-                                              !value.checkStatus(value.filteredfrequencies[index].toString()) ?
-                                              InkWell(
-                                                onTap: (){
-                                                  value.downloadButtonClickedList[index] = 2;
-                                                  Future.delayed(const Duration(seconds: 1), (){
-                                                    value.downloadButtonClickedList[index] = 3;
-                                                  });
-                                                  value.parser.updateList("No Name",value.filteredfrequencies[index].toString());
-                                                },
-                                                child: Padding(
-                                                  padding:  EdgeInsets.all(screenWidth * .05),
-                                                  child: Obx(() =>  value.downloadButtonClickedList[index] == 1 ?  SvgPicture.asset(AssetPath.download,width: screenWidth * 0.05) :  value.downloadButtonClickedList[index] == 2 ? Image.asset(
-                                                    AssetPath.loading,
-                                                    height: screenWidth * .05,
-                                                    width: 25.0,
-                                                  ) : Container()),
-                                                ),
-                                              ) : Container(),
-
+                                              !value.checkStatus(value
+                                                  .filteredfrequencies[index].toString())
+                                                  ? InkWell(
+                                                      onTap: () {
+                                                        value.downloadButtonClickedList[index] = 2;
+                                                        Future.delayed(const Duration(seconds: 1), () {
+                                                          value.downloadButtonClickedList[
+                                                              index] = 3;
+                                                        });
+                                                        value.parser.updateList(
+                                                            "No Name",
+                                                            value.filteredfrequencies[index].toString());
+                                                      },
+                                                      child: Padding(
+                                                        padding: EdgeInsets.all(screenWidth * .05),
+                                                        child: Obx(() => value.downloadButtonClickedList[index] == 1
+                                                            ? SvgPicture.asset(
+                                                            AssetPath.download, width: screenWidth * 0.05)
+                                                            : value.downloadButtonClickedList[index] == 2
+                                                                ? Image.asset(
+                                                                    AssetPath.loading,
+                                                                    height: screenWidth * .05,
+                                                                    width: 25.0,
+                                                                  )
+                                                                : Container()),
+                                                      ),
+                                                    )
+                                                  : Container(),
                                               PopupMenuButton<String>(
                                                 offset: const Offset(00, 40),
                                                 itemBuilder: (context) => [
@@ -220,11 +228,10 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
                                                 onSelected: (selectedValue) {
                                                   if (selectedValue == "Add To Playlist") {
                                                     value.fetchUserPlaylists();
-                                                    _showBottomSheet(context, value,value.filteredfrequencies[index].toString());
+                                                    _showBottomSheet(context, value, value.filteredfrequencies[index].toString());
 
                                                     // value.createUserPlaylist("Test1");// Handle Option 1 action
-                                                  } else if (selectedValue ==
-                                                      "Add To Queue") {
+                                                  } else if (selectedValue == "Add To Queue") {
                                                     // Handle Option 2 action
                                                   } else {}
                                                 },
@@ -234,8 +241,8 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
                                                   child: SvgPicture.asset(
                                                       AssetPath.setting,
                                                       width: screenWidth * .008,
-                                                      color:
-                                                      ThemeProvider.greyColor),
+                                                      color: ThemeProvider
+                                                          .greyColor),
                                                 ),
                                               ),
                                             ],
@@ -261,84 +268,31 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
                 ),
                 Obx(() => StaticValue.miniPlayer.value
                     ? Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    width: screenWidth,
-                    height: screenHeight * .08, // Adjust the height as needed
-                    color: ThemeProvider.blackColor, // Set the color as needed
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SvgPicture.asset(AssetPath.mini_player),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: screenWidth * .06),
-                            width: screenWidth * .6,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Obx(() => CommonTextWidget(
-                                    heading: StaticValue.frequencyName.value,
-                                    fontSize: Dimens.thrteen,
-                                    color: Colors.white,
-                                    fontFamily: 'light'),
-                                ),
-                                SizedBox(height: 8),
-                                Obx(() => CommonTextWidget(
-                                    heading: StaticValue.frequencyValue.value.toString(),
-                                    fontSize: Dimens.thrteen,
-                                    color: Colors.white,
-                                    fontFamily: 'regular')),
-                              ],
-                            ),
-                          ),
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: InkWell(
+                          onTap: () {
+                            StaticValue.pauseTimer();
 
-                          InkWell(
-                            onTap: (){
-                              if (StaticValue.isPlaying.value == false) {
-                                StaticValue.startTime();
-                                StaticValue.playFrequency();
-                              } else {
-                                StaticValue.pauseTimer();
-                                StaticValue.stopFrequency();
-                              }
-                            },
-                            child: RoundButton(
-                              width: screenWidth * .1,
-                              height: screenWidth * .1,
-                              borderColor: ThemeProvider.borderColor,
-                              padding: screenWidth * 0.03,
-                              background: ThemeProvider.bright_gray,
-                              child: StaticValue.isPlaying.value ?   SvgPicture.asset(AssetPath.play2) :   SvgPicture.asset(AssetPath.play),
-                            ),
-                          ),
+                            Get.toNamed(AppRouter.getFeaturesScreen(), arguments: {
+                              'frequency':StaticValue.frequenciesList[StaticValue.playingIndex.value],
+                              'frequenciesList':StaticValue.frequenciesList,
+                              'index':StaticValue.playingIndex.value,
+                              'name': StaticValue.frequencyName.value,
+                              'programName':StaticValue.programNameList,// Pass the data you want
+                              'screenName': StaticValue.screenName,
+                              'type':'mini_player',
+                              'isPlaying':StaticValue.isPlaying.value,// Pass the data you want
+                              'currentTimeInSeconds':StaticValue.currentTimeInSeconds// Pass the data you want
+                            });
 
-                          IconButton(
-                            icon: const Icon(
-                              Icons.close,
-                              color: Colors.white,
-                            ),
-                            onPressed: () {
-                              print("HelloHereTimer"+StaticValue.frequenciesList.length.toString());
-                              StaticValue.miniPlayer.value = false;
-                              StaticValue.resetTimer();
-                              // final FeaturesController featuresController = Get.put(FeaturesController(parser: Get.find()));
-                              // featuresController.resetTimer();
-                              // StaticValue.miniPlayer.value = false;
-
-                            },
-                          ),
-
-                          // You can add more widgets here as needed
-                        ],
-                      ),
-                    ),
-                  ),
-                )
+                          },
+                          child: CustomMiniPlayer(
+                              screenWidth: screenWidth,
+                              screenHeight: screenHeight),
+                        ),
+                      )
                     : Container()),
               ],
             )),
@@ -353,10 +307,7 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
         children: [
           Padding(
             padding: EdgeInsets.only(right: screenWidth * 0.04),
-            child: SvgPicture.asset(
-              path,
-              width: screenWidth * .05,
-            ),
+            child: SvgPicture.asset(path, width: screenWidth * .05,),
           ),
           CommonTextWidget(
               heading: text,
@@ -368,7 +319,8 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
     );
   }
 
-  void _showBottomSheet(BuildContext context, FrequencyController value,String frequency) {
+  void _showBottomSheet(
+      BuildContext context, FrequencyController value, String frequency) {
     showModalBottomSheet(
       backgroundColor: Colors.transparent,
       context: context,
@@ -402,13 +354,11 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
               ),
 
               InkWell(
-                onTap: (){
+                onTap: () {
                   Get.back();
                   Get.toNamed(
-                    AppRouter.getcreatePlaylistScreen(), arguments: {
-                      'frequency':frequency,
-                      'name':''
-                    },
+                    AppRouter.getcreatePlaylistScreen(),
+                    arguments: {'frequency': frequency, 'name': ''},
                   );
                 },
                 child: Row(children: [
@@ -447,42 +397,43 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
               ),
               // List title "Frequency" and items
               Expanded(
-                child: Obx(() =>  ListView.builder(
-                  itemCount: value.playlistNames.length,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        InkWell(
-                          onTap: (){
-                           value.updatePlaylist(value.playlistNames[index],frequency);
-                          },
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.all(screenWidth * 0.03),
-                                child: SvgPicture.asset(
-                                  AssetPath.create_playlist,
-                                  width: screenWidth * .05,
-                                ),
+                child: Obx(() => ListView.builder(
+                      itemCount: value.playlistNames.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                value.updatePlaylist(
+                                    value.playlistNames[index], frequency);
+                              },
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(screenWidth * 0.03),
+                                    child: SvgPicture.asset(
+                                      AssetPath.create_playlist,
+                                      width: screenWidth * .05,
+                                    ),
+                                  ),
+                                  CommonTextWidget(
+                                    heading: value.playlistNames[index],
+                                    fontSize: Dimens.sixteen,
+                                    color: ThemeProvider.whiteColor,
+                                    fontFamily: 'bold',
+                                  ),
+                                ],
                               ),
-                              CommonTextWidget(
-                                heading: value.playlistNames[index],
-                                fontSize: Dimens.sixteen,
-                                color: ThemeProvider.whiteColor,
-                                fontFamily: 'bold',
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Divider(
-                          color: ThemeProvider.borderColor,
-                          thickness: 1.0,
-                        ),
-                      ],
-                    );
-                  },
-                )),
+                            ),
+                            const Divider(
+                              color: ThemeProvider.borderColor,
+                              thickness: 1.0,
+                            ),
+                          ],
+                        );
+                      },
+                    )),
               ),
             ],
           ),
@@ -491,3 +442,93 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
     );
   }
 }
+
+
+/*Container(
+width: screenWidth,
+height: screenHeight * .08,
+// Adjust the height as needed
+color: ThemeProvider.blackColor,
+// Set the color as needed
+child: Padding(
+padding: const EdgeInsets.all(8.0),
+child: Row(
+mainAxisAlignment:
+MainAxisAlignment.spaceBetween,
+children: [
+SvgPicture.asset(AssetPath.mini_player),
+Container(
+padding: EdgeInsets.symmetric(
+horizontal: screenWidth * .06),
+width: screenWidth * .6,
+child: Column(
+mainAxisAlignment:
+MainAxisAlignment.center,
+crossAxisAlignment:
+CrossAxisAlignment.start,
+children: [
+Obx(
+() => CommonTextWidget(
+heading: StaticValue
+    .frequencyName.value,
+fontSize: Dimens.thrteen,
+color: Colors.white,
+fontFamily: 'light'),
+),
+SizedBox(height: 8),
+Obx(() => CommonTextWidget(
+heading: StaticValue
+    .frequencyValue.value
+    .toString(),
+fontSize: Dimens.thrteen,
+color: Colors.white,
+fontFamily: 'regular')),
+],
+),
+),
+
+InkWell(
+onTap: () {
+if (StaticValue.isPlaying.value ==
+false) {
+StaticValue.startTime();
+StaticValue.playFrequency();
+} else {
+StaticValue.pauseTimer();
+StaticValue.stopFrequency();
+}
+},
+child: RoundButton(
+width: screenWidth * .1,
+height: screenWidth * .1,
+borderColor: ThemeProvider.borderColor,
+padding: screenWidth * 0.03,
+background: ThemeProvider.bright_gray,
+child: StaticValue.isPlaying.value
+? SvgPicture.asset(AssetPath.play2)
+    : SvgPicture.asset(AssetPath.play),
+),
+),
+
+IconButton(
+icon: const Icon(
+Icons.close,
+color: Colors.white,
+),
+onPressed: () {
+print("HelloHereTimer" +
+StaticValue.frequenciesList.length
+    .toString());
+StaticValue.miniPlayer.value = false;
+StaticValue.resetTimer();
+// final FeaturesController featuresController = Get.put(FeaturesController(parser: Get.find()));
+// featuresController.resetTimer();
+// StaticValue.miniPlayer.value = false;
+},
+),
+
+// You can add more widgets here as needed
+],
+),
+),
+)*/

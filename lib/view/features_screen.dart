@@ -47,8 +47,8 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
           // Set the scaffold's background to transparent
           body: WillPopScope(
             onWillPop: () async {
-             value.onBackRoutes(); // Call your function
-              return true; // Return true to allow back navigation, or false to prevent it.
+              value.onBackRoutes(); // Call your function
+              return false; // Return true to allow back navigation, or false to prevent it.
             },
             child: Stack(
               children: [

@@ -79,9 +79,7 @@ class CustomMiniPlayer extends StatelessWidget {
                 Icons.close,
                 color: Colors.white,
               ),
-              onPressed: () {
-                print("HelloHereTimer" +
-                    StaticValue.frequenciesList.length.toString());
+              onPressed: () {print("HelloHereTimer" + StaticValue.frequenciesList.length.toString());
                 StaticValue.miniPlayer.value = false;
                 StaticValue.resetTimer();
               },

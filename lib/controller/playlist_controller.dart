@@ -109,6 +109,10 @@ class PlaylistController extends GetxController {
           frequencyList.add(double.parse(frequency));
           programName.add(name);
         }
+
+        print("HelloList"+frequencyList[0].toString());
+        print("HelloList"+programName.length.toString());
+
         Get.toNamed(AppRouter.getFeaturesScreen(), arguments: {
           'frequency':frequencyList[0],
           'frequenciesList':frequencyList,
