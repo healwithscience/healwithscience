@@ -68,7 +68,7 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                   children: [
                     Padding(
                       padding:
-                      EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
+                      const EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

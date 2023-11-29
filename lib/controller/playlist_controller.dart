@@ -100,6 +100,7 @@ class PlaylistController extends GetxController {
           .get();
 
       if (playlistDoc.exists) {
+        StaticValue.resetTimer();
         // Assuming the frequency array is stored as a field named 'frequency' within the playlist document.
         List<Map<String, dynamic>> playlistObjects = List.from(playlistDoc.data()?['playlist']);
         for (var playlistObject in playlistObjects) {

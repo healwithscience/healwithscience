@@ -38,7 +38,6 @@ class FeaturesController extends GetxController {
   final double maxPhaseControl = 2 * pi;
   final double minPhaseControl = 0.0;
 
-
   final RxInt currentTheme = 0.obs;
 
   late AnimationController animatedcontroller;
@@ -198,7 +197,6 @@ class FeaturesController extends GetxController {
 
   //used to reset timer
   void resetTimer() {
-    print("HelloHereReset");
     pauseTimer();
     currentTimeInSeconds = 0;
     totalTime.value = "0:00";
@@ -280,12 +278,11 @@ class FeaturesController extends GetxController {
   }
 
   void onBackRoutes() {
-   /* if (isPlaying.value == true) {
+    if (isPlaying.value == true) {
       timer?.cancel();
-      stopFrequency();
+      // stopFrequency();
 
-    }*/
-    // Get.delete<FeaturesController>(force: true);
+    }
     setMiniPlayerValue();
     var context = Get.context as BuildContext;
     Navigator.of(context).pop(true);
@@ -299,8 +296,6 @@ class FeaturesController extends GetxController {
 
   //This function is used to generate sound according to particular frequency value (Native Approach)
   Future<void> playFrequency() async {
-
-
 
     changeProgramName();
     isPlaying.value = true;
@@ -458,7 +453,7 @@ class FeaturesController extends GetxController {
     if(screenName == "playlist" || screenName == "download" ){
       programName.value = programNameList[playingIndex.value] != 'No Name' ?  programNameList[playingIndex.value] : "";
     }
-    StaticValue.frequencyValue.value = frequencyValue.toString();
+    StaticValue.frequencyValue.value = frequencyValue.value;
     StaticValue.frequencyName.value = programName.value;
   }
 
@@ -539,8 +534,25 @@ class FeaturesController extends GetxController {
     StaticValue.amplitude = amplitude.value;
     StaticValue.offset = offset.value;
     StaticValue.phaseControl = phaseControl.value;
-    StaticValue.frequencyValue.value = frequencyValue.toString();
+    StaticValue.frequencyValue.value = frequencyValue.value;
     StaticValue.frequencyName.value = programName.value;
+    StaticValue.isPlaying.value = isPlaying.value;
+    StaticValue.totalTimeInSeconds = totalTimeInSeconds;
+    StaticValue.currentTimeInSeconds = currentTimeInSeconds;
+    StaticValue.waveType = selectedOption.value;
+
+
+    // StaticValue.frequenciesList.clear();
+    // StaticValue.programNameList.clear();
+    StaticValue.frequenciesList = frequenciesList;
+    StaticValue.programNameList = programNameList;
+
+    StaticValue.playingIndex.value = playingIndex.value;
+    StaticValue.screenName = screenName;
+
+    if(isPlaying.value == true){
+      StaticValue.startTime();
+    }
   }
 }
 

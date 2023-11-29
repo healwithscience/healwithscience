@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:heal_with_science/controller/category_controller.dart';
 import 'package:heal_with_science/widgets/CustomGradientDivider.dart';
-import '../controller/features_controller.dart';
 import '../util/app_assets.dart';
 import '../util/dimens.dart';
 import '../util/extensions/static_values.dart';
@@ -262,7 +260,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 ),
                                 SizedBox(height: 8),
                                 Obx(() => CommonTextWidget(
-                                    heading: StaticValue.frequencyValue.value,
+                                    heading: StaticValue.frequencyValue.value.toString(),
                                     fontSize: Dimens.thrteen,
                                     color: Colors.white,
                                     fontFamily: 'regular')),
@@ -270,13 +268,24 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             ),
                           ),
 
-                          RoundButton(
-                            width: screenWidth * .1,
-                            height: screenWidth * .1,
-                            borderColor: ThemeProvider.borderColor,
-                            padding: screenWidth * 0.03,
-                            background: ThemeProvider.bright_gray,
-                            child: SvgPicture.asset(AssetPath.play2),
+                          InkWell(
+                            onTap: (){
+                              if (StaticValue.isPlaying.value == false) {
+                                  StaticValue.startTime();
+                                  StaticValue.playFrequency();
+                              } else {
+                                StaticValue.pauseTimer();
+                                StaticValue.stopFrequency();
+                              }
+                            },
+                            child: RoundButton(
+                              width: screenWidth * .1,
+                              height: screenWidth * .1,
+                              borderColor: ThemeProvider.borderColor,
+                              padding: screenWidth * 0.03,
+                              background: ThemeProvider.bright_gray,
+                              child: StaticValue.isPlaying.value ?   SvgPicture.asset(AssetPath.play2) :   SvgPicture.asset(AssetPath.play),
+                            ),
                           ),
 
                           IconButton(
@@ -285,7 +294,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               color: Colors.white,
                             ),
                             onPressed: () {
-                              print("HelloHere");
+                              print("HelloHereTimer"+StaticValue.frequenciesList.length.toString());
+                              StaticValue.miniPlayer.value = false;
+                              StaticValue.resetTimer();
                               // final FeaturesController featuresController = Get.put(FeaturesController(parser: Get.find()));
                               // featuresController.resetTimer();
                               // StaticValue.miniPlayer.value = false;

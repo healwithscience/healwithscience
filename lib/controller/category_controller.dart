@@ -115,6 +115,7 @@ class CategoryController extends GetxController {
 
   //Function used to split frequency string then convert it into list and then pass to next screen
   void goToFeatures(String frequency , String name) {
+    StaticValue.resetTimer();
 
     List<String> numberStringList = frequency.split('/');
     List<double> frequencyList = numberStringList
@@ -123,7 +124,6 @@ class CategoryController extends GetxController {
         .cast<double>()
         .toList();
 
-    Get.delete<FeaturesController>(force: false);
     Get.toNamed(AppRouter.getFeaturesScreen(), arguments: {
       'frequency':frequencyList[0],
       'frequenciesList':frequencyList,
