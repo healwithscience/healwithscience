@@ -43,7 +43,7 @@ class StaticValue {
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (currentTimeInSeconds < restartTimeInSeconds) {
         currentTimeInSeconds++;
-        print(currentTimeInSeconds.toString());
+        // print(currentTimeInSeconds.toString());
       } else {
         playNext();
       }

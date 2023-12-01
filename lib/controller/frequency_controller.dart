@@ -10,6 +10,7 @@ import 'package:heal_with_science/backend/parser/frequency_parser.dart';
 import '../model/Category.dart';
 import '../util/all_constants.dart';
 import '../util/extensions/static_values.dart';
+import '../util/inactivity_manager.dart';
 import '../util/utils.dart';
 
 class FrequencyController extends GetxController {
@@ -47,12 +48,16 @@ class FrequencyController extends GetxController {
   Future<void> onInit() async {
     super.onInit();
     connectivityResult.value = await Utils.checkInternetConnection();
+    if (StaticValue.miniPlayer.value) {
+      InactivityManager.resetTimer();
+    }
 
     if(connectivityResult.value == ConnectivityResult.wifi || connectivityResult.value == ConnectivityResult.mobile){
       fetchDownloadlist();
       fetchFrequencies();
       loadRewardedAd();
       StaticValue.rewardPoint = await Utils.getRewardPoints(parser.getUserId());
+
     }else{
       isLoading.value = false;
       showToast("No Internet Connection");
@@ -185,6 +190,9 @@ class FrequencyController extends GetxController {
 
   //Function used to navigate back to previous screen
   void onBackRoutes() {
+    if (StaticValue.miniPlayer.value) {
+      InactivityManager.resetTimer();
+    }
     var context = Get.context as BuildContext;
     Navigator.of(context).pop(true);
   }

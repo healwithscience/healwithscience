@@ -9,6 +9,7 @@ import '../backend/helper/app_router.dart';
 import '../backend/parser/reward_parser.dart';
 import '../backend/parser/splash_parser.dart';
 import '../util/extensions/static_values.dart';
+import '../util/inactivity_manager.dart';
 import '../util/utils.dart';
 
 class RewardController extends GetxController {
@@ -25,11 +26,17 @@ class RewardController extends GetxController {
     super.onInit();
     StaticValue.rewardPoint = await Utils.getRewardPoints(parser.getUserId());
     rewardPoint.value = StaticValue.rewardPoint.toString();
+    if(StaticValue.miniPlayer.value){
+      InactivityManager.resetTimer();
+    }
   }
 
 
 
   void onBackRoutes() {
+    if(StaticValue.miniPlayer.value){
+      InactivityManager.resetTimer();
+    }
     var context = Get.context as BuildContext;
     Navigator.of(context).pop(true);
   }

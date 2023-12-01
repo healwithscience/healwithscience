@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:heal_with_science/util/inactivity_manager.dart';
 import 'package:heal_with_science/widgets/round_button.dart';
 
 import '../util/app_assets.dart';
@@ -79,9 +80,10 @@ class CustomMiniPlayer extends StatelessWidget {
                 Icons.close,
                 color: Colors.white,
               ),
-              onPressed: () {print("HelloHereTimer" + StaticValue.frequenciesList.length.toString());
+              onPressed: () {
                 StaticValue.miniPlayer.value = false;
                 StaticValue.resetTimer();
+                InactivityManager.doNotStart();
               },
             ),
           ],

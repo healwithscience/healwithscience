@@ -6,6 +6,8 @@ import 'package:heal_with_science/model/CustomCategory.dart';
 import '../backend/helper/app_router.dart';
 import '../backend/parser/custom_frequency_parser.dart';
 import '../util/all_constants.dart';
+import '../util/extensions/static_values.dart';
+import '../util/inactivity_manager.dart';
 
 class CustomFrequencyController extends GetxController {
   final CustomFrequencyParser parser;
@@ -24,6 +26,9 @@ class CustomFrequencyController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    if(StaticValue.miniPlayer.value){
+      InactivityManager.resetTimer();
+    }
     fetchCustomProgram();
   }
 
@@ -207,6 +212,9 @@ class CustomFrequencyController extends GetxController {
 
 
   void onBackRoutes() {
+    if(StaticValue.miniPlayer.value){
+      InactivityManager.resetTimer();
+    }
     var context = Get.context as BuildContext;
     Navigator.of(context).pop(true);
   }

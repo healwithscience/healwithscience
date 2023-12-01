@@ -7,6 +7,8 @@ import 'package:heal_with_science/backend/parser/download_parser.dart';
 import '../backend/helper/app_router.dart';
 import '../model/Category.dart';
 import '../util/all_constants.dart';
+import '../util/extensions/static_values.dart';
+import '../util/inactivity_manager.dart';
 
 class DownloadController extends GetxController {
   final DownloadParser parser;
@@ -30,6 +32,9 @@ class DownloadController extends GetxController {
       filterCategories(searchController.text); // Listen to text changes
     });
     getList();
+    if(StaticValue.miniPlayer.value){
+      InactivityManager.resetTimer();
+    }
   }
 
   Future<void> getList() async {
@@ -47,6 +52,9 @@ class DownloadController extends GetxController {
 
 
   void onBackRoutes() {
+    if(StaticValue.miniPlayer.value){
+      InactivityManager.resetTimer();
+    }
     var context = Get.context as BuildContext;
     Navigator.of(context).pop(true);
   }

@@ -8,11 +8,12 @@ import '../backend/helper/app_router.dart';
 import '../util/app_assets.dart';
 import '../util/dimens.dart';
 import '../util/extensions/static_values.dart';
+import '../util/inactivity_manager.dart';
 import '../util/string.dart';
 import '../widgets/CustomGradientDivider.dart';
+import '../widgets/common_loading.dart';
 import '../widgets/common_min_player.dart';
 import '../widgets/commontext.dart';
-import '../widgets/round_button.dart';
 
 class CustomFrequencyScreen extends StatefulWidget {
   const CustomFrequencyScreen({Key? key}) : super(key: key);
@@ -29,204 +30,257 @@ class _CustomFrequencyScreenState extends State<CustomFrequencyScreen> {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
     return GetBuilder<CustomFrequencyController>(builder: (value) {
-      return SafeArea(
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          body: Stack(
-            children: [
-              Padding(
-                  padding: EdgeInsets.all(screenWidth * .04),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+      return GestureDetector(
+        onPanDown: (details) {
+          if (StaticValue.miniPlayer.value) {
+            InactivityManager.resetTimer();
+          }
+        },
+        child: Obx(() => !InactivityManager.showImage.value
+            ? SafeArea(
+                child: Scaffold(
+                  backgroundColor: Colors.white,
+                  body: Stack(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              value.onBackRoutes();
-                            },
-                            child: Container(
-                              width: screenWidth * .1,
-                              height: screenWidth * .1,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: ThemeProvider.borderColor,
-                                  ),
-                                  borderRadius:
-                                  const BorderRadius.all(Radius.circular(10))),
-                              child: Padding(
-                                padding: EdgeInsets.all(screenWidth * .02),
-                                child: SvgPicture.asset(AssetPath.back_arrow),
-                              ),
-                            ),
-                          ),
-                          CommonTextWidget(
-                              heading: AppString.custom_frequency,
-                              fontSize: Dimens.twentyFour,
-                              color: Colors.black,
-                              fontFamily: 'bold'),
-                          InkWell(
-                            onTap: () {},
-                            child: Padding(
-                              padding: EdgeInsets.all(screenWidth * .02),
-                              child: SvgPicture.asset(AssetPath.setting,
-                                  width: screenWidth * .012,
-                                  color: ThemeProvider.blackColor),
-                            ),
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      const SizedBox(height: 10),
-                      Obx(() {
-                        if (value.isLoading.value) {
-                          return Expanded(
-                            child: Container(
-                              width: screenWidth,
-                              height: screenHeight,
-                              alignment: Alignment.center,
-                              child: const CircularProgressIndicator(),
-                            ),
-                          );
-                        } else if (value.customProgram.isEmpty) {
-                          // Display a "No Data" message
-                          return Expanded(
-                            child: Center(
-                              child: CommonTextWidget(
-                                  heading: AppString.no_data,
-                                  fontSize: Dimens.sixteen,
-                                  color: Colors.black,
-                                  fontFamily: 'light'),
-                            ),
-                          );
-                        } else {
-                          return Expanded(
-                            child: ListView.builder(
-                              controller: value.scrollController,
-                              itemCount: value.customProgram.length,
-                              itemBuilder: (context, index) {
-                                return InkWell(
-                                  onTap: () {
-                                    StaticValue.resetTimer();
-                                    value.goToFeatures(
-                                        value.customProgram[index].frequency,
-                                        value.customProgram[index].name);
-                                  },
-                                  child: SizedBox(
-                                    height: screenHeight * 0.07,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.symmetric(
-                                                  vertical: 15, horizontal: 10),
-                                              child: CommonTextWidget(
-                                                  textOverflow:
-                                                  TextOverflow.ellipsis,
-                                                  heading: value
-                                                      .customProgram[index].name,
-                                                  fontSize: Dimens.sixteen,
-                                                  color: Colors.black,
-                                                  fontFamily: 'medium'),
-                                            ),
-                                            PopupMenuButton<String>(
-                                              offset: const Offset(00, 40),
-                                              itemBuilder: (context) => [
-                                                buildPopupMenuItem("Add Frequency",
-                                                    AssetPath.add_playlist),
-                                                buildPopupMenuItem("Remove Program",
-                                                    AssetPath.add_queue),
-                                                // Add more options as needed
-                                              ],
-                                              onSelected: (selectedValue) {
-                                                if (selectedValue ==
-                                                    "Add Frequency") {
-                                                  showFrequencyDialog(
-                                                      context,
-                                                      value,
-                                                      value.customProgram[index]
-                                                          .name);
-                                                  // value.addToFrequencyArray()
-                                                } else if (selectedValue ==
-                                                    "Remove Program") {
-                                                  value.removeProgram(value
-                                                      .customProgram[index].name);
-                                                } else {}
-                                              },
-                                              child: Padding(
-                                                padding: EdgeInsets.all(
-                                                    screenWidth * .04),
-                                                child: SvgPicture.asset(
-                                                    AssetPath.setting,
-                                                    width: screenWidth * .008,
-                                                    color: ThemeProvider.greyColor),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        SizedBox(
-                                            width: screenWidth * .8,
-                                            child: CustomGradientDivider(
-                                                height: 1.0,
-                                                startColor: ThemeProvider.greyColor,
-                                                endColor: Colors.transparent))
-                                      ],
+                      Padding(
+                          padding: EdgeInsets.all(screenWidth * .04),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      value.onBackRoutes();
+                                    },
+                                    child: Container(
+                                      width: screenWidth * .1,
+                                      height: screenWidth * .1,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: ThemeProvider.borderColor,
+                                          ),
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(10))),
+                                      child: Padding(
+                                        padding:
+                                            EdgeInsets.all(screenWidth * .02),
+                                        child: SvgPicture.asset(
+                                            AssetPath.back_arrow),
+                                      ),
                                     ),
                                   ),
-                                );
-                              },
-                            ),
-                          );
-                        }
-                      }),
+                                  CommonTextWidget(
+                                      heading: AppString.custom_frequency,
+                                      fontSize: Dimens.twentyFour,
+                                      color: Colors.black,
+                                      fontFamily: 'bold'),
+                                  InkWell(
+                                    onTap: () {},
+                                    child: Padding(
+                                      padding:
+                                          EdgeInsets.all(screenWidth * .02),
+                                      child: SvgPicture.asset(AssetPath.setting,
+                                          width: screenWidth * .012,
+                                          color: ThemeProvider.blackColor),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              const SizedBox(height: 10),
+                              Obx(() {
+                                if (value.isLoading.value) {
+                                  return Expanded(
+                                    child: Container(
+                                      width: screenWidth,
+                                      height: screenHeight,
+                                      alignment: Alignment.center,
+                                      child: const CircularProgressIndicator(),
+                                    ),
+                                  );
+                                } else if (value.customProgram.isEmpty) {
+                                  // Display a "No Data" message
+                                  return Expanded(
+                                    child: Center(
+                                      child: CommonTextWidget(
+                                          heading: AppString.no_data,
+                                          fontSize: Dimens.sixteen,
+                                          color: Colors.black,
+                                          fontFamily: 'light'),
+                                    ),
+                                  );
+                                } else {
+                                  return Expanded(
+                                    child: ListView.builder(
+                                      controller: value.scrollController,
+                                      itemCount: value.customProgram.length,
+                                      itemBuilder: (context, index) {
+                                        return InkWell(
+                                          onTap: () {
+                                            StaticValue.resetTimer();
+                                            value.goToFeatures(
+                                                value.customProgram[index].frequency,
+                                                value.customProgram[index].name);
+                                          },
+                                          child: SizedBox(
+                                            height: screenHeight * 0.07,
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          vertical: 15,
+                                                          horizontal: 10),
+                                                      child: CommonTextWidget(
+                                                          textOverflow:
+                                                              TextOverflow
+                                                                  .ellipsis,
+                                                          heading: value
+                                                              .customProgram[
+                                                                  index]
+                                                              .name,
+                                                          fontSize:
+                                                              Dimens.sixteen,
+                                                          color: Colors.black,
+                                                          fontFamily: 'medium'),
+                                                    ),
+                                                    PopupMenuButton<String>(
+                                                      offset:
+                                                          const Offset(00, 40),
+                                                      itemBuilder: (context) =>
+                                                          [
+                                                        buildPopupMenuItem(
+                                                            "Add Frequency",
+                                                            AssetPath
+                                                                .add_playlist),
+                                                        buildPopupMenuItem(
+                                                            "Remove Program",
+                                                            AssetPath
+                                                                .add_queue),
+                                                        // Add more options as needed
+                                                      ],
+                                                      onSelected:
+                                                          (selectedValue) {
+                                                        if (selectedValue ==
+                                                            "Add Frequency") {
+                                                          showFrequencyDialog(
+                                                              context,
+                                                              value,
+                                                              value
+                                                                  .customProgram[
+                                                                      index]
+                                                                  .name);
+                                                          // value.addToFrequencyArray()
+                                                        } else if (selectedValue ==
+                                                            "Remove Program") {
+                                                          value.removeProgram(
+                                                              value
+                                                                  .customProgram[
+                                                                      index]
+                                                                  .name);
+                                                        } else {}
+                                                      },
+                                                      child: Padding(
+                                                        padding: EdgeInsets.all(
+                                                            screenWidth * .04),
+                                                        child: SvgPicture.asset(
+                                                            AssetPath.setting,
+                                                            width: screenWidth *
+                                                                .008,
+                                                            color: ThemeProvider
+                                                                .greyColor),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                    width: screenWidth * .8,
+                                                    child:
+                                                        CustomGradientDivider(
+                                                            height: 1.0,
+                                                            startColor:
+                                                                ThemeProvider
+                                                                    .greyColor,
+                                                            endColor: Colors
+                                                                .transparent))
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  );
+                                }
+                              }),
+                            ],
+                          )),
+                      Obx(() => Positioned(
+                          bottom: StaticValue.miniPlayer.value
+                              ? screenHeight * .09
+                              : screenHeight * .02,
+                          right: 10,
+                          child: FloatingActionButton.extended(
+                            backgroundColor: ThemeProvider.persianGreen,
+                            onPressed: () {
+                              showAddProgramDialog(context, value);
+                            },
+                            label: CommonTextWidget(
+                                lineHeight: 1.3,
+                                heading: AppString.add_frequency,
+                                fontSize: Dimens.thrteen,
+                                color: Colors.white,
+                                fontFamily: 'bold'),
+                          ))),
+                      Obx(() => StaticValue.miniPlayer.value
+                          ? Positioned(
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              child: InkWell(
+                                onTap: () {
+                                  StaticValue.pauseTimer();
+                                  Get.toNamed(AppRouter.getFeaturesScreen(),
+                                      arguments: {
+                                        'frequency':
+                                            StaticValue.frequenciesList[
+                                                StaticValue.playingIndex.value],
+                                        'frequenciesList':
+                                            StaticValue.frequenciesList,
+                                        'index': StaticValue.playingIndex.value,
+                                        'name': StaticValue.frequencyName.value,
+                                        'programName':
+                                            StaticValue.programNameList,
+                                        // Pass the data you want
+                                        'screenName': StaticValue.screenName,
+                                        'type': 'mini_player',
+                                        'isPlaying':
+                                            StaticValue.isPlaying.value,
+                                        // Pass the data you want
+                                        'currentTimeInSeconds':
+                                            StaticValue.currentTimeInSeconds
+                                        // Pass the data you want
+                                      });
+                                },
+                                child: CustomMiniPlayer(
+                                    screenWidth: screenWidth,
+                                    screenHeight: screenHeight),
+                              ),
+                            )
+                          : Container())
                     ],
-                  )),
-              Obx(() =>  Positioned(bottom: StaticValue.miniPlayer.value ? screenHeight * .09 : screenHeight * .02 , right: 10,child:  FloatingActionButton.extended(
-                backgroundColor: ThemeProvider.persianGreen,
-                onPressed: () {
-                  showAddProgramDialog(context, value);
-                },
-                label: CommonTextWidget(
-                    lineHeight: 1.3,
-                    heading: AppString.add_frequency,
-                    fontSize: Dimens.thrteen,
-                    color: Colors.white,
-                    fontFamily: 'bold'),
-              ))),
-              Obx(() => StaticValue.miniPlayer.value
-                  ? Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: InkWell(
-                  onTap: (){
-                    StaticValue.pauseTimer();
-                    Get.toNamed(AppRouter.getFeaturesScreen(), arguments: {
-                      'frequency':StaticValue.frequenciesList[StaticValue.playingIndex.value],
-                      'frequenciesList':StaticValue.frequenciesList,
-                      'index':StaticValue.playingIndex.value,
-                      'name': StaticValue.frequencyName.value,
-                      'programName':StaticValue.programNameList,// Pass the data you want
-                      'screenName': StaticValue.screenName,
-                      'type':'mini_player',
-                      'isPlaying':StaticValue.isPlaying.value,// Pass the data you want
-                      'currentTimeInSeconds':StaticValue.currentTimeInSeconds// Pass the data you want
-                    });
-                  },
-                  child:  CustomMiniPlayer(
-                      screenWidth: screenWidth,
-                      screenHeight: screenHeight),
+                  ),
                 ),
               )
-                  : Container())
-            ],
-          ),
-        ),
+            : CommonLoadingWidget(screenHeight: screenHeight, screenWidth: screenWidth)),
       );
     });
   }

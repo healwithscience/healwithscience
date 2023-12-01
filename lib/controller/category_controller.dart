@@ -7,8 +7,8 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:heal_with_science/backend/parser/category_parser.dart';
-import 'package:heal_with_science/controller/features_controller.dart';
 import 'package:heal_with_science/util/extensions/static_values.dart';
+import 'package:heal_with_science/util/inactivity_manager.dart';
 import '../backend/helper/app_router.dart';
 import '../model/Category.dart';
 import '../util/all_constants.dart';
@@ -49,11 +49,15 @@ class CategoryController extends GetxController {
   Future<void> onInit() async {
     super.onInit();
     connectivityResult.value = await Utils.checkInternetConnection();
+    if(StaticValue.miniPlayer.value){
+      InactivityManager.resetTimer();
+    }
 
     if(connectivityResult.value == ConnectivityResult.wifi || connectivityResult.value == ConnectivityResult.mobile) {
       fetchCategories();
       loadRewardedAd();
       StaticValue.rewardPoint = await Utils.getRewardPoints(parser.getUserId());
+
     }else{
       isLoading.value = false;
       showToast("No Internet Connection");
@@ -86,8 +90,6 @@ class CategoryController extends GetxController {
 
 
       fetchedCategories.sort((a, b) => a.name.compareTo(b.name));
-      print('Hello Here1 Length======>'+fetchedCategories.length.toString());
-
       categories.assignAll(fetchedCategories);
       isLoading.value = false;
 
@@ -109,6 +111,9 @@ class CategoryController extends GetxController {
 
   //Function used to navigate back to previous screen
   void onBackRoutes() {
+    if(StaticValue.miniPlayer.value){
+      InactivityManager.resetTimer();
+    }
     var context = Get.context as BuildContext;
     Navigator.of(context).pop(true);
   }

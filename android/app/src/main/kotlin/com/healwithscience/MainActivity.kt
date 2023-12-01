@@ -1,9 +1,9 @@
 package com.healwithscience
 
+import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioTrack
-import android.widget.Toast
 import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -212,7 +212,12 @@ class MainActivity : FlutterActivity() {
         return fibonacciValues.take(length)
     }
 
-    private fun generateHarmonicWave(fundamentalFrequency: Double, amplitude: Double, offset: Double, phase: Double, ) {
+    private fun generateHarmonicWave(
+        fundamentalFrequency: Double,
+        amplitude: Double,
+        offset: Double,
+        phase: Double
+    ) {
         for (i in 0 until durationSeconds * sampleRate) {
             var sampleValue = 0.0
 

@@ -70,5 +70,6 @@ class AssetPath {
   static final dark_background = _imagesPath("dark_background.jpg");
   static final person = _imagesPath("person.png");
   static final loading = _imagesPath("loading.gif");
+  static final background = _imagesPath("background.gif");
   static final user = _imagesPath("user.jpg");
 }

@@ -8,6 +8,8 @@ import 'package:heal_with_science/backend/parser/profile_parser.dart';
 import 'package:path/path.dart';
 import '../backend/helper/app_router.dart';
 import '../util/all_constants.dart';
+import '../util/extensions/static_values.dart';
+import '../util/inactivity_manager.dart';
 import '../util/theme.dart';
 import '../util/utils.dart';
 
@@ -28,10 +30,15 @@ class ProfileController extends GetxController {
     username = parser.getUserName().toString();
     email = parser.getUserEmail().toString();
     profileImage.value = parser.getUserImage().toString();
-    print("HelloImageUrl===> "+profileImage.value.toString());
+    if(StaticValue.miniPlayer.value){
+      InactivityManager.resetTimer();
+    }
   }
 
   void onBackRoutes() {
+    if(StaticValue.miniPlayer.value){
+      InactivityManager.resetTimer();
+    }
     var context = Get.context as BuildContext;
     Navigator.of(context).pop(true);
   }
@@ -69,9 +76,16 @@ class ProfileController extends GetxController {
 // Function used for logout
   Future<void> signOut() async {
     try {
+      Utils.showProgressbar();
+      StaticValue.stopFrequency();
+      StaticValue.miniPlayer.value = false;
+      InactivityManager.doNotStart();
       await FirebaseAuth.instance.signOut();
       parser.logout();
+      Get.back();
       Get.offNamedUntil(AppRouter.getLoginRoute(), (route) => false);
+
+
       // The user has been signed out successfully.
     } catch (e) {
       print('Error signing out: $e');

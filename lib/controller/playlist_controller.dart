@@ -12,6 +12,7 @@ import '../backend/helper/app_router.dart';
 import '../model/Category.dart';
 import '../util/all_constants.dart';
 import '../util/extensions/static_values.dart';
+import '../util/inactivity_manager.dart';
 import '../util/utils.dart';
 
 class PlaylistController extends GetxController {
@@ -43,6 +44,9 @@ class PlaylistController extends GetxController {
   Future<void> onInit() async {
     super.onInit();
     connectivityResult.value = await Utils.checkInternetConnection();
+    if (StaticValue.miniPlayer.value) {
+      InactivityManager.resetTimer();
+    }
     if(connectivityResult.value == ConnectivityResult.wifi || connectivityResult.value == ConnectivityResult.mobile) {
       fetchUserPlaylists();
       loadRewardedAd();
@@ -145,6 +149,9 @@ class PlaylistController extends GetxController {
   }
 
   void onBackRoutes() {
+    if (StaticValue.miniPlayer.value) {
+      InactivityManager.resetTimer();
+    }
     var context = Get.context as BuildContext;
     Navigator.of(context).pop(true);
   }

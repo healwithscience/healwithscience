@@ -10,6 +10,7 @@ import 'package:heal_with_science/backend/parser/features_parser.dart';
 import '../model/Category.dart';
 import '../util/all_constants.dart';
 import '../util/extensions/static_values.dart';
+import '../util/inactivity_manager.dart';
 import '../util/utils.dart';
 
 class FeaturesController extends GetxController {
@@ -118,8 +119,6 @@ class FeaturesController extends GetxController {
       programName.value = programNameList[playingIndex.value] != 'No Name' ?  programNameList[playingIndex.value] : "";
     }
 
-
-
     if(data['type'] != null){
       playerType = data['type'];
       isPlaying.value = data['isPlaying'];
@@ -127,23 +126,21 @@ class FeaturesController extends GetxController {
 
       if(isPlaying.value){
         startTime();
+        InactivityManager.resetTimer();
       }
     }else{
       playFrequency();
       startTime();
+      InactivityManager.resetTimer();
       //Fetch reward point and update Reward Point
       StaticValue.rewardPoint = await Utils.getRewardPoints(parser.getUserId());
       StaticValue.rewardPoint =  StaticValue.rewardPoint-1;
       Utils.updateRewardPoints(StaticValue.rewardPoint ,parser.getUserId());
     }
-
     fetchDownloadlist();
-
-
 
     // Fetch current theme
     currentTheme.value = parser.getTheme();
-
   }
 
 
@@ -182,7 +179,7 @@ class FeaturesController extends GetxController {
         sliderProgress.value = currentTimeInSeconds.toDouble();
         currentTimeInSeconds++;
         timeCalculation();
-        print(currentTimeInSeconds.toString());
+        // print(currentTimeInSeconds.toString());
       } else {
         if(playType.value == 0){
          if(StaticValue.rewardPoint > 0){
@@ -298,6 +295,7 @@ class FeaturesController extends GetxController {
         // stopFrequency();
       }
       setMiniPlayerValue();
+      InactivityManager.resetTimer();
       var context = Get.context as BuildContext;
       Navigator.of(context).pop(true);
     }else{
@@ -339,7 +337,6 @@ class FeaturesController extends GetxController {
   Future<void> stopFrequency() async {
     if(isPlaying.value == true){
       isPlaying.value = false;
-
       var channelName = const MethodChannel("nativeBridge");
       try {
         await channelName.invokeMethod<String>("stopMusic");
