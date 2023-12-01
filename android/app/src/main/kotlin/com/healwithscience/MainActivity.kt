@@ -108,16 +108,40 @@ class MainActivity : FlutterActivity() {
 
     fun playSound(offset: Double) {
 
-        // Set up AudioTrack
-        audioTrack = AudioTrack(
+        val audioAttributes = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_MEDIA)
+            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+            .build()
+
+        // Create an AudioFormat object
+        val audioFormat = AudioFormat.Builder()
+            .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
+            .setSampleRate(sampleRate)
+            .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
+            .build()
+
+        // Create an AudioTrack object using the Builder
+        audioTrack = AudioTrack.Builder()
+            .setAudioAttributes(audioAttributes)
+            .setAudioFormat(audioFormat)
+            .setBufferSizeInBytes(buffer.size)
+            .setTransferMode(AudioTrack.MODE_STATIC)
+            .build()
+
+        // Write data to the AudioTrack
+        audioTrack.write(buffer,  offset.toInt(), buffer.size)
+
+
+        //This is old code if above code not working please use this
+       /* audioTrack = AudioTrack(
             AudioManager.STREAM_MUSIC,
             sampleRate, AudioFormat.CHANNEL_OUT_MONO,
             AudioFormat.ENCODING_PCM_16BIT, buffer.size,
             AudioTrack.MODE_STATIC
         )
 
-        // Write the buffer to the track
-        audioTrack.write(buffer, offset.toInt(), buffer.size)
+       audioTrack.write(buffer, offset.toInt(), buffer.size)
+       */
 
         // Start playback
         audioTrack.play()
