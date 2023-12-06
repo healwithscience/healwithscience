@@ -29,9 +29,8 @@ class CommonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Container(
+      height: screenHeight * 0.25,
       padding: EdgeInsets.symmetric(vertical:screenWidth * 0.05,horizontal:screenWidth * 0.03 ),
       width: screenWidth,
       decoration: BoxDecoration(
@@ -48,7 +47,7 @@ class CommonCard extends StatelessWidget {
               children: [
                 CommonTextWidget(
                   heading: heading,
-                  fontSize: Dimens.sixteen,
+                  fontSize: Dimens.eighteen,
                   color: ThemeProvider.whiteColor,
                   fontFamily: 'bold',
                 ),
@@ -64,7 +63,7 @@ class CommonCard extends StatelessWidget {
                           ),
                           child: CommonTextWidget(
                             heading: point1,
-                            fontSize: Dimens.forteen,
+                            fontSize: Dimens.sixteen,
                             color: ThemeProvider.whiteColor,
                             fontFamily: 'medium',
                           ),
@@ -84,7 +83,7 @@ class CommonCard extends StatelessWidget {
                         ),
                         child: CommonTextWidget(
                           heading: point2,
-                          fontSize: Dimens.forteen,
+                          fontSize: Dimens.sixteen,
                           color: ThemeProvider.whiteColor,
                           fontFamily: 'medium',
                         ),
@@ -103,7 +102,7 @@ class CommonCard extends StatelessWidget {
                         ),
                         child: CommonTextWidget(
                           heading: point3,
-                          fontSize: Dimens.forteen,
+                          fontSize: Dimens.sixteen,
                           color: ThemeProvider.whiteColor,
                           fontFamily: 'medium',
                         ),

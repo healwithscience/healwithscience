@@ -16,37 +16,28 @@ class SubscriptionController extends GetxController {
 
   @override
   void onInit() {
-    final Stream<List<PurchaseDetails>> purchaseUpdated =
-        _inAppPurchase.purchaseStream;
-    _subscription =
-        purchaseUpdated.listen((List<PurchaseDetails> purchaseDetailsList) {
-          _listenToPurchaseUpdated(purchaseDetailsList);
-        }, onDone: () {
-          _subscription.cancel();
-        }, onError: (Object error) {
-          // handle error here.
-        });
+    final Stream<List<PurchaseDetails>> purchaseUpdated = _inAppPurchase.purchaseStream;
+    _subscription = purchaseUpdated.listen((List<PurchaseDetails> purchaseDetailsList) {
+      _listenToPurchaseUpdated(purchaseDetailsList);
+    }, onDone: () {
+      _subscription.cancel();
+    }, onError: (Object error) {
+      // handle error here.
+    });
 
     initStoreInfo();
 
     super.onInit();
-
   }
 
   void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
     purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
       if (purchaseDetails.status == PurchaseStatus.pending) {
-
       } else {
         if (purchaseDetails.status == PurchaseStatus.error) {
-
-        } else if (purchaseDetails.status == PurchaseStatus.purchased ||
-            purchaseDetails.status == PurchaseStatus.restored) {
-
-        }
+        } else if (purchaseDetails.status == PurchaseStatus.purchased || purchaseDetails.status == PurchaseStatus.restored) {}
         if (purchaseDetails.pendingCompletePurchase) {
-          await InAppPurchase.instance
-              .completePurchase(purchaseDetails);
+          await InAppPurchase.instance.completePurchase(purchaseDetails);
         }
       }
     });
@@ -61,13 +52,11 @@ class SubscriptionController extends GetxController {
     final bool available = await InAppPurchase.instance.isAvailable();
     if (available) {
       const Set<String> _kIds = <String>{'product1', 'product2'};
-      final ProductDetailsResponse response =
-      await InAppPurchase.instance.queryProductDetails(_kIds);
+      final ProductDetailsResponse response = await InAppPurchase.instance.queryProductDetails(_kIds);
       if (response.notFoundIDs.isNotEmpty) {
         // Handle the error.
       }
       List<ProductDetails> products = response.productDetails;
     }
   }
-
 }
