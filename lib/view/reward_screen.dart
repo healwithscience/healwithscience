@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:heal_with_science/controller/reward_controller.dart';
 import '../backend/helper/app_router.dart';
-import '../controller/splash_controller.dart';
 import '../util/app_assets.dart';
 import '../util/dimens.dart';
 import '../util/extensions/static_values.dart';

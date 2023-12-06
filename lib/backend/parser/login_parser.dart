@@ -23,5 +23,10 @@ class LoginParser {
     sharedPreferencesManager.putString('profile', profile);
   }
 
+  void saveReferralUser(String referralId) {
+    sharedPreferencesManager.putString('referralId', referralId);
+
+  }
+
 
 }

@@ -21,4 +21,10 @@ class RigiterParser {
     sharedPreferencesManager.putString('name', username);
     sharedPreferencesManager.putString('email', email);
   }
+
+  String getReferralUser() {
+    String? referralUser = sharedPreferencesManager.getString('referralId');
+    return referralUser.toString();
+
+  }
 }

@@ -36,6 +36,7 @@ class DashboardController extends GetxController {
     listItem.add(ListItem(name: "Heart Rate", imagePath: AssetPath.heart_rate));
     listItem.add(ListItem(name: "Playlist", imagePath: AssetPath.playlist));
     rewardPoint();
+    parser.saveReferralUser("");
     // getCollectionSize();
     // populateDB();
   }

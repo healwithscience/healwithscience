@@ -214,6 +214,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     accountText: AppString.notification),
                                 InkWell(
                                     onTap: () {
+                                      Get.toNamed(AppRouter.getShareScreen());
+                                    },
+                                    child: CommonMenuWidget(
+                                        screenWidth: screenWidth,
+                                        userIconAssetPath: AssetPath.sign_out,
+                                        accountText: AppString.share)),
+                                InkWell(
+                                    onTap: () {
                                       value.signOut();
                                     },
                                     child: CommonMenuWidget(

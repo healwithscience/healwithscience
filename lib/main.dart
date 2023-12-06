@@ -1,10 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:heal_with_science/util/constants.dart';
+import 'package:heal_with_science/util/extensions/static_values.dart';
 
 import 'backend/helper/app_router.dart';
 import 'backend/helper/init.dart';
@@ -18,6 +20,9 @@ Future<void> main() async {
   ]);
 
    await Firebase.initializeApp();
+
+
+
   /* SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: ThemeProvider.appColor, // status bar color
@@ -27,8 +32,38 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    WidgetsBinding.instance.addObserver(this);
+   // Add this line
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      // App is in the background
+      print('App is in the background');
+      // StaticValue.startBackgroundService();
+      // StaticValue.resetTimer();
+
+      // StaticValue.miniPlayer.value = false;
+    } else if (state == AppLifecycleState.resumed) {
+      // App is in the foreground
+      print('App is in the foreground');
+    }
+  }
 
   // This widget is the root of your application.
   @override
@@ -45,4 +80,6 @@ class MyApp extends StatelessWidget {
 
     );
   }
+
+
 }

@@ -28,6 +28,17 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data android:scheme="https"/>
+                <data android:host="healwithscience.page.link"/>
+
+                <data android:scheme="http"/>
+                <data android:host="healwithscience.page.link"/>
+            </intent-filter>
         </activity>
 
         <activity
@@ -51,6 +62,12 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+
+
+        <service
+            android:name=".MyBackgroundService"
+            android:enabled="true"
+            android:exported="false" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

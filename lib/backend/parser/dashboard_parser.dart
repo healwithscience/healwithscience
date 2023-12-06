@@ -15,4 +15,9 @@ class DashboardParser {
   String getUserId(){
     return sharedPreferencesManager.getString('uid').toString();
   }
+
+  void saveReferralUser(String referralId) {
+    sharedPreferencesManager.putString('referralId', referralId);
+
+  }
 }

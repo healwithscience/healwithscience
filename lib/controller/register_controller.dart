@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
@@ -30,6 +32,9 @@ class RegisterController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
+    print("HelloReferralUser===>  "+parser.getReferralUser());
+
   }
 
   void toggleConfirmPasswordVisibility() {
@@ -109,7 +114,12 @@ class RegisterController extends GetxController {
 
       parser.saveUser(uid.toString(), username , email.toString());
 
-      Get.back();
+      if(parser.getReferralUser().toString() != "null"  || parser.getReferralUser().toString().isNotEmpty){
+        addRewardPoints();
+      }else{
+        Get.back();
+      }
+
       successToast('Registration successful');
       Get.offNamedUntil(AppRouter.addDashboardScreenRoute(), (route) => false);
       // Get.offNamedUntil(
@@ -150,12 +160,17 @@ class RegisterController extends GetxController {
       final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
       final User? user = userCredential.user;
 
-      Get.back();
+
       if (user != null) {
         String? uid = user.uid;
         String username = user.displayName ?? "No Display Name Set";
         String? email = user.email;
         parser.saveUser(uid.toString(), username, email.toString());
+        if(parser.getReferralUser().toString() != "null"  || parser.getReferralUser().toString().isNotEmpty){
+          addRewardPoints();
+        }else{
+          Get.back();
+        }
         // Google Sign In successful, you can navigate to the next screen or perform other actions.
         Get.offNamed(AppRouter.addDashboardScreenRoute());
       } else {
@@ -191,7 +206,11 @@ class RegisterController extends GetxController {
         parser.saveUser(uid.toString(),username,email.toString());
 
         // You can now use 'user' for further user-related operations
-        Get.back();
+        if(parser.getReferralUser().toString() != "null"  || parser.getReferralUser().toString().isNotEmpty){
+          addRewardPoints();
+        }else{
+          Get.back();
+        }
         successToast('Login successful');
         Get.offNamed(AppRouter.addDashboardScreenRoute());
       } else {
@@ -232,6 +251,11 @@ class RegisterController extends GetxController {
         String? email = user.email ;
         parser.saveUser(uid.toString(), username , email.toString());
         // User successfully signed in with Apple
+        if(parser.getReferralUser().toString() != "null"  || parser.getReferralUser().toString().isNotEmpty){
+          addRewardPoints();
+        }else{
+          Get.back();
+        }
         Get.offNamed(AppRouter.addDashboardScreenRoute());
         // You can navigate to another screen or perform other actions here.
       } else {
@@ -269,7 +293,41 @@ class RegisterController extends GetxController {
     }
 
     // Add any additional password criteria here as needed
-
     return true; // Password meets all criteria
   }
+
+  Future<void> addRewardPoints() async {
+    try {
+      final firestoreInstance = FirebaseFirestore.instance;
+
+      // Create a reference to the document for the specified user
+      final userPoint = firestoreInstance.collection('reward').doc(parser.getReferralUser());
+
+      // Get the document snapshot
+      final docSnapshot = await userPoint.get();
+
+      if (docSnapshot.exists) {
+        // If the document exists, retrieve and update the points
+        String currentPoints = docSnapshot.data()?['points'];
+        int newPoints = int.parse(currentPoints) + 150;
+        //
+        // // Update the document with the new points
+        await userPoint.update({'points': newPoints.toString()});
+        Get.back();
+        print("Updated Reward Points: $currentPoints");
+
+      } else {
+        Get.back();
+        // If the document doesn't exist, handle accordingly (create or log an error)
+        print("User document not found in 'reward' collection");
+      }
+    } catch (e) {
+      Get.back();
+      print('Error updating reward points: $e');
+    }
+  }
+
+
+
+
 }

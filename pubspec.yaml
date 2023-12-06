@@ -60,6 +60,8 @@ dependencies:
   google_mobile_ads: ^3.1.0
   in_app_purchase: ^3.1.11
   connectivity_plus: ^5.0.2
+  firebase_dynamic_links: ^5.4.6
+  share_plus: ^7.2.1
 
 
 

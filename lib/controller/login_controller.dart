@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
@@ -7,7 +8,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../backend/helper/app_router.dart';
 import '../backend/parser/login_parser.dart';
-import '../util/theme.dart';
 import '../util/toast.dart';
 import '../util/utils.dart';
 
@@ -25,6 +25,7 @@ class LoginController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    handleDynamicLinks();
   }
 
   void togglePasswordVisibility() {
@@ -199,4 +200,35 @@ class LoginController extends GetxController {
     final emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
     return emailRegex.hasMatch(email);
   }
+
+  Future<void> handleDynamicLinks() async {
+    // Get the initial dynamic link
+    final PendingDynamicLinkData? data = await FirebaseDynamicLinks.instance.getInitialLink();
+    if(data != null){
+      _handleDeepLink(data);
+    }
+
+    // Listen for dynamic links
+    FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
+      print("onLinkSuccess");
+
+    }).onError((error) {
+      print('onLink error');
+      print(error.message);
+    });
+  }
+
+  void _handleDeepLink(PendingDynamicLinkData data) {
+    final Uri deepLink = data.link;
+
+    String? deepUserId = deepLink.queryParameters['userId'];
+
+    // Handle the deep link as needed, for example, navigate to a specific screen
+    parser.saveReferralUser(deepUserId.toString());
+    print('Deep link123: $deepLink');
+    print('Deep link123: $deepUserId');
+  }
+
+
+
 }

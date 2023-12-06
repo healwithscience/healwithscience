@@ -120,6 +120,18 @@ class StaticValue {
     if(screenName == "playlist" || screenName == "download" ){
       frequencyName.value = programNameList[playingIndex.value] != 'No Name' ?  programNameList[playingIndex.value] : "";
     }
+  }
 
+
+  static Future<void> startBackgroundService() async {
+    // if (isPlaying.value == true) {
+      isPlaying.value = false;
+      var channelName = const MethodChannel("nativeBridge");
+      try {
+        await channelName.invokeMethod<String>("startBackgroundService");
+      } catch (e) {
+        print("Error getting string: $e");
+      }
+    // }
   }
 }

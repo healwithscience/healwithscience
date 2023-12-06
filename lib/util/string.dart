@@ -132,6 +132,7 @@ class AppString {
   static String privacy_policy = "Privacy Policy";
   static String notification = "Notification";
   static String sign_out = "Sign Out";
+  static String share = "Share";
   static String camera = "Camera";
   static String gallery = "Gallery";
   static String custom_playList = "Create Custom Playlist";
@@ -139,6 +140,7 @@ class AppString {
   static String give_name = "Give your playlist a name";
   static String cancel = "Cancel";
   static String create = "Create";
+  static String invite = "Invite";
   static String playlist = "Playlist";
   static String no_data = "No Data";
   static String customize_time = "Customize Time";

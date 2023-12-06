@@ -8,6 +8,7 @@ import 'package:heal_with_science/backend/binding/features_binding.dart';
 import 'package:heal_with_science/backend/binding/heart_binding.dart';
 import 'package:heal_with_science/backend/binding/playlist_binding.dart';
 import 'package:heal_with_science/backend/binding/reward_binding.dart';
+import 'package:heal_with_science/backend/binding/share_binding.dart';
 import 'package:heal_with_science/backend/binding/subscription_binding.dart';
 import 'package:heal_with_science/view/category_screen.dart';
 import 'package:heal_with_science/view/create_playlist_screen.dart';
@@ -18,6 +19,7 @@ import 'package:heal_with_science/view/frequency_screen.dart';
 import 'package:heal_with_science/view/heart_rate_screen.dart';
 import 'package:heal_with_science/view/playlist_screen.dart';
 import 'package:heal_with_science/view/reward_screen.dart';
+import 'package:heal_with_science/view/share_screen.dart';
 import 'package:heal_with_science/view/subscription_screen.dart';
 import '../../view/add_payment_screen.dart';
 import '../../view/authentication_typescreen.dart';
@@ -71,6 +73,7 @@ class AppRouter {
   static const String customFrequencyScreen = '/custom_frequency_screen';
   static const String rewardScreen = '/reward_screen';
   static const String subscriptionScreen = '/subscription_screen';
+  static const String shareScreen = '/share_screen';
 
   static String onBoardingRoute() => onboardingScreen;
   static String phoneVerificationRoute() => phoneVerification;
@@ -96,6 +99,7 @@ class AppRouter {
   static String getCustomFrequencyScreen() => customFrequencyScreen;
   static String getRewardScreen() => rewardScreen;
   static String getSubscriptionScreen() => subscriptionScreen;
+  static String getShareScreen() => shareScreen;
 
   static List<GetPage> routes = [
     GetPage(name: onboardingScreen, page: () => OnBoardScreen(), binding: OnBoardBinding(),transition: Transition.fadeIn,transitionDuration: const Duration(milliseconds: 300)),
@@ -120,5 +124,6 @@ class AppRouter {
     GetPage(name: customFrequencyScreen, page: () => CustomFrequencyScreen(), binding: CustomFrequencyBinding(),transition: Transition.fadeIn,transitionDuration: const Duration(milliseconds: 300)),
     GetPage(name: rewardScreen, page: () => RewardScreen(), binding: RewardBinding(),transition: Transition.fadeIn,transitionDuration: const Duration(milliseconds: 300)),
     GetPage(name: subscriptionScreen, page: () => SubscriptionScreen(), binding: SubscriptionBinding(),transition: Transition.fadeIn,transitionDuration: const Duration(milliseconds: 300)),
+    GetPage(name: shareScreen, page: () => ShareScreen(), binding: ShareBinding(),transition: Transition.fadeIn,transitionDuration: const Duration(milliseconds: 300)),
   ];
 }

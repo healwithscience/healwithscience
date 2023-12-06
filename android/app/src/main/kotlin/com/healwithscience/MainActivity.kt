@@ -1,9 +1,10 @@
 package com.healwithscience
 
+import android.content.Intent
 import android.media.AudioAttributes
 import android.media.AudioFormat
-import android.media.AudioManager
 import android.media.AudioTrack
+import android.widget.Toast
 import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -29,7 +30,6 @@ class MainActivity : FlutterActivity() {
             channelName
         ).setMethodCallHandler { call, result ->
 
-
             // This method is invoked on the main thread.
             if (call.method == "playMusic") {
 
@@ -48,11 +48,13 @@ class MainActivity : FlutterActivity() {
 
             } else if (call.method == "stopMusic") {
 //                Toast.makeText(this, "Stop call", Toast.LENGTH_SHORT).show();
-
                 stopAudioPlayback()
             } else {
                 result.notImplemented()
             }
+
+//            else if(call.method == "startBackgroundService")
+//            startBackgroundService()
         }
     }
 
@@ -312,4 +314,15 @@ class MainActivity : FlutterActivity() {
     }
 
 
+    private fun startBackgroundService() {
+
+        Toast.makeText(this, "BACKGROUND", Toast.LENGTH_SHORT).show();
+        val serviceIntent = Intent(this, MyBackgroundService::class.java)
+        startService(serviceIntent)
+    }
+
+    private fun stopBackgroundService() {
+        val serviceIntent = Intent(this, MyBackgroundService::class.java)
+        stopService(serviceIntent)
+    }
 }
