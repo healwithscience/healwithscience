@@ -164,8 +164,7 @@ class _CustomFrequencyScreenState extends State<CustomFrequencyScreen> {
                                                                 .add_playlist),
                                                         buildPopupMenuItem(
                                                             "Remove Program",
-                                                            AssetPath
-                                                                .add_queue),
+                                                            AssetPath.add_queue),
                                                         // Add more options as needed
                                                       ],
                                                       onSelected:

@@ -77,9 +77,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       initialRoute: AppRouter.splash,
       getPages: AppRouter.routes,
       defaultTransition: Transition.fadeIn,
-
     );
   }
-
 
 }

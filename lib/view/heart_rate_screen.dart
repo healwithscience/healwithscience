@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -73,11 +75,75 @@ class _HeartRateScreenState extends State<HeartRateScreen> {
                     ],
                   ),
                   const SizedBox(height: 10),
+
+                  Row(
+                    children: [
+                      Obx(() =>  Expanded(
+                          child: healthCard(
+                              title: "Heart rate",
+                              image: AssetPath.user,
+                              data: value.heartRate.value != "null" ? "${value.heartRate.value} bpm" : "",
+                              color: const Color(0xFF8d7ffa)))),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                     Obx(() =>  Expanded(
+                         child: healthCard(
+                             title: "Blood pressure",
+                             data: value.bp.value ?? "",
+                             image: AssetPath.user,
+                             color: const Color(0xFF4fd164))))
+                    ],
+                  ),
+
+                  Row(
+                    children: [
+                      Obx(() =>  Expanded(
+                          child: healthCard(
+                              title: "Step count",
+                              image: AssetPath.user,
+                              data: value.steps.value ?? "",
+                              color: const Color(0xFF2086fd)))),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Obx(() =>   Expanded(
+                          child: healthCard(
+                              title: "Energy burned",
+                              image: AssetPath.user,
+                              data: value.activeEnergy.value != "null" ? "${value.activeEnergy.value} cal" : "",
+                              color: const Color(0xFFf77e7e))),)
+                    ],
+                  )
                 ],
               )
           ),
         ),
       );
     });
+  }
+
+  Widget healthCard(
+      {String title = "",
+        String data = "",
+        Color color = Colors.blue,
+        required String image}) {
+    return Container(
+      height: 240,
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      decoration: BoxDecoration(
+          color: color,
+          borderRadius: const BorderRadius.all(Radius.circular(20))),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Text(title,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          Image.asset(image, width: 70),
+          Text(data),
+        ],
+      ),
+    );
   }
 }
