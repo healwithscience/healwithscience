@@ -170,7 +170,7 @@ class PlaylistController extends GetxController {
             _numRewardedLoadAttempts = 0;
           },
           onAdFailedToLoad: (LoadAdError error) {
-            showToast('RewardedAd failed to load: $error');
+            showToast('RewardedAd failed to load');
             _rewardedAd = null;
             _numRewardedLoadAttempts += 1;
             if (_numRewardedLoadAttempts < 3) {

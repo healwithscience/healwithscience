@@ -3,12 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-import 'package:heal_with_science/backend/parser/dashboard_parser.dart';
 import 'package:heal_with_science/backend/parser/heart_parser.dart';
-import 'package:heal_with_science/model/ListItem.dart';
-import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart';
-import '../backend/helper/app_router.dart';
 import '../util/all_constants.dart';
 
 class HeartController extends GetxController {
@@ -24,22 +20,22 @@ class HeartController extends GetxController {
   RxString bloodPreSys = "0".obs;
   RxString bloodPreDia = "0".obs;
 
-  List<HealthDataPoint> healthData = [];
-
-  HealthFactory health = HealthFactory();
-
-  final types = [
-    HealthDataType.HEART_RATE,
-    HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
-    HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
-    HealthDataType.STEPS,
-    HealthDataType.ACTIVE_ENERGY_BURNED,
-  ];
+  // List<HealthDataPoint> healthData = [];
+  //
+  // HealthFactory health = HealthFactory();
+  //
+  // final types = [
+  //   HealthDataType.HEART_RATE,
+  //   HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+  //   HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+  //   HealthDataType.STEPS,
+  //   HealthDataType.ACTIVE_ENERGY_BURNED,
+  // ];
 
   @override
   void onInit() async {
     super.onInit();
-    if (Platform.isAndroid) {
+    /*if (Platform.isAndroid) {
       final permissionStatus = Permission.activityRecognition.request();
       if (await permissionStatus.isDenied ||
           await permissionStatus.isPermanentlyDenied) {
@@ -49,7 +45,7 @@ class HeartController extends GetxController {
       }else{
         fetchData();
       }
-    }
+    }*/
   }
 
 
@@ -57,7 +53,7 @@ class HeartController extends GetxController {
 
 
 
-  Future fetchData() async {
+/*  Future fetchData() async {
     // define the types to get
     final types = [
       HealthDataType.HEART_RATE,
@@ -114,7 +110,7 @@ class HeartController extends GetxController {
     } else {
       print("Authorization not granted");
     }
-  }
+  }*/
 
   void onBackRoutes() {
     var context = Get.context as BuildContext;

@@ -76,7 +76,7 @@ class _HeartRateScreenState extends State<HeartRateScreen> {
                   ),
                   const SizedBox(height: 10),
 
-                  Row(
+                 /* Row(
                     children: [
                       Obx(() =>  Expanded(
                           child: healthCard(
@@ -114,7 +114,7 @@ class _HeartRateScreenState extends State<HeartRateScreen> {
                               data: value.activeEnergy.value != "null" ? "${value.activeEnergy.value} cal" : "",
                               color: const Color(0xFFf77e7e))),)
                     ],
-                  )
+                  )*/
                 ],
               )
           ),

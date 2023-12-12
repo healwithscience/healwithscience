@@ -25,6 +25,7 @@ class SubscriptionController extends GetxController {
       // handle error here.
     });
 
+
     initStoreInfo();
 
     super.onInit();
@@ -35,7 +36,11 @@ class SubscriptionController extends GetxController {
       if (purchaseDetails.status == PurchaseStatus.pending) {
       } else {
         if (purchaseDetails.status == PurchaseStatus.error) {
-        } else if (purchaseDetails.status == PurchaseStatus.purchased || purchaseDetails.status == PurchaseStatus.restored) {}
+
+        } else if (purchaseDetails.status == PurchaseStatus.purchased || purchaseDetails.status == PurchaseStatus.restored) {
+
+
+        }
         if (purchaseDetails.pendingCompletePurchase) {
           await InAppPurchase.instance.completePurchase(purchaseDetails);
         }
@@ -49,14 +54,19 @@ class SubscriptionController extends GetxController {
   }
 
   Future<void> initStoreInfo() async {
+
     final bool available = await InAppPurchase.instance.isAvailable();
     if (available) {
-      const Set<String> _kIds = <String>{'product1', 'product2'};
+      // const Set<String> _kIds = <String>{'product1', 'product2'};
+      const Set<String> _kIds = <String>{'my_id_demo'};
       final ProductDetailsResponse response = await InAppPurchase.instance.queryProductDetails(_kIds);
       if (response.notFoundIDs.isNotEmpty) {
-        // Handle the error.
+        print("I am here");
+      }else{
+        print("I am here1");
       }
       List<ProductDetails> products = response.productDetails;
+      print("HelloProductDetail====>"+products.toString());
     }
   }
 }

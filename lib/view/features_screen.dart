@@ -22,7 +22,6 @@ import '../util/extensions/static_values.dart';
 import '../util/string.dart';
 import '../util/theme.dart';
 import '../widgets/CustomGradientDivider.dart';
-import '../widgets/common_loading.dart';
 import '../widgets/commontext.dart';
 import '../widgets/fabonacciwave.dart';
 import '../widgets/round_button.dart';
@@ -150,38 +149,11 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                             ],
                                           ),
                                         ),
-                                        PopupMenuItem(
-                                          value: 3,
-                                          child: Row(
-                                            children: [
-                                              const SizedBox(width: 5),
-                                              SvgPicture.asset(
-                                                AssetPath.create_playlist,
-                                                width: 20,
-                                                color: ThemeProvider.persianGreen,
-                                              ),
-                                              const SizedBox(width: 12),
-                                              CommonTextWidget(
-                                                heading: AppString.create_playlist,
-                                                fontSize: Dimens.forteen,
-                                                color: ThemeProvider.blackColor,
-                                                fontFamily: 'light',
-                                              ),
-                                            ],
-                                          ),
-                                        ),
                                       ],
-                                      elevation: 3,
+                                      elevation: 2,
                                     ).then((newValue) {
                                       if (newValue == 1 || newValue == 2) {
                                         value.setTheme(newValue!);
-                                      } else if (newValue == 3) {
-                                        value.fetchUserPlaylists();
-                                        _showBottomSheet(
-                                            context,
-                                            value,
-                                            value.frequencyValue.toString(),
-                                            value.programName.value.toString());
                                       }
                                     });
                                   },
@@ -906,6 +878,22 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                                                         width: 25.0,
                                                                                       ) : Container() )),
                                                                                 ):Container() : Container(),
+
+                                                                                (value.screenName == "category" || value.screenName == "frequency") ?
+                                                                                InkWell(
+                                                                                  onTap: (){
+                                                                                    value.fetchUserPlaylists();
+                                                                                    _showBottomSheet(context, value, value.frequenciesList[index].toString(), value.programName.value.toString());
+                                                                                  },
+                                                                                  child: Padding(
+                                                                                    padding: EdgeInsets.symmetric(vertical:  screenWidth * .04,horizontal:  screenWidth * .08),
+                                                                                    child: SvgPicture.asset(
+                                                                                        AssetPath.setting,
+                                                                                        width: screenWidth * .008,
+                                                                                        color: ThemeProvider
+                                                                                            .greyColor),
+                                                                                  ),
+                                                                                ) : Container(),
                                                                               ],
                                                                             ),
                                                                           ],
@@ -1133,6 +1121,7 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
   }
 
   void _showBottomSheet(BuildContext context, FeaturesController value, String frequency, String programName) {
+
     showModalBottomSheet(
       backgroundColor: Colors.transparent,
       context: context,
@@ -1215,6 +1204,7 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                           children: [
                             InkWell(
                               onTap: () {
+                                // print("Hello Program=====>"+frequency.toString());
                                 value.updatePlaylist(value.playlistNames[index],
                                     frequency, programName);
                               },
