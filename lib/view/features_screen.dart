@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:heal_with_science/controller/features_controller.dart';
+import 'package:heal_with_science/util/all_constants.dart';
 import 'package:heal_with_science/util/inactivity_manager.dart';
 import 'package:heal_with_science/widgets/common_reward_dialog.dart';
 import 'package:heal_with_science/widgets/common_slider.dart';
@@ -372,17 +373,23 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                   splashColor: Colors.transparent,
                                                   highlightColor: Colors.transparent,
                                                   onTap: () {
-                                                    if(StaticValue.rewardPoint > 0){
+                                                    if(value.parser.getPlan() == "intermediate" || value.parser.getPlan() == "advance"){
                                                       value.playNext();
                                                     }else{
-                                                      showCommonRewardDialog(context ,screenHeight ,screenWidth ,() {
-                                                        value.stopFrequency();
-                                                        value.pauseTimer();
-                                                        Future.delayed(const Duration(seconds: 2), () {
-                                                          value.showRewardedAd();
+                                                      if(StaticValue.rewardPoint > 0){
+                                                        value.playNext();
+                                                      }
+                                                      else{
+                                                        showCommonRewardDialog(context ,screenHeight ,screenWidth ,() {
+                                                          value.stopFrequency();
+                                                          value.pauseTimer();
+                                                          Future.delayed(const Duration(seconds: 2), () {
+                                                            value.showRewardedAd();
+                                                          });
                                                         });
-                                                      });
+                                                      }
                                                     }
+
                                                   },
                                                   child: RoundButton(
                                                     width: screenWidth * .12,
@@ -1157,11 +1164,16 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
               ),
               InkWell(
                 onTap: () {
-                  Get.back();
-                  Get.toNamed(
-                    AppRouter.getcreatePlaylistScreen(),
-                    arguments: {'frequency': frequency, 'name': programName},
-                  );
+                  if(value.parser.getPlan() == "advance"){
+                    Get.back();
+                    Get.toNamed(
+                      AppRouter.getcreatePlaylistScreen(),
+                      arguments: {'frequency': frequency, 'name': programName},
+                    );
+                  }else{
+                    successToast("To Use this feature subscribe our advanced plan");
+                  }
+
                 },
                 child: Row(children: [
                   Padding(

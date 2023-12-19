@@ -55,7 +55,9 @@ class CategoryController extends GetxController {
 
     if(connectivityResult.value == ConnectivityResult.wifi || connectivityResult.value == ConnectivityResult.mobile) {
       fetchCategories();
-      loadRewardedAd();
+      if(parser.getPlan() == "basic"){
+        loadRewardedAd();
+      }
       StaticValue.rewardPoint = await Utils.getRewardPoints(parser.getUserId());
 
     }else{

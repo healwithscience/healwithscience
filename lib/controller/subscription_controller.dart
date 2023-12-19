@@ -14,9 +14,14 @@ class SubscriptionController extends GetxController {
 
   SubscriptionController({required this.parser});
 
+  RxString currentPlan = "".obs;
+
+
   @override
   void onInit() {
     super.onInit();
+
+    currentPlan.value = parser.getPlan();
 
     final Stream<List<PurchaseDetails>> purchaseUpdated = _inAppPurchase.purchaseStream;
     _subscription = purchaseUpdated.listen((List<PurchaseDetails> purchaseDetailsList) {
@@ -42,7 +47,15 @@ class SubscriptionController extends GetxController {
       else {
         if (purchaseDetails.status == PurchaseStatus.error) {}
         else if (purchaseDetails.status == PurchaseStatus.purchased || purchaseDetails.status == PurchaseStatus.restored) {
-           print("Already Purchase Product123     ${purchaseDetails.status}------${purchaseDetails.productID}");
+          print("HelloHere==>"+purchaseDetails.productID);
+          if(purchaseDetails.productID == "intermediate_plan"){
+            parser.setPlan("intermediate");
+            currentPlan.value = 'intermediate';
+          }
+          if(purchaseDetails.productID == "advanced_plan"){
+            parser.setPlan("advance");
+            currentPlan.value = 'advance';
+          }
         }
 
         if (Platform.isAndroid) {}
@@ -73,8 +86,6 @@ class SubscriptionController extends GetxController {
       for (ProductDetails product in products) {
         print("Product Name: " + product.id);
       }
-
-
     }
   }
 

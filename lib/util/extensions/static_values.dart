@@ -1,8 +1,5 @@
 import 'dart:async';
-import 'dart:ffi';
-
 import 'package:get/get.dart';
-
 import '../all_constants.dart';
 
 class StaticValue {

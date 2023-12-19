@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -19,7 +17,7 @@ import '../widgets/common_min_player.dart';
 import '../widgets/common_reward_dialog.dart';
 import '../widgets/commontext.dart';
 import '../widgets/custom_text_field.dart';
-import '../widgets/round_button.dart';
+
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key});
@@ -156,25 +154,21 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                           itemBuilder: (context, index) {
                                             return InkWell(
                                               onTap: () {
-                                                if (StaticValue.rewardPoint >
-                                                    0) {
-                                                  value.goToFeatures(
-                                                      value.categories[index]
-                                                          .frequency,
-                                                      value.categories[index]
-                                                          .name);
-                                                } else {
-                                                  showCommonRewardDialog(
-                                                      context,
-                                                      screenHeight,
-                                                      screenWidth, () {
-                                                    Future.delayed(
-                                                        const Duration(
-                                                            seconds: 1), () {
-                                                      value.showRewardedAd();
-                                                    });
-                                                  });
-                                                }
+                                               if(value.parser.getPlan() == "intermediate" || value.parser.getPlan() == "advance"){
+                                                 value.goToFeatures(value.categories[index].frequency, value.categories[index].name);
+                                               }else{
+                                                 if (StaticValue.rewardPoint > 0) {
+                                                   value.goToFeatures(value.categories[index].frequency, value.categories[index].name);
+                                                 } else {
+                                                   showCommonRewardDialog(context, screenHeight, screenWidth, () {
+                                                     Future.delayed(const Duration(seconds: 1), () {
+                                                       value.showRewardedAd();
+                                                     });
+                                                   });
+                                                 }
+                                               }
+
+
                                               },
                                               child: SizedBox(
                                                 height: screenHeight * 0.07,

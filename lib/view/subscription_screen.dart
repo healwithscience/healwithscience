@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:heal_with_science/controller/subscription_controller.dart';
+import 'package:heal_with_science/util/all_constants.dart';
 import 'package:heal_with_science/util/theme.dart';
 import 'package:heal_with_science/widgets/common_card.dart';
 import '../util/app_assets.dart';
@@ -75,6 +76,13 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         InkWell(onTap: () {
+                          if(value.currentPlan.value == 'intermediate' || value.currentPlan.value == 'advance'){
+                            successToast("You already have ${value.parser.getPlan()} plan");
+                          }else{
+                            successToast("Plan changed to basic");
+                            value.parser.setPlan('basic');
+                            value.onBackRoutes();
+                          }
 
                         }, child: CommonCard(screenWidth: screenWidth, screenHeight: screenHeight, heading: AppString.free_plan, point1: AppString.free_plan_point1, point2: AppString.free_plan_point2, point3: AppString.free_plan_point3, imagePath: AssetPath.free_plan)),
                         InkWell(

@@ -133,6 +133,7 @@ class AppString {
   static String notification = "Notification";
   static String sign_out = "Sign Out";
   static String share = "Share";
+  static String subscription = "Subscriptions";
   static String camera = "Camera";
   static String gallery = "Gallery";
   static String custom_playList = "Create Custom Playlist";

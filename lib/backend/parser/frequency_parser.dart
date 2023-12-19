@@ -15,6 +15,9 @@ class FrequencyParser {
     return sharedPreferencesManager.getString('uid').toString();
   }
 
+  String getPlan(){
+    return sharedPreferencesManager.getString('plan').toString();
+  }
 
   Future<void> updateList( String name,String frequency) async {
     // Retrieve the existing list from SharedPreferences
@@ -108,7 +111,5 @@ class FrequencyParser {
   //   return myList;
   // }
 
-  String getPlan(){
-    return sharedPreferencesManager.getString('plan').toString();
-  }
+
 }

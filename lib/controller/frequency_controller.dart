@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:heal_with_science/backend/parser/frequency_parser.dart';
+import '../backend/helper/app_router.dart';
 import '../model/Category.dart';
 import '../util/all_constants.dart';
 import '../util/extensions/static_values.dart';
@@ -55,7 +56,11 @@ class FrequencyController extends GetxController {
     if(connectivityResult.value == ConnectivityResult.wifi || connectivityResult.value == ConnectivityResult.mobile){
       fetchDownloadlist();
       fetchFrequencies();
-      loadRewardedAd();
+
+      if(parser.getPlan() == "basic"){
+        loadRewardedAd();
+      }
+
       StaticValue.rewardPoint = await Utils.getRewardPoints(parser.getUserId());
 
     }else{
@@ -252,6 +257,20 @@ class FrequencyController extends GetxController {
         });
 
     _rewardedAd = null;
+  }
+
+  void goToNext( RxList<double?> filteredfrequencies, int index){
+    StaticValue.resetTimer();
+    Get.toNamed(
+      AppRouter.getFeaturesScreen(),
+      arguments: {
+        'frequency': filteredfrequencies[index],
+        'frequenciesList': filteredfrequencies,
+        'index': index,
+        'screenName': 'frequency'
+        // Pass the data you want
+      },
+    );
   }
 
 

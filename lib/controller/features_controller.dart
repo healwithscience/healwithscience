@@ -133,9 +133,12 @@ class FeaturesController extends GetxController {
       startTime();
       InactivityManager.resetTimer();
       //Fetch reward point and update Reward Point
-      StaticValue.rewardPoint = await Utils.getRewardPoints(parser.getUserId());
-      StaticValue.rewardPoint =  StaticValue.rewardPoint-1;
-      Utils.updateRewardPoints(StaticValue.rewardPoint ,parser.getUserId());
+      if(parser.getPlan() == 'basic' && StaticValue.rewardPoint > 0){
+        StaticValue.rewardPoint = await Utils.getRewardPoints(parser.getUserId());
+        StaticValue.rewardPoint =  StaticValue.rewardPoint-1;
+        Utils.updateRewardPoints(StaticValue.rewardPoint ,parser.getUserId());
+      }
+
     }
     fetchDownloadlist();
 
@@ -182,16 +185,22 @@ class FeaturesController extends GetxController {
         // print(currentTimeInSeconds.toString());
       } else {
         if(playType.value == 0){
-         if(StaticValue.rewardPoint > 0){
-           playNext();
-         }else{
-           resetTimer();
-           Future.delayed(Duration(seconds: 3), (){
-             playFrequency();
-             startTime();
-             isPlaying.value = true;
-           });
-         }
+          if(parser.getPlan() == 'basic'){
+            if(StaticValue.rewardPoint > 0){
+              playNext();
+            }
+            else{
+              resetTimer();
+              Future.delayed(Duration(seconds: 3), (){
+                playFrequency();
+                startTime();
+                isPlaying.value = true;
+              });
+            }
+          }else{
+            playNext();
+          }
+
           // resetTimer();
         }else{
           resetTimer();
@@ -351,10 +360,12 @@ class FeaturesController extends GetxController {
 
     if(!isButtonPressed.value){
       isButtonPressed.value = true;
-      if(StaticValue.rewardPoint > 0){
-        print("Reward Point ${StaticValue.rewardPoint}");
-        StaticValue.rewardPoint = StaticValue.rewardPoint - 1;
-        Utils.updateRewardPoints(StaticValue.rewardPoint,parser.getUserId());
+      if(parser.getPlan() == "basic"){
+        if(StaticValue.rewardPoint > 0){
+          print("Reward Point ${StaticValue.rewardPoint}");
+          StaticValue.rewardPoint = StaticValue.rewardPoint - 1;
+          Utils.updateRewardPoints(StaticValue.rewardPoint,parser.getUserId());
+        }
       }
       // frequencyValue.value = frequenciesList[playingIndex.value + 1]!;
       resetTimer();
@@ -385,10 +396,13 @@ class FeaturesController extends GetxController {
   void playPrevious() {
     if(!isButtonPressed.value){
       isButtonPressed.value = true;
-      if(StaticValue.rewardPoint != 0){
-        StaticValue.rewardPoint = StaticValue.rewardPoint - 1;
-        Utils.updateRewardPoints(StaticValue.rewardPoint,parser.getUserId());
+      if(parser.getPlan() == "basic"){
+        if(StaticValue.rewardPoint != 0){
+          StaticValue.rewardPoint = StaticValue.rewardPoint - 1;
+          Utils.updateRewardPoints(StaticValue.rewardPoint,parser.getUserId());
+        }
       }
+
       // frequencyValue.value = frequenciesList[playingIndex.value + 1]!;
       resetTimer();
       isPlaying.value == false;

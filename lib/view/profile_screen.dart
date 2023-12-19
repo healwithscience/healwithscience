@@ -201,7 +201,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         accountText: AppString.download)),
                                 InkWell(
                                   onTap: (){
-                                    Get.toNamed(AppRouter.getSubscriptionScreen());
+
                                   },
                                   child: CommonMenuWidget(
                                       screenWidth: screenWidth,
@@ -212,6 +212,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     screenWidth: screenWidth,
                                     userIconAssetPath: AssetPath.notification,
                                     accountText: AppString.notification),
+
+                                InkWell(
+                                    onTap: () {
+                                      Get.toNamed(AppRouter.getSubscriptionScreen());
+                                    },
+                                    child: CommonMenuWidget(
+                                        screenWidth: screenWidth,
+                                        userIconAssetPath: AssetPath.sign_out,
+                                        accountText: AppString.subscription)),
+
+
                                 InkWell(
                                     onTap: () {
                                       Get.toNamed(AppRouter.getShareScreen());

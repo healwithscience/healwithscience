@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -10,6 +11,9 @@ import 'backend/helper/init.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
+  if(kIsWeb){
+    await Firebase.initializeApp(options: FirebaseOptions(apiKey: "AIzaSyBnB-U4rAOCd-nItvNi-bYcGUO8bq3FDzM", appId: "1:1089948969143:web:c7f45fdf2517c42748c532", messagingSenderId: "1089948969143", projectId: "heal-with-science"));
+  }
   await MainBinding().dependencies();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

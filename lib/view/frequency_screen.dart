@@ -146,27 +146,22 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
                                   children: [
                                     InkWell(
                                       onTap: () {
-                                        if (StaticValue.rewardPoint > 0) {
-                                          StaticValue.resetTimer();
-                                          Get.toNamed(
-                                            AppRouter.getFeaturesScreen(),
-                                            arguments: {
-                                              'frequency': value.filteredfrequencies[index],
-                                              'frequenciesList': value.filteredfrequencies,
-                                              'index': index,
-                                              'screenName': 'frequency'
-                                              // Pass the data you want
-                                            },
-                                          );
-                                        } else {
-                                          showCommonRewardDialog(
-                                              context, screenHeight, screenWidth,
-                                                  () {
-                                                Future.delayed(const Duration(seconds: 1), ()
-                                                {
-                                                  value.showRewardedAd();
+                                        if(value.parser.getPlan() == "intermediate" || value.parser.getPlan() == "advance"){
+                                         value.goToNext(value.filteredfrequencies,index);
+                                        }else{
+                                          if (StaticValue.rewardPoint > 0) {
+                                            value.goToNext(value.filteredfrequencies,index);
+                                          }
+                                          else {
+                                            showCommonRewardDialog(
+                                                context, screenHeight, screenWidth,
+                                                    () {
+                                                  Future.delayed(const Duration(seconds: 1), ()
+                                                  {
+                                                    value.showRewardedAd();
+                                                  });
                                                 });
-                                              });
+                                          }
                                         }
                                       },
                                       child: Padding(

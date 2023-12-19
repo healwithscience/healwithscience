@@ -210,8 +210,9 @@ class DashboardController extends GetxController {
         } else if (purchaseDetails.status == PurchaseStatus.purchased || purchaseDetails.status == PurchaseStatus.restored) {
           if(purchaseDetails.productID == "intermediate_plan"){
             setSubscriptionType("intermediate");
-            print("Hello Current Plan123");
-          }else if(purchaseDetails.productID == "advanced_plan"){
+
+          }
+          if(purchaseDetails.productID == "advanced_plan"){
             setSubscriptionType("advance");
           }
         }
@@ -221,7 +222,7 @@ class DashboardController extends GetxController {
       }
     }
     currentPlan.value = parser.getPlan();
-    print("Hello Current Plan"+parser.getPlan());
+
   }
 
 
@@ -276,5 +277,31 @@ class DashboardController extends GetxController {
   void setSubscriptionType(String type){
     parser.setPlan(type);
     currentPlan.value = type;
+  }
+
+  Future<void> purchaseProduct(String productId) async {
+    try {
+      final PurchaseParam purchaseParam = PurchaseParam(
+        productDetails: await getProductDetails(productId),
+        // Set to false for production
+      );
+
+      // Initiating the purchase process
+      await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
+    } catch (error) {
+      // Handle error
+      print("Error during purchase: $error");
+    }
+  }
+
+  Future<ProductDetails> getProductDetails(String productId) async {
+    final ProductDetailsResponse response = await InAppPurchase.instance.queryProductDetails(<String>{productId});
+
+    if (response.notFoundIDs.isNotEmpty) {
+      // Handle not found IDs
+      showToast("Product not found");
+    }
+
+    return response.productDetails.first;
   }
 }

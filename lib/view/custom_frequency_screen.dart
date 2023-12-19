@@ -13,6 +13,7 @@ import '../util/string.dart';
 import '../widgets/CustomGradientDivider.dart';
 import '../widgets/common_loading.dart';
 import '../widgets/common_min_player.dart';
+import '../widgets/common_reward_dialog.dart';
 import '../widgets/commontext.dart';
 
 class CustomFrequencyScreen extends StatefulWidget {
@@ -120,10 +121,29 @@ class _CustomFrequencyScreenState extends State<CustomFrequencyScreen> {
                                       itemBuilder: (context, index) {
                                         return InkWell(
                                           onTap: () {
-                                            StaticValue.resetTimer();
-                                            value.goToFeatures(
-                                                value.customProgram[index].frequency,
-                                                value.customProgram[index].name);
+
+                                            if(value.parser.getPlan() == "intermediate" || value.parser.getPlan() == "advance"){
+                                              StaticValue.resetTimer();
+                                              value.goToFeatures(value.customProgram[index].frequency, value.customProgram[index].name);
+
+                                            }else{
+                                              if (StaticValue.rewardPoint > 0) {
+                                                StaticValue.resetTimer();
+                                                value.goToFeatures(value.customProgram[index].frequency, value.customProgram[index].name);
+                                              }
+                                              else {
+                                                showCommonRewardDialog(
+                                                    context, screenHeight, screenWidth,
+                                                        () {
+                                                      Future.delayed(const Duration(seconds: 1), ()
+                                                      {
+                                                        value.showRewardedAd();
+                                                      });
+                                                    });
+                                              }
+                                            }
+
+
                                           },
                                           child: SizedBox(
                                             height: screenHeight * 0.07,
