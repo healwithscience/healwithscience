@@ -50,8 +50,7 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding:
-                        EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
+                        padding: const EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -197,8 +196,7 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
                                             //
                                             Row(
                                               children: [
-                                                !value.checkStatus(value
-                                                    .filteredfrequencies[index].toString())
+                                                value.parser.getPlan() == "advance" ? !value.checkStatus(value.filteredfrequencies[index].toString())
                                                     ? InkWell(
                                                   onTap: () {
                                                     value.downloadButtonClickedList[index] = 2;
@@ -206,9 +204,7 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
                                                       value.downloadButtonClickedList[
                                                       index] = 3;
                                                     });
-                                                    value.parser.updateList(
-                                                        "No Name",
-                                                        value.filteredfrequencies[index].toString());
+                                                    value.parser.updateList("No Name", value.filteredfrequencies[index].toString());
                                                   },
                                                   child: Padding(
                                                     padding: EdgeInsets.all(screenWidth * .05),
@@ -224,7 +220,8 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
                                                         : Container()),
                                                   ),
                                                 )
-                                                    : Container(),
+                                                    : Container() : Container(),
+
                                                 PopupMenuButton<String>(
                                                   offset: const Offset(00, 40),
                                                   itemBuilder: (context) => [

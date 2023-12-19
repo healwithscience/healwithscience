@@ -12,6 +12,14 @@ class DashboardParser {
     sharedPreferencesManager.clearAll();
   }
 
+  String getPlan(){
+    return sharedPreferencesManager.getString('plan').toString();
+  }
+
+  void setPlan(String type){
+     sharedPreferencesManager.putString('plan',type);
+  }
+
   String getUserId(){
     return sharedPreferencesManager.getString('uid').toString();
   }

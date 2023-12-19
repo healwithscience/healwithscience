@@ -30,7 +30,7 @@ class CommonCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: screenHeight * 0.25,
+      height: screenHeight * 0.28,
       padding: EdgeInsets.symmetric(vertical:screenWidth * 0.05,horizontal:screenWidth * 0.03 ),
       width: screenWidth,
       decoration: BoxDecoration(
@@ -114,7 +114,7 @@ class CommonCard extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: screenWidth * 0.2,
+            width: screenWidth * 0.25,
             child: SvgPicture.asset(imagePath),
           ),
         ],

@@ -16,57 +16,91 @@ class SubscriptionController extends GetxController {
 
   @override
   void onInit() {
+    super.onInit();
+
     final Stream<List<PurchaseDetails>> purchaseUpdated = _inAppPurchase.purchaseStream;
     _subscription = purchaseUpdated.listen((List<PurchaseDetails> purchaseDetailsList) {
       _listenToPurchaseUpdated(purchaseDetailsList);
+
     }, onDone: () {
       _subscription.cancel();
     }, onError: (Object error) {
-      // handle error here.
+      print("Error in purchaseUpdated stream: $error");
     });
-
+    _inAppPurchase.restorePurchases();
 
     initStoreInfo();
-
-    super.onInit();
   }
 
-  void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
-    purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
+  Future<void> _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) async {
+
+
+    for (final PurchaseDetails purchaseDetails in purchaseDetailsList) {
       if (purchaseDetails.status == PurchaseStatus.pending) {
-      } else {
-        if (purchaseDetails.status == PurchaseStatus.error) {
 
-        } else if (purchaseDetails.status == PurchaseStatus.purchased || purchaseDetails.status == PurchaseStatus.restored) {
-
-
+      }
+      else {
+        if (purchaseDetails.status == PurchaseStatus.error) {}
+        else if (purchaseDetails.status == PurchaseStatus.purchased || purchaseDetails.status == PurchaseStatus.restored) {
+           print("Already Purchase Product123     ${purchaseDetails.status}------${purchaseDetails.productID}");
         }
+
+        if (Platform.isAndroid) {}
+
         if (purchaseDetails.pendingCompletePurchase) {
-          await InAppPurchase.instance.completePurchase(purchaseDetails);
+          await _inAppPurchase.completePurchase(purchaseDetails);
         }
       }
-    });
+    }
   }
 
   void onBackRoutes() {
+    _subscription.cancel();
     var context = Get.context as BuildContext;
     Navigator.of(context).pop(true);
   }
 
   Future<void> initStoreInfo() async {
-
     final bool available = await InAppPurchase.instance.isAvailable();
     if (available) {
       // const Set<String> _kIds = <String>{'product1', 'product2'};
-      const Set<String> _kIds = <String>{'my_id_demo'};
+      const Set<String> _kIds = <String>{'intermediate_plan', 'advanced_plan'};
       final ProductDetailsResponse response = await InAppPurchase.instance.queryProductDetails(_kIds);
       if (response.notFoundIDs.isNotEmpty) {
-        print("I am here");
-      }else{
-        print("I am here1");
+        // showToast("I am here ${response.error}");
       }
       List<ProductDetails> products = response.productDetails;
-      print("HelloProductDetail====>"+products.toString());
+      for (ProductDetails product in products) {
+        print("Product Name: " + product.id);
+      }
+
+
     }
+  }
+
+  Future<void> purchaseProduct(String productId) async {
+    try {
+      final PurchaseParam purchaseParam = PurchaseParam(
+        productDetails: await getProductDetails(productId),
+        // Set to false for production
+      );
+
+      // Initiating the purchase process
+      await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
+    } catch (error) {
+      // Handle error
+      print("Error during purchase: $error");
+    }
+  }
+
+  Future<ProductDetails> getProductDetails(String productId) async {
+    final ProductDetailsResponse response = await InAppPurchase.instance.queryProductDetails(<String>{productId});
+
+    if (response.notFoundIDs.isNotEmpty) {
+      // Handle not found IDs
+      showToast("Product not found");
+    }
+
+    return response.productDetails.first;
   }
 }

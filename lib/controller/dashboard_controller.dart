@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:heal_with_science/backend/parser/dashboard_parser.dart';
 import 'package:heal_with_science/model/ListItem.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import '../backend/helper/app_router.dart';
 import '../model/Category.dart';
 import '../util/all_constants.dart';
@@ -25,16 +27,27 @@ class DashboardController extends GetxController {
 
   get itemList => listItem;
 
+  final InAppPurchase _inAppPurchase = InAppPurchase.instance;
+  late StreamSubscription<List<PurchaseDetails>> _subscription;
+
+  RxString currentPlan = "".obs;
+
   // List<String,String> itemList = ["Category", "Custom Playlist", "Frequencies","Hear Rate","Playlist"];
 
   @override
   void onInit() {
     super.onInit();
+
+    getSubScriptionDetail();
+
+
+
     listItem.add(ListItem(name: "Category", imagePath: AssetPath.category));
     listItem.add(ListItem(name: "Custom Frequency", imagePath: AssetPath.custom_playlist));
     listItem.add(ListItem(name: "Frequencies", imagePath: AssetPath.frequencies));
     listItem.add(ListItem(name: "Heart Rate", imagePath: AssetPath.heart_rate));
     listItem.add(ListItem(name: "Playlist", imagePath: AssetPath.playlist));
+
     rewardPoint();
     parser.saveReferralUser("");
     // getCollectionSize();
@@ -172,6 +185,45 @@ class DashboardController extends GetxController {
     }
   }
 
+  void getSubScriptionDetail() {
+    final Stream<List<PurchaseDetails>> purchaseUpdated = _inAppPurchase.purchaseStream;
+    _subscription = purchaseUpdated.listen((List<PurchaseDetails> purchaseDetailsList) {
+      _listenToPurchaseUpdated(purchaseDetailsList);
+
+    }, onDone: () {
+      _subscription.cancel();
+    }, onError: (Object error) {
+      print("Error in purchaseUpdated stream: $error");
+    });
+    _inAppPurchase.restorePurchases();
+
+
+
+  }
+
+  Future<void> _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) async {
+
+    for (final PurchaseDetails purchaseDetails in purchaseDetailsList) {
+      if (purchaseDetails.status == PurchaseStatus.pending) {
+      } else {
+        if (purchaseDetails.status == PurchaseStatus.error) {
+        } else if (purchaseDetails.status == PurchaseStatus.purchased || purchaseDetails.status == PurchaseStatus.restored) {
+          if(purchaseDetails.productID == "intermediate_plan"){
+            setSubscriptionType("intermediate");
+            print("Hello Current Plan123");
+          }else if(purchaseDetails.productID == "advanced_plan"){
+            setSubscriptionType("advance");
+          }
+        }
+        if (purchaseDetails.pendingCompletePurchase) {
+          await _inAppPurchase.completePurchase(purchaseDetails);
+        }
+      }
+    }
+    currentPlan.value = parser.getPlan();
+    print("Hello Current Plan"+parser.getPlan());
+  }
+
 
 
   /*Future<void> populateDB() async {
@@ -220,4 +272,9 @@ class DashboardController extends GetxController {
       print('Error: $e');
     }
   }*/
+
+  void setSubscriptionType(String type){
+    parser.setPlan(type);
+    currentPlan.value = type;
+  }
 }

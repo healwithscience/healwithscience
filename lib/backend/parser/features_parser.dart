@@ -80,5 +80,9 @@ class  FeaturesParser {
     return value;
   }
 
+  String getPlan(){
+    return sharedPreferencesManager.getString('plan').toString();
+  }
+
 
 }

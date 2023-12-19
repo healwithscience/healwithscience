@@ -33,8 +33,6 @@ class RegisterController extends GetxController {
   void onInit() {
     super.onInit();
 
-    print("HelloReferralUser===>  "+parser.getReferralUser());
-
   }
 
   void toggleConfirmPasswordVisibility() {
@@ -326,8 +324,4 @@ class RegisterController extends GetxController {
       print('Error updating reward points: $e');
     }
   }
-
-
-
-
 }

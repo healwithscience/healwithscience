@@ -1,13 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:heal_with_science/util/constants.dart';
-import 'package:heal_with_science/util/extensions/static_values.dart';
-
 import 'backend/helper/app_router.dart';
 import 'backend/helper/init.dart';
 
@@ -20,8 +16,6 @@ Future<void> main() async {
   ]);
 
    await Firebase.initializeApp();
-
-
 
   /* SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(

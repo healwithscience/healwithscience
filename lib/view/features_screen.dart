@@ -861,7 +861,10 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                                                   ),
                                                                                 )
                                                                                     : Container()),
-                                                                                (value.screenName == "category" || value.screenName == "frequency") ?
+
+                                                                                 //Handle Download based on subscription type
+                                                                                 value.parser.getPlan() == "advance"?
+                                                                                 (value.screenName == "category" || value.screenName == "frequency") ?
                                                                                 !value.checkStatus(value.frequenciesList[index].toString()) ?
                                                                                 InkWell(
                                                                                   onTap: (){
@@ -877,7 +880,7 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                                                         height: screenWidth * .05,
                                                                                         width: 25.0,
                                                                                       ) : Container() )),
-                                                                                ):Container() : Container(),
+                                                                                ):Container() : Container() : Container(),
 
                                                                                 (value.screenName == "category" || value.screenName == "frequency") ?
                                                                                 InkWell(

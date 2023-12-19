@@ -107,4 +107,8 @@ class FrequencyParser {
   //
   //   return myList;
   // }
+
+  String getPlan(){
+    return sharedPreferencesManager.getString('plan').toString();
+  }
 }
