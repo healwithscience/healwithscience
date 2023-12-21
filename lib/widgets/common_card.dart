@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -30,7 +31,7 @@ class CommonCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: screenHeight * 0.28,
+      height: kIsWeb ? screenHeight * 0.4 : screenHeight * 0.25,
       padding: EdgeInsets.symmetric(vertical:screenWidth * 0.05,horizontal:screenWidth * 0.03 ),
       width: screenWidth,
       decoration: BoxDecoration(
@@ -53,61 +54,51 @@ class CommonCard extends StatelessWidget {
                 ),
                 SizedBox(height: screenHeight * 0.02),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SvgPicture.asset(AssetPath.dot),
+                      const SizedBox(width: 20),
                       Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            top: screenWidth * 0.02,
-                            left: screenWidth * 0.02,
-                          ),
-                          child: CommonTextWidget(
-                            heading: point1,
-                            fontSize: Dimens.sixteen,
-                            color: ThemeProvider.whiteColor,
-                            fontFamily: 'medium',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                Row(
-                  children: [
-                    point2.toString() != "" ?
-                    SvgPicture.asset(AssetPath.dot) : Container(),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          top: screenWidth * 0.02,
-                          left: screenWidth * 0.02,
-                        ),
                         child: CommonTextWidget(
-                          heading: point2,
+                          heading: point1,
                           fontSize: Dimens.sixteen,
                           color: ThemeProvider.whiteColor,
                           fontFamily: 'medium',
                         ),
                       ),
+                    ],
+                  ),
+                SizedBox(height: screenWidth * .01),
+                Row(
+                  children: [
+                    point2.toString() != "" ?
+                    SvgPicture.asset(AssetPath.dot) : Container(),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: CommonTextWidget(
+                          heading: point2,
+                          fontSize: Dimens.sixteen,
+                          color: ThemeProvider.whiteColor,
+                          fontFamily: 'medium',
+                        ),
+
                     ),
                   ],
                 ),
+                SizedBox(height: screenWidth * .01),
                 Row(
                   children: [
                     SvgPicture.asset(AssetPath.dot),
+                    const SizedBox(width: 20),
                     Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          top: screenWidth * 0.02,
-                          left: screenWidth * 0.02,
-                        ),
-                        child: CommonTextWidget(
+                      child: CommonTextWidget(
                           heading: point3,
                           fontSize: Dimens.sixteen,
                           color: ThemeProvider.whiteColor,
                           fontFamily: 'medium',
                         ),
                       ),
-                    ),
+
                   ],
                 )
               ],

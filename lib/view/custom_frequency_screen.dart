@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -57,19 +58,14 @@ class _CustomFrequencyScreenState extends State<CustomFrequencyScreen> {
                                       value.onBackRoutes();
                                     },
                                     child: Container(
-                                      width: screenWidth * .1,
-                                      height: screenWidth * .1,
+                                      width: kIsWeb ? screenWidth * .07 :  screenWidth * .1,
+                                      height: kIsWeb ? screenWidth * .07 :  screenWidth * .1,
                                       decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color: ThemeProvider.borderColor,
-                                          ),
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(10))),
+                                          border: Border.all(color: ThemeProvider.borderColor,),
+                                          borderRadius: const BorderRadius.all(Radius.circular(10))),
                                       child: Padding(
-                                        padding:
-                                            EdgeInsets.all(screenWidth * .02),
-                                        child: SvgPicture.asset(
-                                            AssetPath.back_arrow),
+                                        padding: EdgeInsets.all(screenWidth * .02),
+                                        child: SvgPicture.asset(AssetPath.back_arrow),
                                       ),
                                     ),
                                   ),
@@ -81,17 +77,13 @@ class _CustomFrequencyScreenState extends State<CustomFrequencyScreen> {
                                   InkWell(
                                     onTap: () {},
                                     child: Padding(
-                                      padding:
-                                          EdgeInsets.all(screenWidth * .02),
-                                      child: SvgPicture.asset(AssetPath.setting,
-                                          width: screenWidth * .012,
-                                          color: ThemeProvider.blackColor),
+                                      padding: EdgeInsets.all(screenWidth * .02),
+                                      child: SvgPicture.asset(AssetPath.setting, width: screenWidth * .012, color: ThemeProvider.blackColor),
                                     ),
                                   )
                                 ],
                               ),
-                              const SizedBox(height: 10),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 20),
                               Obx(() {
                                 if (value.isLoading.value) {
                                   return Expanded(
@@ -146,91 +138,48 @@ class _CustomFrequencyScreenState extends State<CustomFrequencyScreen> {
 
                                           },
                                           child: SizedBox(
-                                            height: screenHeight * 0.07,
+                                            height: kIsWeb ?  screenHeight * .1  : screenHeight * 0.07,
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                   children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          vertical: 15,
-                                                          horizontal: 10),
-                                                      child: CommonTextWidget(
-                                                          textOverflow:
-                                                              TextOverflow
-                                                                  .ellipsis,
-                                                          heading: value
-                                                              .customProgram[
-                                                                  index]
-                                                              .name,
-                                                          fontSize:
-                                                              Dimens.sixteen,
-                                                          color: Colors.black,
-                                                          fontFamily: 'medium'),
-                                                    ),
+                                                    CommonTextWidget(
+                                                        textOverflow: TextOverflow.ellipsis,
+                                                        heading: value.customProgram[index].name,
+                                                        fontSize: Dimens.sixteen,
+                                                        color: Colors.black,
+                                                        fontFamily: 'medium'),
                                                     PopupMenuButton<String>(
-                                                      offset:
-                                                          const Offset(00, 40),
-                                                      itemBuilder: (context) =>
-                                                          [
-                                                        buildPopupMenuItem(
-                                                            "Add Frequency",
-                                                            AssetPath
-                                                                .add_playlist),
-                                                        buildPopupMenuItem(
-                                                            "Remove Program",
-                                                            AssetPath.add_queue),
+                                                      offset: const Offset(00, 40),
+                                                      itemBuilder: (context) => [
+                                                        buildPopupMenuItem("Add Frequency", AssetPath.add_playlist),
+                                                        buildPopupMenuItem("Remove Program", AssetPath.add_queue),
                                                         // Add more options as needed
                                                       ],
                                                       onSelected:
                                                           (selectedValue) {
-                                                        if (selectedValue ==
-                                                            "Add Frequency") {
-                                                          showFrequencyDialog(
-                                                              context,
-                                                              value,
-                                                              value
-                                                                  .customProgram[
-                                                                      index]
-                                                                  .name);
+                                                        if (selectedValue == "Add Frequency") {
+                                                          showFrequencyDialog(context, value, value.customProgram[index].name);
                                                           // value.addToFrequencyArray()
-                                                        } else if (selectedValue ==
-                                                            "Remove Program") {
-                                                          value.removeProgram(
-                                                              value
-                                                                  .customProgram[
-                                                                      index]
-                                                                  .name);
+                                                        } else if (selectedValue == "Remove Program") {
+                                                          value.removeProgram(value.customProgram[index].name);
                                                         } else {}
                                                       },
                                                       child: Padding(
-                                                        padding: EdgeInsets.all(
-                                                            screenWidth * .04),
-                                                        child: SvgPicture.asset(
-                                                            AssetPath.setting,
-                                                            width: screenWidth *
-                                                                .008,
-                                                            color: ThemeProvider
-                                                                .greyColor),
+                                                        padding: EdgeInsets.only( left:  kIsWeb ? screenWidth * .01  : screenWidth * .04 , bottom: kIsWeb ? screenWidth * .01 :  screenWidth * .04 ),
+                                                        child: SvgPicture.asset(AssetPath.setting, width: screenWidth * .008, color: ThemeProvider.greyColor),
                                                       ),
                                                     )
                                                   ],
                                                 ),
                                                 SizedBox(
                                                     width: screenWidth * .8,
-                                                    child:
-                                                        CustomGradientDivider(
-                                                            height: 1.0,
-                                                            startColor:
-                                                                ThemeProvider
-                                                                    .greyColor,
-                                                            endColor: Colors
-                                                                .transparent))
+
+                                                    child: CustomGradientDivider(height: 1.0,
+                                                            startColor: ThemeProvider.greyColor,
+                                                            endColor: Colors.transparent))
                                               ],
                                             ),
                                           ),
@@ -253,7 +202,6 @@ class _CustomFrequencyScreenState extends State<CustomFrequencyScreen> {
                               showAddProgramDialog(context, value);
                             },
                             label: CommonTextWidget(
-                                lineHeight: 1.3,
                                 heading: AppString.add_frequency,
                                 fontSize: Dimens.thrteen,
                                 color: Colors.white,

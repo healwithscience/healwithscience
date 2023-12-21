@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -16,7 +19,6 @@ import '../util/theme.dart';
 import '../widgets/common_loading.dart';
 import '../widgets/common_min_player.dart';
 import '../widgets/commontext.dart';
-import '../widgets/round_button.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -30,8 +32,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    screenHeight = MediaQuery.of(context).size.height;
-    screenWidth = MediaQuery.of(context).size.width;
+    if(kIsWeb){
+      screenHeight = MediaQuery.of(context).size.height/3;
+      screenWidth = MediaQuery.of(context).size.width/3;
+    }else{
+      screenHeight = MediaQuery.of(context).size.height;
+      screenWidth = MediaQuery.of(context).size.width;
+    }
+
+
     return GetBuilder<ProfileController>(builder: (value) {
       return GestureDetector(
         onPanDown: (details){
@@ -126,20 +135,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 },
                                 child: Container(
                                   width: screenWidth * .1,
-                                  // Adjust the size as needed
                                   height: screenWidth * .1,
-                                  // Adjust the size as needed
+
                                   decoration: const BoxDecoration(
                                     color: ThemeProvider.persianGreen,
-                                    // Change 'Colors.blue' to your desired button color
                                     shape: BoxShape.circle,
                                   ),
                                   child: const Center(
                                     child: Icon(
                                       Icons.edit,
-                                      // You can use any edit icon you prefer
-                                      color: Colors
-                                          .white, // Change 'Colors.white' to your desired icon color
+                                      color: Colors.white, // Change 'Colors.white' to your desired icon color
                                     ),
                                   ),
                                 ),

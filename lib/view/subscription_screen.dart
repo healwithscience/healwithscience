@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -46,8 +47,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                           value.onBackRoutes();
                         },
                         child: Container(
-                          width: screenWidth * .1,
-                          height: screenWidth * .1,
+                          width: kIsWeb ? screenWidth * .07 :  screenWidth * .1,
+                          height: kIsWeb ? screenWidth * .07 :  screenWidth * .1,
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: ThemeProvider.borderColor,
@@ -71,33 +72,41 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                       ),
                     ],
                   ),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        InkWell(onTap: () {
-                          if(value.currentPlan.value == 'intermediate' || value.currentPlan.value == 'advance'){
-                            successToast("You already have ${value.parser.getPlan()} plan");
-                          }else{
-                            successToast("Plan changed to basic");
-                            value.parser.setPlan('basic');
-                            value.onBackRoutes();
-                          }
+                  SizedBox(height: screenHeight * .03),
+                   //Hello
+                   Expanded(
+                     child: SingleChildScrollView(
+                       scrollDirection: Axis.vertical,
+                       child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            InkWell(onTap: () {
+                              if(value.currentPlan.value == 'intermediate' || value.currentPlan.value == 'advance'){
+                                successToast("You already have ${value.parser.getPlan()} plan");
+                              }else{
+                                successToast("Plan changed to basic");
+                                value.parser.setPlan('basic');
+                                value.onBackRoutes();
+                              }
 
-                        }, child: CommonCard(screenWidth: screenWidth, screenHeight: screenHeight, heading: AppString.free_plan, point1: AppString.free_plan_point1, point2: AppString.free_plan_point2, point3: AppString.free_plan_point3, imagePath: AssetPath.free_plan)),
-                        InkWell(
-                            onTap: () {
-                              value.purchaseProduct("intermediate_plan");
-                            },
-                            child: CommonCard(screenWidth: screenWidth, screenHeight: screenHeight, heading: AppString.paid_plan, point1: AppString.paid_plan_point1, point2: "", point3: AppString.paid_plan_point2, imagePath: AssetPath.pain_plan)),
-                        InkWell(
-                            onTap: () {
-                              value.purchaseProduct("advanced_plan");
-                            },
-                            child: CommonCard(screenWidth: screenWidth, screenHeight: screenHeight, heading: AppString.featured_plan, point1: AppString.featured_plan_point1, point2: AppString.featured_plan_point2, point3: AppString.featured_plan_point3, imagePath: AssetPath.featured_plan)),
-                      ],
-                    ),
-                  )
+                            }, child: CommonCard(screenWidth: screenWidth, screenHeight: screenHeight, heading: AppString.free_plan, point1: AppString.free_plan_point1, point2: AppString.free_plan_point2, point3: AppString.free_plan_point3, imagePath: AssetPath.free_plan)),
+                            SizedBox(height: screenHeight * .03),
+                            InkWell(
+                                onTap: () {
+                                  value.purchaseProduct("intermediate_plan");
+                                },
+                                child: CommonCard(screenWidth: screenWidth, screenHeight: screenHeight, heading: AppString.paid_plan, point1: AppString.paid_plan_point1, point2: "", point3: AppString.paid_plan_point2, imagePath: AssetPath.pain_plan)),
+                            SizedBox(height: screenHeight * .03),
+                            InkWell(
+                                onTap: () {
+                                  value.purchaseProduct("advanced_plan");
+                                },
+                                child: CommonCard(screenWidth: screenWidth, screenHeight: screenHeight, heading: AppString.featured_plan, point1: AppString.featured_plan_point1, point2: AppString.featured_plan_point2, point3: AppString.featured_plan_point3, imagePath: AssetPath.featured_plan)),
+                          ],
+                        ),
+                     ),
+                   ),
+
                 ],
               ),
             ),

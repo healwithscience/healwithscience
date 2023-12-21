@@ -1,3 +1,5 @@
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -82,8 +84,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            width: screenWidth * .1,
-                            height: screenWidth * .1,
+                            width: kIsWeb ? screenWidth * .07 :  screenWidth * .1,
+                            height: kIsWeb ? screenWidth * .07 :  screenWidth * .1,
                             decoration: BoxDecoration(
                                 border: Border.all(
                                   color: ThemeProvider.borderColor,
