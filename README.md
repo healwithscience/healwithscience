@@ -1,29 +1,22 @@
 # README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+# Account Deletion Guide
 
-### What is this repository for? ###
+Thank you for using our app! If you wish to delete your account, please follow the instructions below:
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+1. **Log in to your account.**
+2. **Go to the account Profile page.**
+3. **Find the option for account deletion.**
+4. **Follow the on-screen instructions to confirm and complete the process.**
 
-### How do I get set up? ###
+If you encounter any issues or have questions, feel free to contact our support team at healwithscience.ai@gmail.com.
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+## Additional Information
 
-### Contribution guidelines ###
+- **Privacy and Security:** We take your privacy seriously. Account deletion ensures that your personal information is handled securely.
 
-* Writing tests
-* Code review
-* Other guidelines
+- **Consequences:** Be aware that account deletion may result in the loss of data, subscriptions, and other account-related information.
 
-### Who do I talk to? ###
+## Contact Us
 
-* Repo owner or admin
-* Other community or team contact
+For any further assistance, please contact our support team at [healwithscience.ai@gmail.com](mailto:healwithscience.ai@gmail.com).
