@@ -10,6 +10,7 @@ import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:heal_with_science/controller/features_controller.dart';
 import 'package:heal_with_science/util/extensions/static_values.dart';
 import 'package:heal_with_science/util/theme.dart';
+import 'package:heal_with_science/util/utils.dart';
 import '../backend/helper/app_router.dart';
 import '../controller/dashboard_controller.dart';
 import '../util/app_assets.dart';
@@ -36,7 +37,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
     return GetBuilder<DashboardController>(builder: (value) {
-      return Obx(() => value.currentPlan.value == "null" ? SafeArea(
+      return Obx(() => (value.currentPlan.value == "null" || value.currentPlan.value == "") ? SafeArea(
 
         child: Container(
           color: Colors.white,

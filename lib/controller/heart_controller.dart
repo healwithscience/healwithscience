@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:heal_with_science/backend/parser/heart_parser.dart';
+import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../util/all_constants.dart';
 
@@ -13,55 +14,51 @@ class HeartController extends GetxController {
   HeartController({required this.parser});
 
   RxString heartRate = "".obs;
-  RxString bp = "0".obs;
-  RxString steps = "0".obs;
-  RxString activeEnergy = "0".obs;
+  List<HealthDataPoint> healthData = [];
 
-  RxString bloodPreSys = "0".obs;
-  RxString bloodPreDia = "0".obs;
+  static final types = [
+    HealthDataType.HEART_RATE,
+  ];
+  final permissions = types.map((e) => HealthDataAccess.READ_WRITE).toList();
 
-  // List<HealthDataPoint> healthData = [];
-  //
-  // HealthFactory health = HealthFactory();
-  //
-  // final types = [
-  //   HealthDataType.HEART_RATE,
-  //   HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
-  //   HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
-  //   HealthDataType.STEPS,
-  //   HealthDataType.ACTIVE_ENERGY_BURNED,
-  // ];
+  HealthFactory health = HealthFactory();
+
+  bool? hasPermissions = false;
+  bool authorized = false;
 
   @override
   void onInit() async {
     super.onInit();
-    /*if (Platform.isAndroid) {
+    hasPermissions = await HealthFactory.hasPermissions(types, permissions: permissions);
+
+    if (!hasPermissions!) {
+      // requesting access to the data types before reading them
+      try {
+        authorized = await health.requestAuthorization(types, permissions: permissions);
+      } catch (error) {
+        print("Exception in authorize: $error");
+      }
+    }else{
+      fetchData();
+    }
+
+   /* if (Platform.isAndroid) {
       final permissionStatus = Permission.activityRecognition.request();
+
       if (await permissionStatus.isDenied ||
           await permissionStatus.isPermanentlyDenied) {
         showToast(
             'activityRecognition permission required to fetch your steps count');
         return;
       }else{
-        fetchData();
+
       }
     }*/
   }
 
-
-
-
-
-
-/*  Future fetchData() async {
+  Future fetchData() async {
     // define the types to get
-    final types = [
-      HealthDataType.HEART_RATE,
-      HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
-      HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
-      HealthDataType.STEPS,
-      HealthDataType.ACTIVE_ENERGY_BURNED,
-    ];
+
 
     // get data within the last 24 hours
     final now = DateTime.now();
@@ -80,26 +77,13 @@ class HeartController extends GetxController {
 
           for (HealthDataPoint h in healthData) {
             if (h.type == HealthDataType.HEART_RATE) {
-              heartRate.value = "${h.value}";
-            } else if (h.type == HealthDataType.BLOOD_PRESSURE_SYSTOLIC) {
-              bloodPreSys.value = "${h.value}";
-            } else if (h.type == HealthDataType.BLOOD_PRESSURE_DIASTOLIC) {
-              bloodPreDia.value = "${h.value}";
-            } else if (h.type == HealthDataType.ACTIVE_ENERGY_BURNED) {
-              activeEnergy.value = "${h.value}";
-            }else if (h.type == HealthDataType.STEPS) {
-              steps.value = "${h.value}";
+              var doubleValue = double.parse('${h.value}');
+              String formattedValue = doubleValue.toStringAsFixed(2);
+              heartRate.value = formattedValue;
             }
-
-
           }
-          if (bloodPreSys.value != "null" && bloodPreDia.value != "null") {
-            bp.value = "$bloodPreSys / $bloodPreDia mmHg";
-          }
-          print("Hello Data: ${bp.value}");
-          print("Hello Data: ${steps.value}");
+
           print("Hello Data: ${heartRate.value}");
-          print("Hello Data: ${activeEnergy.value}");
         }
       } catch (error) {
         print("Exception in getHealthDataFromTypes: $error");
@@ -110,7 +94,7 @@ class HeartController extends GetxController {
     } else {
       print("Authorization not granted");
     }
-  }*/
+  }
 
   void onBackRoutes() {
     var context = Get.context as BuildContext;

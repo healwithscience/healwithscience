@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import '../all_constants.dart';
+// import 'dart:js' as js;
 
 class StaticValue {
   static int rewardPoint = 100;
@@ -50,20 +53,53 @@ class StaticValue {
   //This function is used to generate sound according to particular frequency value (Native Approach)
   static Future<void> playFrequency() async {
     isPlaying.value = true;
-    Map<String, dynamic> data = {
-      'frequency': frequencyValue.value,
-      'duty_cycle': dutyCycle,
-      'amplitude': amplitude,
-      'offset': offset,
-      'phase': phaseControl,
-      'wavetype': waveType
-    };
 
-    var channelName = const MethodChannel("nativeBridge");
-    try {
-      await channelName.invokeMethod<String>("playMusic", data);
-    } catch (e) {
-      print("Error getting string: $e");
+    if(kIsWeb){
+      //Commented because dart:js not working  only in web . You have to uncomment it if you have to run application in web
+      // js.context.callMethod('generateAudio', [amplitude,frequencyValue.value,phaseControl,waveType]);
+    }else{
+      if(Platform.isAndroid){
+        Map<String, dynamic> data = {
+          'frequency': frequencyValue.value,
+          'duty_cycle': dutyCycle,
+          'amplitude': amplitude,
+          'offset': offset,
+          'phase': phaseControl,
+          'wavetype': waveType
+        };
+
+        var channelName = const MethodChannel("nativeBridge");
+        try {
+          await channelName.invokeMethod<String>("playMusic", data);
+        } catch (e) {
+          print("Error getting string: $e");
+        }
+      }else{
+
+      }
+    }
+  }
+
+
+  static Future<void> stopFrequency() async {
+    if (isPlaying.value == true) {
+      isPlaying.value = false;
+
+      if(kIsWeb){
+        //Commented because dart:js not working  only in web . You have to uncomment it if you have to run application in web
+        // js.context.callMethod('stopAudio');
+      }else{
+        if(Platform.isAndroid){
+          var channelName = const MethodChannel("nativeBridge");
+          try {
+            await channelName.invokeMethod<String>("stopMusic");
+          } catch (e) {
+            print("Error getting string: $e");
+          }
+        }else{
+
+        }
+      }
     }
   }
 
@@ -82,17 +118,7 @@ class StaticValue {
   }
 
   //Used to stop generated frequency sound
-  static Future<void> stopFrequency() async {
-    if (isPlaying.value == true) {
-      isPlaying.value = false;
-      var channelName = const MethodChannel("nativeBridge");
-      try {
-        await channelName.invokeMethod<String>("stopMusic");
-      } catch (e) {
-        print("Error getting string: $e");
-      }
-    }
-  }
+
 
   //This function is used to play next frequency in the list
   static Future<void> playNext() async {

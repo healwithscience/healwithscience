@@ -16,6 +16,10 @@ class DashboardParser {
     return sharedPreferencesManager.getString('plan').toString();
   }
 
+  String getEmail(){
+    return sharedPreferencesManager.getString('email').toString();
+  }
+
   void setPlan(String type){
      sharedPreferencesManager.putString('plan',type);
   }

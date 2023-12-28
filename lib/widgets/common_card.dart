@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
 import '../util/app_assets.dart';
 import '../util/dimens.dart';
 import '../util/theme.dart';
@@ -31,7 +30,7 @@ class CommonCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: kIsWeb ? screenHeight * 0.4 : screenHeight * 0.25,
+      height: kIsWeb ? screenHeight * 0.4 : screenHeight * 0.28,
       padding: EdgeInsets.symmetric(vertical:screenWidth * 0.05,horizontal:screenWidth * 0.03 ),
       width: screenWidth,
       decoration: BoxDecoration(

@@ -16,4 +16,9 @@ class SubscriptionParser {
     return sharedPreferencesManager.getString('plan').toString();
   }
 
+
+  String getEmail(){
+    return sharedPreferencesManager.getString('email').toString();
+  }
+
 }

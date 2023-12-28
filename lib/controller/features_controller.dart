@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart' as found;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -12,6 +13,8 @@ import '../util/all_constants.dart';
 import '../util/extensions/static_values.dart';
 import '../util/inactivity_manager.dart';
 import '../util/utils.dart';
+// import 'dart:js' as js;
+
 
 class FeaturesController extends GetxController {
   final FeaturesParser parser;
@@ -89,6 +92,8 @@ class FeaturesController extends GetxController {
     nonPersonalizedAds: true,
   );
 
+
+
   @override
   onInit()  {
     super.onInit();
@@ -102,7 +107,9 @@ class FeaturesController extends GetxController {
     connectivityResult.value = await Utils.checkInternetConnection();
 
     if(connectivityResult.value == ConnectivityResult.wifi || connectivityResult.value == ConnectivityResult.mobile){
-      loadRewardedAd();
+      if(!found.kIsWeb){
+        loadRewardedAd();
+      }
     }
 
     final data = Get.arguments;
@@ -297,7 +304,6 @@ class FeaturesController extends GetxController {
   }
 
   void onBackRoutes() {
-
     if(isButtonPressed.value == false){
       if (isPlaying.value == true) {
         timer?.cancel();
@@ -311,7 +317,6 @@ class FeaturesController extends GetxController {
       // var context = Get.context as BuildContext;
       // Navigator.of(context).pop(false);
     }
-
   }
 
   //Used to update the theme (dark or light)
@@ -325,20 +330,26 @@ class FeaturesController extends GetxController {
 
     changeProgramName();
     isPlaying.value = true;
-    Map<String, dynamic> data = {
-      'frequency': frequencyValue.value,
-      'duty_cycle': dutyCycle.value,
-      'amplitude': amplitude.value,
-      'offset': offset.value,
-      'phase': phaseControl.value,
-      'wavetype':selectedOption.value
-    };
-
-    var channelName = const MethodChannel("nativeBridge");
-    try {
-      await channelName.invokeMethod<String>("playMusic", data);
-    } catch (e) {
-      print("Error getting string: $e");
+    if(found.kIsWeb){
+      //Commented because dart:js not working  only in web . You have to uncomment it if you have to run application in web
+      // js.context.callMethod('generateAudio', [amplitude.value,frequencyValue.value,phaseControl.value,selectedOption.value]);
+    }else{
+      if(Platform.isAndroid){
+        Map<String, dynamic> data = {
+          'frequency': frequencyValue.value,
+          'duty_cycle': dutyCycle.value,
+          'amplitude': amplitude.value,
+          'offset': offset.value,
+          'phase': phaseControl.value,
+          'wavetype':selectedOption.value
+        };
+        var channelName = const MethodChannel("nativeBridge");
+        try {
+          await channelName.invokeMethod<String>("playMusic", data);
+        } catch (e) {
+          print("Error getting string: $e");
+        }
+      }
     }
   }
 
@@ -346,12 +357,22 @@ class FeaturesController extends GetxController {
   Future<void> stopFrequency() async {
     if(isPlaying.value == true){
       isPlaying.value = false;
-      var channelName = const MethodChannel("nativeBridge");
-      try {
-        await channelName.invokeMethod<String>("stopMusic");
-      } catch (e) {
-        print("Error getting string: $e");
+
+      if(found.kIsWeb){
+        //Commented because dart:js not working  only in web . You have to uncomment it if you have to run application in web
+        // js.context.callMethod('stopAudio');
+      }else{
+        if(Platform.isAndroid){
+          var channelName = const MethodChannel("nativeBridge");
+          try {
+            await channelName.invokeMethod<String>("stopMusic");
+          } catch (e) {
+            print("Error getting string: $e");
+          }
+        }
       }
+
+
     }
   }
 

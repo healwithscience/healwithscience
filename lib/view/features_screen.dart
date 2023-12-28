@@ -284,8 +284,8 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                 ),
                               )),
                           
-                              SizedBox(
-                                height: screenWidth * .8,
+                              Container(
+                                height: screenWidth * .9,
                                 child: PageView(
                                   onPageChanged: (index) {
                                     value.currentIndex.value = index.toDouble();
@@ -311,9 +311,9 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                               fontSize: Dimens.eighteen,
                                               color: value.currentTheme.value == 1 ? ThemeProvider.lightBlack : ThemeProvider.light_white,
                                               fontFamily: 'light')),
+
                                           SizedBox(height: screenHeight * .01),
-                                          //display time remaining
-                                          SizedBox(height: screenHeight * .025),
+
                                           Stack(
                                             children: [
                                               Row(
@@ -994,9 +994,11 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                         ],
                                       ),
                                     ),
+
                                     Align(
                                       alignment: Alignment.center,
                                       child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           // Obx(() => CommonSliderWidget(
                                           //       sliderValue: value.frequency.value

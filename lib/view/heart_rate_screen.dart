@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -7,11 +5,13 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:heal_with_science/controller/heart_controller.dart';
 import 'package:heal_with_science/util/theme.dart';
-import '../controller/dashboard_controller.dart';
 import '../util/app_assets.dart';
 import '../util/dimens.dart';
 import '../util/string.dart';
 import '../widgets/commontext.dart';
+import 'package:flutter/material.dart';
+import 'package:heart_bpm/chart.dart';
+import 'package:heart_bpm/heart_bpm.dart';
 
 class HeartRateScreen extends StatefulWidget {
   const HeartRateScreen({Key? key}) : super(key: key);
@@ -22,6 +22,13 @@ class HeartRateScreen extends StatefulWidget {
 
 class _HeartRateScreenState extends State<HeartRateScreen> {
   double screenHeight = 0, screenWidth = 0;
+  List<SensorValue> data = [];
+  List<SensorValue> bpmValues = [];
+
+  //  Widget chart = BPMChart(data);
+
+  bool isBPMEnabled = false;
+  Widget? dialog;
 
   @override
   Widget build(BuildContext context) {
@@ -40,107 +47,106 @@ class _HeartRateScreenState extends State<HeartRateScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       InkWell(
-                        onTap: (){
+                        onTap: () {
                           value.onBackRoutes();
                         },
                         child: Container(
-                          width: kIsWeb ? screenWidth * .07 :  screenWidth * .1,
-                          height: kIsWeb ? screenWidth * .07 :  screenWidth * .1,
+                          width: kIsWeb ? screenWidth * .07 : screenWidth * .1,
+                          height: kIsWeb ? screenWidth * .07 : screenWidth * .1,
                           decoration: BoxDecoration(
                               border: Border.all(
                                 color: ThemeProvider.borderColor,
                               ),
-                              borderRadius:
-                              const BorderRadius.all(Radius.circular(10))),
+                              borderRadius: const BorderRadius.all(Radius.circular(10))),
                           child: Padding(
-                            padding:  EdgeInsets.all(screenWidth * .02),
+                            padding: EdgeInsets.all(screenWidth * .02),
                             child: SvgPicture.asset(AssetPath.back_arrow),
                           ),
                         ),
                       ),
-                      CommonTextWidget(
-                          lineHeight:1.3,
-                          heading: AppString.heart_rate,
-                          fontSize: Dimens.twentyFour,
-                          color: Colors.black,
-                          fontFamily: 'bold'),
+                      CommonTextWidget(lineHeight: 1.3, heading: AppString.heart_rate, fontSize: Dimens.twentyFour, color: Colors.black, fontFamily: 'bold'),
                       InkWell(
-                        onTap: (){
-
-                        },
+                        onTap: () {},
                         child: Padding(
-                          padding:  EdgeInsets.all(screenWidth * .02),
-                          child: SvgPicture.asset(AssetPath.setting,width:screenWidth * .012,color: ThemeProvider.blackColor),
+                          padding: EdgeInsets.all(screenWidth * .02),
+                          child: SvgPicture.asset(AssetPath.setting, width: screenWidth * .012, color: ThemeProvider.blackColor),
                         ),
                       )
                     ],
                   ),
                   const SizedBox(height: 10),
+                  /*   Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        isBPMEnabled
+                            ? dialog = HeartBPMDialog(
+                                context: context,
+                                showTextValues: true,
+                                borderRadius: 10,
+                                onRawData: (value) {
+                                  setState(() {
+                                    if (data.length >= 100) data.removeAt(0);
+                                    data.add(value);
+                                  });
+                                },
+                                onBPM: (value) => setState(() {
+                                  if (bpmValues.length >= 100) bpmValues.removeAt(0);
+                                  bpmValues.add(SensorValue(value: value.toDouble(), time: DateTime.now()));
+                                }),
+                              )
+                            : const SizedBox(),
+                        Center(
+                          child: ElevatedButton.icon(
+                            icon: Icon(Icons.favorite_rounded),
+                            label: Text(isBPMEnabled ? "Stop measurement" : "Measure BPM"),
+                            onPressed: () => setState(() {
+                              if (isBPMEnabled) {
+                                isBPMEnabled = false;
+                                // dialog.
+                              } else
+                                isBPMEnabled = true;
+                            }),
+                          ),
+                        ),
 
-                 /* Row(
-                    children: [
-                      Obx(() =>  Expanded(
-                          child: healthCard(
-                              title: "Heart rate",
-                              image: AssetPath.user,
-                              data: value.heartRate.value != "null" ? "${value.heartRate.value} bpm" : "",
-                              color: const Color(0xFF8d7ffa)))),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                     Obx(() =>  Expanded(
-                         child: healthCard(
-                             title: "Blood pressure",
-                             data: value.bp.value ?? "",
-                             image: AssetPath.user,
-                             color: const Color(0xFF4fd164))))
-                    ],
-                  ),
+                        SizedBox(height: screenHeight * .09),
 
+
+                        CommonTextWidget(
+                            lineHeight: 1.3,
+                            heading: 'Covering the camera lens with the fingertip enables the camera to measure the subtle changes in skin tone. These are proportional to the changes in the blood flow through the arteries just below the skin of the fingertip. This is in-turn correlated to the heart beats. Hence, the variations in the skin tone can be approximated to the instances of heart beats. Measuring the time differences between the peaks provides Beats per Minute.',
+                            fontSize: Dimens.sixteen,
+                            color: Colors.black,
+                            fontFamily: 'light'),
+                      ],
+                    ),
+                  ),*/
                   Row(
                     children: [
-                      Obx(() =>  Expanded(
-                          child: healthCard(
-                              title: "Step count",
-                              image: AssetPath.user,
-                              data: value.steps.value ?? "",
-                              color: const Color(0xFF2086fd)))),
+                      Obx(() => Expanded(child: healthCard(title: "Heart rate", image: AssetPath.user, data: value.heartRate.value != "null" ? "${value.heartRate.value} bpm" : "", color: const Color(0xFF8d7ffa)))),
                       const SizedBox(
                         width: 10,
                       ),
-                      Obx(() =>   Expanded(
-                          child: healthCard(
-                              title: "Energy burned",
-                              image: AssetPath.user,
-                              data: value.activeEnergy.value != "null" ? "${value.activeEnergy.value} cal" : "",
-                              color: const Color(0xFFf77e7e))),)
                     ],
-                  )*/
+                  ),
                 ],
-              )
-          ),
+              )),
         ),
       );
     });
   }
 
-  Widget healthCard(
-      {String title = "",
-        String data = "",
-        Color color = Colors.blue,
-        required String image}) {
+  Widget healthCard({String title = "", String data = "", Color color = Colors.blue, required String image}) {
     return Container(
       height: 240,
       margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.symmetric(vertical: 10),
-      decoration: BoxDecoration(
-          color: color,
-          borderRadius: const BorderRadius.all(Radius.circular(20))),
+      decoration: BoxDecoration(color: color, borderRadius: const BorderRadius.all(Radius.circular(20))),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Text(title,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
           Image.asset(image, width: 70),
           Text(data),
         ],

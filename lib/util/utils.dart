@@ -72,10 +72,38 @@ class Utils {
     });
   }
 
+
+
+
   //Function Used to check Internet Connection
   static Future<ConnectivityResult> checkInternetConnection() async {
     ConnectivityResult result = await Connectivity().checkConnectivity();
     return result;
+  }
+
+
+  //Function Used to update Reward Point
+  static Future<void> updateSubscription(String type,String email) async {
+    final firestoreInstance = FirebaseFirestore.instance;
+
+    // Create a reference to the document for the specified user
+    final subscriptionType = firestoreInstance.collection('subscription').doc(email);
+
+    // Check if the document already exists
+    final docSnapshot = await subscriptionType.get();
+
+    if (!docSnapshot.exists) {
+      // The document doesn't exist, so you can create a new one
+      await subscriptionType.set({
+        "plan_type": "basic",
+      });
+    }else{
+      await subscriptionType.update({
+        "plan_type": type,
+      });
+    }
+    // Update the "points" field with the new value
+
   }
 
 }

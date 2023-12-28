@@ -9,6 +9,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import '../backend/helper/app_router.dart';
 import '../model/Category.dart';
 import '../util/all_constants.dart';
+import '../util/utils.dart';
 
 class DashboardController extends GetxController {
   final DashboardParser parser;
@@ -31,6 +32,8 @@ class DashboardController extends GetxController {
   late StreamSubscription<List<PurchaseDetails>> _subscription;
 
   RxString currentPlan = "".obs;
+  bool _subscriptionSetUp = false;
+
 
   // List<String,String> itemList = ["Category", "Custom Playlist", "Frequencies","Hear Rate","Playlist"];
 
@@ -38,8 +41,7 @@ class DashboardController extends GetxController {
   void onInit() {
     super.onInit();
 
-    getSubScriptionDetail();
-
+    saveSubscriptionStatus();
 
 
     listItem.add(ListItem(name: "Category", imagePath: AssetPath.category));
@@ -82,7 +84,155 @@ class DashboardController extends GetxController {
     }
   }
 
-  Future<void> populateDB() async {
+  Future<void> saveSubscriptionStatus() async {
+    final firestoreInstance = FirebaseFirestore.instance;
+
+    // Create a reference to the document for the specified user
+    final subscriptionType = firestoreInstance.collection('subscription').doc(parser.getEmail());
+
+    // Check if the document already exists
+    final docSnapshot = await subscriptionType.get();
+
+    if (!docSnapshot.exists) {
+      // The document doesn't exist, so you can create a new one
+      await subscriptionType.set({
+        "plan_type": "basic",
+      });
+    }else{
+      final planType = docSnapshot.data()?['plan_type'];
+      parser.setPlan(planType);
+      currentPlan.value = planType;
+      print('Plan Type: $planType');
+    }
+  }
+
+  void getSubScriptionDetail() {
+    final Stream<List<PurchaseDetails>> purchaseUpdated = _inAppPurchase.purchaseStream;
+    _subscription = purchaseUpdated.listen((List<PurchaseDetails> purchaseDetailsList) {
+      _listenToPurchaseUpdated(purchaseDetailsList);
+
+    }, onDone: () {
+      _subscription.cancel();
+    }, onError: (Object error) {
+      print("Error in purchaseUpdated stream: $error");
+    });
+    _inAppPurchase.restorePurchases();
+  }
+
+  Future<void> _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) async {
+
+    for (final PurchaseDetails purchaseDetails in purchaseDetailsList) {
+      if (purchaseDetails.status == PurchaseStatus.pending) {
+      } else {
+        if (purchaseDetails.status == PurchaseStatus.error) {
+        } else if (purchaseDetails.status == PurchaseStatus.purchased || purchaseDetails.status == PurchaseStatus.restored) {
+          if(purchaseDetails.productID == "intermediate_plan"){
+            if(parser.getPlan() != 'advance'){
+              Utils.updateSubscription("intermediate",parser.getEmail());
+              setSubscriptionType("intermediate");
+            }
+          }
+          if(purchaseDetails.productID == "advanced_plan"){
+            Utils.updateSubscription("advance",parser.getEmail());
+            setSubscriptionType("advance");
+
+          }
+        }
+        if (purchaseDetails.pendingCompletePurchase) {
+          await _inAppPurchase.completePurchase(purchaseDetails);
+        }
+      }
+    }
+    currentPlan.value = parser.getPlan();
+
+  }
+
+  void setSubscriptionType(String type){
+    parser.setPlan(type);
+    currentPlan.value = type;
+  }
+
+  Future<void> purchaseProduct(String productId) async {
+    try {
+      final PurchaseParam purchaseParam = PurchaseParam(
+        productDetails: await getProductDetails(productId),
+        // Set to false for production
+      );
+
+      // Initiating the purchase process
+      await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
+      if (!_subscriptionSetUp) {
+        getSubScriptionDetail();
+        _subscriptionSetUp = true;
+      }
+    } catch (error) {
+      // Handle error
+      print("Error during purchase: $error");
+    }
+  }
+
+  Future<ProductDetails> getProductDetails(String productId) async {
+    final ProductDetailsResponse response = await InAppPurchase.instance.queryProductDetails(<String>{productId});
+
+    if (response.notFoundIDs.isNotEmpty) {
+      // Handle not found IDs
+      showToast("Product not found");
+    }
+
+    return response.productDetails.first;
+  }
+
+
+/*Future<void> populateDB() async {
+
+    try {
+      // Read the text file from the assets
+      ByteData data = await rootBundle.load('assets/spooky_data.txt');
+      List<int> bytes = data.buffer.asUint8List();
+      String fileContent = String.fromCharCodes(bytes);
+
+      // Split the file content into lines
+      List<String> lines = fileContent.split('\n');
+
+      List<Category> categories = [];
+      categories.clear();
+
+      try{
+        for (String line in lines) {
+          List<String> name = line.split(',');
+          String data = line.split('"')[1];
+          String newDAta = data.replaceAll(',','/');
+          String stringWithoutLastChar = newDAta.substring(0, newDAta.length - 1);
+          categories.add(Category(name: name[0], frequency: stringWithoutLastChar));
+
+        }
+      }catch (e){
+        print("HelloError===>"+e.toString());
+      }
+
+      try {
+        // Get a reference to the Firestore collection
+        CollectionReference categoriesCollection =
+        FirebaseFirestore.instance.collection('new_categories');
+
+        // Loop through the list of Category objects and add them to Firestore
+        for (Category category in categories) {
+          print("Hello CategoryName===>${category.name}");
+          await categoriesCollection.add(category.toMap());
+        }
+
+        print('Categories added to Firestore successfully');
+      } catch (e) {
+        print('Error adding categories to Firestore: $e');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }*/
+
+
+
+/*  Future<void> populateDB() async {
     print("Hello I am here");
     try {
       // Read the text file from the assets
@@ -150,7 +300,7 @@ class DashboardController extends GetxController {
       try {
         // Get a reference to the Firestore collection
         CollectionReference categoriesCollection =
-            FirebaseFirestore.instance.collection('categories');
+        FirebaseFirestore.instance.collection('categories');
 
         // Loop through the list of Category objects and add them to Firestore
         for (Category category in categories) {
@@ -183,125 +333,5 @@ class DashboardController extends GetxController {
     } catch (e) {
       print('Error: $e');
     }
-  }
-
-  void getSubScriptionDetail() {
-    final Stream<List<PurchaseDetails>> purchaseUpdated = _inAppPurchase.purchaseStream;
-    _subscription = purchaseUpdated.listen((List<PurchaseDetails> purchaseDetailsList) {
-      _listenToPurchaseUpdated(purchaseDetailsList);
-
-    }, onDone: () {
-      _subscription.cancel();
-    }, onError: (Object error) {
-      print("Error in purchaseUpdated stream: $error");
-    });
-    _inAppPurchase.restorePurchases();
-
-
-
-  }
-
-  Future<void> _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) async {
-
-    for (final PurchaseDetails purchaseDetails in purchaseDetailsList) {
-      if (purchaseDetails.status == PurchaseStatus.pending) {
-      } else {
-        if (purchaseDetails.status == PurchaseStatus.error) {
-        } else if (purchaseDetails.status == PurchaseStatus.purchased || purchaseDetails.status == PurchaseStatus.restored) {
-          if(purchaseDetails.productID == "intermediate_plan"){
-            setSubscriptionType("intermediate");
-
-          }
-          if(purchaseDetails.productID == "advanced_plan"){
-            setSubscriptionType("advance");
-          }
-        }
-        if (purchaseDetails.pendingCompletePurchase) {
-          await _inAppPurchase.completePurchase(purchaseDetails);
-        }
-      }
-    }
-    currentPlan.value = parser.getPlan();
-
-  }
-
-
-
-  /*Future<void> populateDB() async {
-
-    try {
-      // Read the text file from the assets
-      ByteData data = await rootBundle.load('assets/spooky_data.txt');
-      List<int> bytes = data.buffer.asUint8List();
-      String fileContent = String.fromCharCodes(bytes);
-
-      // Split the file content into lines
-      List<String> lines = fileContent.split('\n');
-
-      List<Category> categories = [];
-      categories.clear();
-
-      try{
-        for (String line in lines) {
-          List<String> name = line.split(',');
-          String data = line.split('"')[1];
-          String newDAta = data.replaceAll(',','/');
-          String stringWithoutLastChar = newDAta.substring(0, newDAta.length - 1);
-          categories.add(Category(name: name[0], frequency: stringWithoutLastChar));
-
-        }
-      }catch (e){
-        print("HelloError===>"+e.toString());
-      }
-
-      try {
-        // Get a reference to the Firestore collection
-        CollectionReference categoriesCollection =
-        FirebaseFirestore.instance.collection('new_categories');
-
-        // Loop through the list of Category objects and add them to Firestore
-        for (Category category in categories) {
-          print("Hello CategoryName===>${category.name}");
-          await categoriesCollection.add(category.toMap());
-        }
-
-        print('Categories added to Firestore successfully');
-      } catch (e) {
-        print('Error adding categories to Firestore: $e');
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
   }*/
-
-  void setSubscriptionType(String type){
-    parser.setPlan(type);
-    currentPlan.value = type;
-  }
-
-  Future<void> purchaseProduct(String productId) async {
-    try {
-      final PurchaseParam purchaseParam = PurchaseParam(
-        productDetails: await getProductDetails(productId),
-        // Set to false for production
-      );
-
-      // Initiating the purchase process
-      await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
-    } catch (error) {
-      // Handle error
-      print("Error during purchase: $error");
-    }
-  }
-
-  Future<ProductDetails> getProductDetails(String productId) async {
-    final ProductDetailsResponse response = await InAppPurchase.instance.queryProductDetails(<String>{productId});
-
-    if (response.notFoundIDs.isNotEmpty) {
-      // Handle not found IDs
-      showToast("Product not found");
-    }
-
-    return response.productDetails.first;
-  }
 }

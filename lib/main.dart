@@ -8,6 +8,7 @@ import 'package:heal_with_science/util/constants.dart';
 import 'backend/helper/app_router.dart';
 import 'backend/helper/init.dart';
 
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
