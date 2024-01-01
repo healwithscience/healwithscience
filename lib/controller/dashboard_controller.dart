@@ -53,7 +53,7 @@ class DashboardController extends GetxController {
     rewardPoint();
     parser.saveReferralUser("");
     // getCollectionSize();
-    // populateDB();
+    populateDB();
   }
 
   Future<void> logout() async {
@@ -122,10 +122,13 @@ class DashboardController extends GetxController {
   Future<void> _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) async {
 
     for (final PurchaseDetails purchaseDetails in purchaseDetailsList) {
+      print("Hello My Status  =====> ${purchaseDetails.status}");
       if (purchaseDetails.status == PurchaseStatus.pending) {
+
       } else {
         if (purchaseDetails.status == PurchaseStatus.error) {
-        } else if (purchaseDetails.status == PurchaseStatus.purchased || purchaseDetails.status == PurchaseStatus.restored) {
+
+        }else if (purchaseDetails.status == PurchaseStatus.purchased) {
           if(purchaseDetails.productID == "intermediate_plan"){
             if(parser.getPlan() != 'advance'){
               Utils.updateSubscription("intermediate",parser.getEmail());
@@ -135,11 +138,11 @@ class DashboardController extends GetxController {
           if(purchaseDetails.productID == "advanced_plan"){
             Utils.updateSubscription("advance",parser.getEmail());
             setSubscriptionType("advance");
-
           }
         }
         if (purchaseDetails.pendingCompletePurchase) {
           await _inAppPurchase.completePurchase(purchaseDetails);
+
         }
       }
     }
@@ -181,6 +184,9 @@ class DashboardController extends GetxController {
 
     return response.productDetails.first;
   }
+
+
+
 
 
 /*Future<void> populateDB() async {
@@ -229,8 +235,6 @@ class DashboardController extends GetxController {
       print('Error: $e');
     }
   }*/
-
-
 
 /*  Future<void> populateDB() async {
     print("Hello I am here");
@@ -334,4 +338,49 @@ class DashboardController extends GetxController {
       print('Error: $e');
     }
   }*/
+
+  Future<void> populateDB() async {
+    print("Hello I am here");
+    try {
+      // Read the text file from the assets
+      ByteData data = await rootBundle.load('assets/spooky_data.txt');
+      List<int> bytes = data.buffer.asUint8List();
+      String fileContent = String.fromCharCodes(bytes);
+
+      // Split the file content into lines
+      List<String> lines = fileContent.split('\n');
+
+      List<Category> categories = [];
+
+
+      for (String line in lines) {
+        List<String> split2 = line.split(':');
+        categories.add(Category(name: split2[0].trim(), frequency: split2[1].trim()));
+        print("HelloPrintLineSize====>  ${split2[0].trim()}");
+        print("HelloPrintLineSize====>  ${split2[1].trim()}");
+      }
+
+      print("HelloBioPhotonic====>  ${lines.length}");
+
+
+  /*    try {
+        // Get a reference to the Firestore collection
+        CollectionReference categoriesCollection =
+        FirebaseFirestore.instance.collection('biophotonic');
+
+        // Loop through the list of Category objects and add them to Firestore
+        for (Category category in categories) {
+          print('HelloCategoriesadd===>'+category.name.toString());
+          await categoriesCollection.add(category.toMap());
+        }
+
+        print('Categories added to Firestore successfully');
+      } catch (e) {
+        print('Error adding categories to Firestore: $e');
+      }*/
+
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
 }

@@ -25,10 +25,7 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
-        MethodChannel(
-            flutterEngine.dartExecutor.binaryMessenger,
-            channelName
-        ).setMethodCallHandler { call, result ->
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, channelName).setMethodCallHandler { call, result ->
 
             // This method is invoked on the main thread.
             if (call.method == "playMusic") {

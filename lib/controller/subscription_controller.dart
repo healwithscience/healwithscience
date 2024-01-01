@@ -68,15 +68,18 @@ class SubscriptionController extends GetxController {
 
       } else {
         if (purchaseDetails.status == PurchaseStatus.error) {
-        } else if (purchaseDetails.status == PurchaseStatus.purchased || purchaseDetails.status == PurchaseStatus.restored) {
+
+        } else if (purchaseDetails.status == PurchaseStatus.purchased) {
           print("HelloHereSubscriptionScreen==>" + purchaseDetails.productID);
           if (purchaseDetails.productID == "intermediate_plan") {
             if (parser.getPlan() != 'advance') {
+              Utils.updateSubscription("intermediate",parser.getEmail());
               parser.setPlan("intermediate");
               currentPlan.value = 'intermediate';
             }
           }
           if (purchaseDetails.productID == "advanced_plan") {
+            Utils.updateSubscription("advance",parser.getEmail());
             parser.setPlan("advance");
             currentPlan.value = 'advance';
           }

@@ -123,4 +123,28 @@ class ProfileController extends GetxController {
       showToast('User not signed in');
     }
   }
+
+
+  Future<void> deleteAccount() async {
+    try {
+      final User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // Delete the user account
+        await user.delete();
+
+        StaticValue.stopFrequency();
+        StaticValue.miniPlayer.value = false;
+        InactivityManager.doNotStart();
+        parser.logout();
+        Get.back();
+        Get.offNamedUntil(AppRouter.getLoginRoute(), (route) => false);
+        print('User account deleted successfully');
+      } else {
+        print('No user signed in');
+      }
+    } catch (e) {
+      print('Error deleting account: $e');
+    }
+  }
 }

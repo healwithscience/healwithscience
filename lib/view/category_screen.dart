@@ -173,18 +173,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                               },
                                               child: SizedBox(
                                                 height: screenHeight * 0.07,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          vertical: 15,
-                                                          horizontal: 10),
-                                                      child: CommonTextWidget(
-                                                          textOverflow:
-                                                              TextOverflow
+                                                child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
+                                                    Padding(padding:kIsWeb   ?  EdgeInsets.symmetric(vertical: 0, horizontal: 10)   : const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                                                      child: CommonTextWidget(textOverflow: TextOverflow
                                                                   .ellipsis,
                                                           heading: value
                                                               .categories[index]
@@ -196,13 +187,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                     ),
                                                     SizedBox(
                                                         width: screenWidth * .8,
-                                                        child: CustomGradientDivider(
-                                                            height: 1.0,
-                                                            startColor:
-                                                                ThemeProvider
-                                                                    .greyColor,
-                                                            endColor: Colors
-                                                                .transparent))
+                                                        child: CustomGradientDivider(height: 1.0, startColor: ThemeProvider.greyColor, endColor: Colors.transparent))
                                                   ],
                                                 ),
                                               ),
@@ -216,12 +201,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                               width: 50,
                                               alignment: Alignment.bottomCenter,
                                               height: screenHeight * .75,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: value.alphabets
-                                                    .map((alphabet) => InkWell(
+                                              child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: value.alphabets.map((alphabet) => InkWell(
                                                           onTap: () {
                                                             value.visibility
                                                                 .value = true;

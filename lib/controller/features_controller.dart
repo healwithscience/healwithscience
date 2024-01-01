@@ -30,9 +30,9 @@ class FeaturesController extends GetxController {
   final double minDutyCycle = 0.0;
   final double maxDutyCycle = 1.0;
 
-  final RxDouble amplitude = 45.0.obs;
-  final double maxAmplitude = 70.0;
-  final double minAmplitude = 30.0;
+  final RxDouble amplitude = 10.0.obs;
+  final double maxAmplitude = 20.0;
+  final double minAmplitude = 0.0;
 
   final RxDouble offset = 0.0.obs;
   final double maxOffset = 50.0;

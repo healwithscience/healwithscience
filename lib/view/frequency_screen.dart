@@ -35,6 +35,7 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
+
     return GetBuilder<FrequencyController>(builder: (value) {
       return GestureDetector(
         onPanDown: (details){

@@ -130,9 +130,12 @@ class AppString {
   static String earn_point = "Earn Point";
   static String download = "Download";
   static String privacy_policy = "Privacy Policy";
+  static String about = "About";
+  static String deletion_guide = "Account Deletion Guide";
   static String notification = "Notification";
   static String sign_out = "Sign Out";
   static String share = "Share";
+  static String delete = "Delete Account";
   static String subscription = "Subscriptions";
   static String camera = "Camera";
   static String gallery = "Gallery";

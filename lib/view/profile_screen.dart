@@ -226,8 +226,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         screenWidth: screenWidth,
                                         userIconAssetPath: AssetPath.sign_out,
                                         accountText: AppString.subscription)),
-
-
                                 InkWell(
                                     onTap: () {
                                       Get.toNamed(AppRouter.getShareScreen());
@@ -236,6 +234,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         screenWidth: screenWidth,
                                         userIconAssetPath: AssetPath.sign_out,
                                         accountText: AppString.share)),
+
+                                InkWell(
+                                  onTap: (){
+                                    Get.toNamed(AppRouter.getAboutScreen());
+                                  },
+                                  child: CommonMenuWidget(
+                                      screenWidth: screenWidth,
+                                      userIconAssetPath: AssetPath.policy,
+                                      accountText: AppString.about),
+                                ),
+
+                                InkWell(
+                                    onTap: () {
+                                      _showDeleteDialog(context,value);
+                                    },
+                                    child: CommonMenuWidget(
+                                        screenWidth: screenWidth,
+                                        userIconAssetPath: AssetPath.sign_out,
+                                        accountText: AppString.delete)),
+
+
+
+
                                 InkWell(
                                     onTap: () {
                                       value.signOut();
@@ -244,6 +265,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         screenWidth: screenWidth,
                                         userIconAssetPath: AssetPath.sign_out,
                                         accountText: AppString.sign_out)),
+
+
+
                                 Obx(() => StaticValue.miniPlayer.value ? SizedBox(height: screenHeight * .05) : Container()),
                               ],
                             ),
@@ -346,4 +370,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
       // Handle camera option
     });
   }
+
+
+  void _showDeleteDialog(BuildContext context, ProfileController value) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Confirmation'),
+          content: Text('Are you sure you want to delete this accounts?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                // User clicked on "No" button
+                Navigator.of(context).pop();
+              },
+              child: CommonTextWidget(
+                  heading: 'No',
+                  fontSize: Dimens.sixteen,
+                  color: ThemeProvider.blackColor,
+                  fontFamily: 'light'),
+            ),
+            TextButton(
+              onPressed: () {
+               value.deleteAccount();
+              },
+              child: CommonTextWidget(
+                  heading: 'Yes',
+                  fontSize: Dimens.sixteen,
+                  color: ThemeProvider.persianGreen,
+                  fontFamily: 'light'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
 }

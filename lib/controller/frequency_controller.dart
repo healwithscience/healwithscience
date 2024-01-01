@@ -54,18 +54,37 @@ class FrequencyController extends GetxController {
     }
 
     if(connectivityResult.value == ConnectivityResult.wifi || connectivityResult.value == ConnectivityResult.mobile){
+      getSubscriptionStatus();
       fetchDownloadlist();
       fetchFrequencies();
+
 
       if(parser.getPlan() == "basic"){
         loadRewardedAd();
       }
-
       StaticValue.rewardPoint = await Utils.getRewardPoints(parser.getUserId());
-
     }else{
       isLoading.value = false;
       showToast("No Internet Connection");
+    }
+  }
+
+
+
+  Future<void> getSubscriptionStatus() async {
+    final firestoreInstance = FirebaseFirestore.instance;
+
+    // Create a reference to the document for the specified user
+    final subscriptionType = firestoreInstance.collection('subscription').doc(parser.getEmail());
+
+    // Check if the document already exists
+    final docSnapshot = await subscriptionType.get();
+
+    if (!docSnapshot.exists) {
+      parser.setPlan('basic');
+    }else{
+      final planType = docSnapshot.data()?['plan_type'];
+      parser.setPlan(planType);
     }
   }
 
