@@ -51,11 +51,9 @@ class _PlayListScreenState extends State<PlayListScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: EdgeInsets.only(
-                                    top: 10.0, left: 10.0, right: 10.0),
+                                padding: const EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     InkWell(
                                       onTap: () {
@@ -87,8 +85,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
                                     InkWell(
                                       onTap: () {},
                                       child: Padding(
-                                        padding:
-                                            EdgeInsets.all(screenWidth * .01),
+                                        padding: EdgeInsets.all(screenWidth * .01),
                                         child: SvgPicture.asset(
                                           AssetPath.setting,
                                           width: screenWidth * .01,
@@ -124,6 +121,78 @@ class _PlayListScreenState extends State<PlayListScreen> {
                                   },
                                 ),
                               ),
+
+                              InkWell(
+                                onTap: (){
+                                   if(value.completePackage1.value){
+                                     Get.toNamed(AppRouter.getPaidFrequencyScreen(), arguments: {'purchased':value.completePackage1.value,});
+                                   }else{
+                                     _showDialog(context,value,'complete_package1');
+                                   }
+                                },
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                                      child: CommonTextWidget(
+                                          heading:AppString.biophotonic1,
+                                          fontSize: Dimens.sixteen,
+                                          color: Colors.black,
+                                          fontFamily: 'bold'),
+                                    ),
+                                    Obx(() => !value.completePackage1.value ? SizedBox(
+                                      height: screenHeight * .025,
+                                      child: SvgPicture.asset(AssetPath.lock),
+                                    ) : Container())
+
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                  width: screenWidth * .8,
+                                  child: CustomGradientDivider(
+                                      height: 1.0,
+                                      startColor: ThemeProvider.greyColor,
+                                      endColor:
+                                      Colors.transparent)),
+
+                              InkWell(
+                                onTap: (){
+                                  if(value.completePackage2.value){
+                                    Get.toNamed(AppRouter.getPaidFrequencyScreen2(), arguments: {'purchased':value.completePackage2.value,});
+                                  }else{
+                                    _showDialog(context,value,'complete_package2');
+                                  }
+                                  // Get.toNamed(AppRouter.getPaidFrequencyScreen2());
+                                },
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                                      child: CommonTextWidget(
+                                          heading:AppString.biophotonic2,
+                                          fontSize: Dimens.sixteen,
+                                          color: Colors.black,
+                                          fontFamily: 'bold'),
+                                    ),
+                                    Obx(() => !value.completePackage2.value ? SizedBox(
+                                      height: screenHeight * .025,
+                                      child: SvgPicture.asset(AssetPath.lock),
+                                    ) : Container())
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                  width: screenWidth * .8,
+                                  child: CustomGradientDivider(
+                                      height: 1.0,
+                                      startColor: ThemeProvider.greyColor,
+                                      endColor:
+                                      Colors.transparent)),
 
                               Obx(() {
                                 if (value.isLoading.value) {
@@ -175,27 +244,18 @@ class _PlayListScreenState extends State<PlayListScreen> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 15,
-                                                        horizontal: 10),
-                                                child: CommonTextWidget(
-                                                    lineHeight: 1.3,
-                                                    heading:
-                                                        value.filteredPlaylist[
-                                                            index],
+                                                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                                                child: CommonTextWidget(lineHeight: 1.3,
+                                                    heading: value.filteredPlaylist[index],
                                                     fontSize: Dimens.sixteen,
                                                     color: Colors.black,
                                                     fontFamily: 'medium'),
                                               ),
                                               SizedBox(
                                                   width: screenWidth * .8,
-                                                  child: CustomGradientDivider(
-                                                      height: 1.0,
-                                                      startColor: ThemeProvider
-                                                          .greyColor,
-                                                      endColor:
-                                                          Colors.transparent))
+                                                  child: CustomGradientDivider(height: 1.0,
+                                                      startColor: ThemeProvider.greyColor,
+                                                      endColor: Colors.transparent))
                                             ],
                                           ),
                                         );
@@ -216,26 +276,17 @@ class _PlayListScreenState extends State<PlayListScreen> {
                                       StaticValue.pauseTimer();
                                       Get.toNamed(AppRouter.getFeaturesScreen(),
                                           arguments: {
-                                            'frequency': StaticValue
-                                                    .frequenciesList[
-                                                StaticValue.playingIndex.value],
-                                            'frequenciesList':
-                                                StaticValue.frequenciesList,
-                                            'index':
-                                                StaticValue.playingIndex.value,
-                                            'name':
-                                                StaticValue.frequencyName.value,
-                                            'programName':
-                                                StaticValue.programNameList,
+                                            'frequency': StaticValue.frequenciesList[StaticValue.playingIndex.value],
+                                            'frequenciesList': StaticValue.frequenciesList,
+                                            'index': StaticValue.playingIndex.value,
+                                            'name': StaticValue.frequencyName.value,
+                                            'programName': StaticValue.programNameList,
                                             // Pass the data you want
-                                            'screenName':
-                                                StaticValue.screenName,
+                                            'screenName': StaticValue.screenName,
                                             'type': 'mini_player',
-                                            'isPlaying':
-                                                StaticValue.isPlaying.value,
+                                            'isPlaying': StaticValue.isPlaying.value,
                                             // Pass the data you want
-                                            'currentTimeInSeconds':
-                                                StaticValue.currentTimeInSeconds
+                                            'currentTimeInSeconds': StaticValue.currentTimeInSeconds
                                             // Pass the data you want
                                           });
                                     },
@@ -251,4 +302,84 @@ class _PlayListScreenState extends State<PlayListScreen> {
               : CommonLoadingWidget(screenHeight: screenHeight, screenWidth: screenWidth)));
     });
   }
+
+
+  void _showDialog(BuildContext context, PlaylistController value,String package) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title:  Center(
+            child: CommonTextWidget(
+              heading: 'Complete Package',
+              fontSize: Dimens.twenty,
+              color: ThemeProvider.blackColor,
+              fontFamily: 'bold',
+            ),
+          ),
+          content: Container(
+            margin: const EdgeInsets.only(top: 5), // Adjust the top margin as needed
+            child: const Text('Unlock the full potential of our premium package and enjoy exclusive features and benefits. By choosing the complete package, you gain access to a wealth of resources designed to enhance your experience.',textAlign: TextAlign.center,),
+          ),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                InkWell(
+                  onTap: (){
+                    Navigator.of(context).pop();
+                    if(package == 'complete_package1'){
+                      Get.toNamed(AppRouter.getPaidFrequencyScreen(), arguments: {'purchased':value.completePackage1.value,});
+                    }else{
+                      Get.toNamed(AppRouter.getPaidFrequencyScreen2(), arguments: {'purchased':value.completePackage2.value,});
+                    }
+
+
+                  },
+                  child: Container(
+                    width: screenWidth * .25,
+                    padding: const EdgeInsets.all(12),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(screenWidth * .02),
+                        border: Border.all(width: 1.0, color: ThemeProvider.persianGreen)),
+                    child: CommonTextWidget(
+                        heading: 'Buy One',
+                        fontSize: Dimens.sixteen,
+                        color: Colors.black,
+                        fontFamily: 'bold'),
+                  ),
+                ),
+                const SizedBox(width: 20), // Add some spacing between buttons
+                InkWell(
+                  onTap: (){
+                    Navigator.of(context).pop();
+                    value.purchaseProduct(package);
+                  },
+                  child: Container(
+                    width: screenWidth * .2,
+                    padding: const EdgeInsets.all(12),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(screenWidth * .02),
+                        border: Border.all(width: 1.0, color: ThemeProvider.persianGreen)),
+                    child: CommonTextWidget(
+                        heading: 'Buy All',
+                        fontSize: Dimens.sixteen,
+                        color: Colors.black,
+                        fontFamily: 'bold'),
+                  ),
+                ),
+
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
 }
+
+

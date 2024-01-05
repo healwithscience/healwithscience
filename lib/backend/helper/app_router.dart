@@ -7,7 +7,10 @@ import 'package:heal_with_science/backend/binding/custom_frequency_binding.dart'
 import 'package:heal_with_science/backend/binding/download_binding.dart';
 import 'package:heal_with_science/backend/binding/features_binding.dart';
 import 'package:heal_with_science/backend/binding/heart_binding.dart';
+import 'package:heal_with_science/backend/binding/paid_frequnecy_binding.dart';
+import 'package:heal_with_science/backend/binding/paid_frequnecy_binding2.dart';
 import 'package:heal_with_science/backend/binding/playlist_binding.dart';
+import 'package:heal_with_science/backend/binding/privacy_policy_binding.dart';
 import 'package:heal_with_science/backend/binding/reward_binding.dart';
 import 'package:heal_with_science/backend/binding/share_binding.dart';
 import 'package:heal_with_science/backend/binding/subscription_binding.dart';
@@ -19,7 +22,9 @@ import 'package:heal_with_science/view/download_screen.dart';
 import 'package:heal_with_science/view/features_screen.dart';
 import 'package:heal_with_science/view/frequency_screen.dart';
 import 'package:heal_with_science/view/heart_rate_screen.dart';
+import 'package:heal_with_science/view/paidfrequency_screen.dart';
 import 'package:heal_with_science/view/playlist_screen.dart';
+import 'package:heal_with_science/view/privacy_policy_screen.dart';
 import 'package:heal_with_science/view/reward_screen.dart';
 import 'package:heal_with_science/view/share_screen.dart';
 import 'package:heal_with_science/view/subscription_screen.dart';
@@ -31,6 +36,7 @@ import '../../view/forgot_password_screen.dart';
 import '../../view/login_view.dart';
 import '../../view/onboardingscreens.dart';
 import '../../view/otp_verification_screen.dart';
+import '../../view/paidfrequency_screen2.dart';
 import '../../view/password_success_screen.dart';
 import '../../view/profile_screen.dart';
 import '../../view/register_screen.dart';
@@ -77,6 +83,9 @@ class AppRouter {
   static const String subscriptionScreen = '/subscription_screen';
   static const String shareScreen = '/share_screen';
   static const String aboutScreen = '/about_screen';
+  static const String paidFrequencyScreen = '/paid_frequency_screen';
+  static const String paidFrequencyScreen2 = '/paid_frequency_screen2';
+  static const String privacyPolicyScreen = '/privacy_policy_screen';
 
   static String onBoardingRoute() => onboardingScreen;
   static String phoneVerificationRoute() => phoneVerification;
@@ -104,6 +113,9 @@ class AppRouter {
   static String getSubscriptionScreen() => subscriptionScreen;
   static String getShareScreen() => shareScreen;
   static String getAboutScreen() => aboutScreen;
+  static String getPaidFrequencyScreen() => paidFrequencyScreen;
+  static String getPaidFrequencyScreen2() => paidFrequencyScreen2;
+  static String getPrivacyPolicyScreen() => privacyPolicyScreen;
 
   static List<GetPage> routes = [
     GetPage(name: onboardingScreen, page: () => OnBoardScreen(), binding: OnBoardBinding(),transition: Transition.fadeIn,transitionDuration: const Duration(milliseconds: 300)),
@@ -130,5 +142,9 @@ class AppRouter {
     GetPage(name: subscriptionScreen, page: () => SubscriptionScreen(), binding: SubscriptionBinding(),transition: Transition.fadeIn,transitionDuration: const Duration(milliseconds: 300)),
     GetPage(name: shareScreen, page: () => ShareScreen(), binding: ShareBinding(),transition: Transition.fadeIn,transitionDuration: const Duration(milliseconds: 300)),
     GetPage(name: aboutScreen, page: () => AboutScreen(), binding: AboutBinding(),transition: Transition.fadeIn,transitionDuration: const Duration(milliseconds: 300)),
+    GetPage(name: paidFrequencyScreen, page: () => PaidFrequencyScreen(), binding: PaidFrequencyBinding(),transition: Transition.fadeIn,transitionDuration: const Duration(milliseconds: 300)),
+    GetPage(name: paidFrequencyScreen2, page: () => PaidFrequencyScreen2(), binding: PaidFrequencyBinding2(),transition: Transition.fadeIn,transitionDuration: const Duration(milliseconds: 300)),
+    GetPage(name: privacyPolicyScreen, page: () => PrivacyPolicyScreen(), binding: PrivacyPolicyBinding(),transition: Transition.fadeIn,transitionDuration: const Duration(milliseconds: 300)),
+
   ];
 }

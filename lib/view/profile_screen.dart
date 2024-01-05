@@ -206,13 +206,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         accountText: AppString.download)),
                                 InkWell(
                                   onTap: (){
-
+                                    Get.toNamed(AppRouter.getPrivacyPolicyScreen());
                                   },
                                   child: CommonMenuWidget(
                                       screenWidth: screenWidth,
                                       userIconAssetPath: AssetPath.policy,
                                       accountText: AppString.privacy_policy),
                                 ),
+
+
                                 CommonMenuWidget(
                                     screenWidth: screenWidth,
                                     userIconAssetPath: AssetPath.notification,
@@ -226,6 +228,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         screenWidth: screenWidth,
                                         userIconAssetPath: AssetPath.sign_out,
                                         accountText: AppString.subscription)),
+
                                 InkWell(
                                     onTap: () {
                                       Get.toNamed(AppRouter.getShareScreen());
@@ -254,9 +257,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         userIconAssetPath: AssetPath.sign_out,
                                         accountText: AppString.delete)),
 
-
-
-
                                 InkWell(
                                     onTap: () {
                                       value.signOut();
@@ -265,8 +265,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         screenWidth: screenWidth,
                                         userIconAssetPath: AssetPath.sign_out,
                                         accountText: AppString.sign_out)),
-
-
 
                                 Obx(() => StaticValue.miniPlayer.value ? SizedBox(height: screenHeight * .05) : Container()),
                               ],

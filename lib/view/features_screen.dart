@@ -43,6 +43,7 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
+    print("HelloScreenWidth"+screenWidth.toString());
     return GetBuilder<FeaturesController>(builder: (value) {
         return GestureDetector(
           onPanDown: (details){
@@ -68,7 +69,6 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                       ),
                     )
                         : Container()),
-
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -284,8 +284,8 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                 ),
                               )),
                           
-                              Container(
-                                height: screenWidth * .9,
+                              SizedBox(
+                                height: screenHeight * .4,
                                 child: PageView(
                                   onPageChanged: (index) {
                                     value.currentIndex.value = index.toDouble();
@@ -293,7 +293,7 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                   children: <Widget>[
                                     //Slider One
                                     Align(
-                                      alignment: Alignment.bottomCenter,
+                                      alignment: Alignment.topCenter,
                                       child: Column(
                                         mainAxisAlignment: MainAxisAlignment.end,
                                         children: [
@@ -996,7 +996,6 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                     ),
 
                                     Align(
-                                      alignment: Alignment.center,
                                       child: Column(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [

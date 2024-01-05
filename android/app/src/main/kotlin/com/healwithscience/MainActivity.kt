@@ -264,7 +264,7 @@ class MainActivity : FlutterActivity() {
 
     //Used to generate HSquare
     private fun generateHSquareWave(amplitude: Double, frequency: Double, dutyCycle: Double, phase: Double, offset: Double) {
-        generateSquareWave(amplitude, frequency, dutyCycle, phase, offset)
+//        generateSquareWave(amplitude, frequency, dutyCycle, phase, offset)
 
         // Get spike height and width dynamically
         val (spikeHeight, spikeWidth) = getSpikeHeightAndWidth(amplitude, frequency, dutyCycle)

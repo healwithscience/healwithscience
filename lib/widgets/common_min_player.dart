@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
@@ -65,10 +66,10 @@ class CustomMiniPlayer extends StatelessWidget {
                 }
               },
               child: Obx(() => RoundButton(
-                width: screenWidth * 0.1,
-                height: screenWidth * 0.1,
+                width: kIsWeb ? screenWidth * 0.03  : screenWidth * 0.1,
+                height: kIsWeb ? screenWidth * 0.03  : screenWidth * 0.1,
                 borderColor: ThemeProvider.borderColor,
-                padding: screenWidth * 0.03,
+                padding: kIsWeb ? screenWidth * 0.01  : screenWidth * 0.03,
                 background: ThemeProvider.bright_gray,
                 child: StaticValue.isPlaying.value
                     ? SvgPicture.asset(AssetPath.play2)

@@ -62,6 +62,8 @@ class AssetPath {
   static final earn_point = _iconPath("earn_point.svg");
   static final change_password = _iconPath("change_password.svg");
   static final mini_player = _iconPath("mini_player.svg");
+  static final lock = _iconPath("lock.svg");
+  static final heart = _iconPath("heart.svg");
 
 
   static final onbarding_image1 = _imagesPath("onboard1.png");

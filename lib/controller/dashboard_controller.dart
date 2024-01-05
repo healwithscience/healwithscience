@@ -43,7 +43,6 @@ class DashboardController extends GetxController {
 
     saveSubscriptionStatus();
 
-
     listItem.add(ListItem(name: "Category", imagePath: AssetPath.category));
     listItem.add(ListItem(name: "Custom Frequency", imagePath: AssetPath.custom_playlist));
     listItem.add(ListItem(name: "Frequencies", imagePath: AssetPath.frequencies));
@@ -53,7 +52,7 @@ class DashboardController extends GetxController {
     rewardPoint();
     parser.saveReferralUser("");
     // getCollectionSize();
-    populateDB();
+    // populateDB();
   }
 
   Future<void> logout() async {
@@ -363,10 +362,10 @@ class DashboardController extends GetxController {
       print("HelloBioPhotonic====>  ${lines.length}");
 
 
-  /*    try {
+      try {
         // Get a reference to the Firestore collection
         CollectionReference categoriesCollection =
-        FirebaseFirestore.instance.collection('biophotonic');
+        FirebaseFirestore.instance.collection('biophotonic2');
 
         // Loop through the list of Category objects and add them to Firestore
         for (Category category in categories) {
@@ -377,7 +376,7 @@ class DashboardController extends GetxController {
         print('Categories added to Firestore successfully');
       } catch (e) {
         print('Error adding categories to Firestore: $e');
-      }*/
+      }
 
     } catch (e) {
       print('Error: $e');

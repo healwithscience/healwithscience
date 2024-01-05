@@ -9,7 +9,10 @@ import 'package:heal_with_science/backend/parser/custom_frequency_parser.dart';
 import 'package:heal_with_science/backend/parser/download_parser.dart';
 import 'package:heal_with_science/backend/parser/features_parser.dart';
 import 'package:heal_with_science/backend/parser/frequency_parser.dart';
+import 'package:heal_with_science/backend/parser/paid_frequency_parser.dart';
+import 'package:heal_with_science/backend/parser/paid_frequency_parser2.dart';
 import 'package:heal_with_science/backend/parser/playlist_parser.dart';
+import 'package:heal_with_science/backend/parser/privacy_policy_parser.dart';
 import 'package:heal_with_science/backend/parser/profile_parser.dart';
 import 'package:heal_with_science/backend/parser/reward_parser.dart';
 import 'package:heal_with_science/backend/parser/share_parser.dart';
@@ -65,6 +68,9 @@ class MainBinding extends Bindings {
     Get.lazyPut(() => SubscriptionParser(apiService: Get.find(), sharedPreferencesManager: Get.find()), fenix: true);
     Get.lazyPut(() => ShareParser(apiService: Get.find(), sharedPreferencesManager: Get.find()), fenix: true);
     Get.lazyPut(() => AboutParser(apiService: Get.find(), sharedPreferencesManager: Get.find()), fenix: true);
+    Get.lazyPut(() => PaidFrequencyParser(apiService: Get.find(), sharedPreferencesManager: Get.find()), fenix: true);
+    Get.lazyPut(() => PaidFrequencyParser2(apiService: Get.find(), sharedPreferencesManager: Get.find()), fenix: true);
+    Get.lazyPut(() => PrivacyPolicyParser(apiService: Get.find(), sharedPreferencesManager: Get.find()), fenix: true);
 
     // Get.lazyPut(()=>FeaturesController(parser: Get.find()));
 

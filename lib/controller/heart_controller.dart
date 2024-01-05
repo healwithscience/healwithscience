@@ -1,62 +1,145 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-import 'package:heal_with_science/backend/parser/heart_parser.dart';
 import 'package:health/health.dart';
+import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
-import '../util/all_constants.dart';
+
+import '../backend/parser/heart_parser.dart';
 
 class HeartController extends GetxController {
+  final HealthFactory health = HealthFactory();
   final HeartParser parser;
 
   HeartController({required this.parser});
 
   RxString heartRate = "".obs;
+  RxDouble rmssd = 0.0.obs;
+  RxString loading = '1'.obs;
   List<HealthDataPoint> healthData = [];
 
-  static final types = [
-    HealthDataType.HEART_RATE,
-  ];
+
+  static final types = [HealthDataType.HEART_RATE];
   final permissions = types.map((e) => HealthDataAccess.READ_WRITE).toList();
 
-  HealthFactory health = HealthFactory();
+
+ /* // define the types to get
+  final types = [
+    HealthDataType.HEART_RATE
+  ];
+
+  // with coresponsing permissions
+  final permissions = [
+    HealthDataAccess.READ_WRITE,
+    // HealthDataAccess.READ,
+  ];*/
+
 
   bool? hasPermissions = false;
-  bool authorized = false;
 
   @override
-  void onInit() async {
+  Future<void> onInit() async {
     super.onInit();
-    hasPermissions = await HealthFactory.hasPermissions(types, permissions: permissions);
-
-    if (!hasPermissions!) {
-      // requesting access to the data types before reading them
-      try {
-        authorized = await health.requestAuthorization(types, permissions: permissions);
-      } catch (error) {
-        print("Exception in authorize: $error");
-      }
-    }else{
-      fetchData();
-    }
-
-   /* if (Platform.isAndroid) {
-      final permissionStatus = Permission.activityRecognition.request();
-
-      if (await permissionStatus.isDenied ||
-          await permissionStatus.isPermanentlyDenied) {
-        showToast(
-            'activityRecognition permission required to fetch your steps count');
-        return;
-      }else{
-
-      }
-    }*/
+    await _checkPermissionsAndFetchData();
   }
 
-  Future fetchData() async {
+  Future<void> _checkPermissionsAndFetchData() async {
+    hasPermissions = await health.hasPermissions(types);
+
+    if (hasPermissions!) {
+      fetchData();
+    } else {
+      await _requestPermissions();
+    }
+  }
+
+  Future<void> _requestPermissions() async {
+    try {
+      bool authorized = await health.requestAuthorization(types, permissions: permissions);
+
+      if (authorized) {
+        print("Permission granted, fetching data...");
+        fetchData();
+      } else {
+        loading.value = '2';
+        print("Permission denied. User did not grant access.");
+      }
+    } catch (error) {
+      print("Exception in authorize: $error");
+    }
+  }
+
+  Future<void> fetchData() async {
+    final now = DateTime.now();
+    final yesterday = now.subtract(const Duration(hours: 24));
+
+    try {
+      healthData = await health.getHealthDataFromTypes(yesterday, now, types);
+
+
+      if (healthData.isNotEmpty) {
+        List<double> heartRateValues = [];
+
+        for (HealthDataPoint h in healthData) {
+          if (h.type == HealthDataType.HEART_RATE) {
+            var doubleValue = double.parse('${h.value}');
+            String formattedValue = doubleValue.toStringAsFixed(2);
+            heartRate.value = formattedValue;
+            heartRateValues.add(doubleValue);
+          }
+        }
+        healthData = HealthFactory.removeDuplicates(healthData);
+        print("List of Heart Rate Values: $heartRateValues");
+        calculateRMSSD(heartRateValues);
+      } else {
+        print("Hello Loading");
+        loading.value = '2';
+      }
+    } catch (error) {
+      print("Exception in getHealthDataFromTypes: $error");
+    }
+  }
+
+  void calculateRMSSD(List<double> heartRates) {
+    int n = heartRates.length;
+
+    if (n < 2) {
+      loading.value = '2';
+      // throw Exception("At least two heart rates are required for RMSSD calculation.");
+    } else {
+      List<double> rrIntervals = [];
+
+      for (int i = 0; i < n; i++) {
+        double rrInterval = 60000 / heartRates[i];
+        rrIntervals.add(rrInterval);
+      }
+
+      double sumSquaredDifferences = 0;
+
+      for (int i = 0; i < n - 1; i++) {
+        double difference = rrIntervals[i + 1] - rrIntervals[i];
+        sumSquaredDifferences += pow(difference, 2);
+      }
+
+      double meanSquaredDifferences = sumSquaredDifferences / (n - 1);
+      rmssd.value = sqrt(meanSquaredDifferences);
+      loading.value = '3';
+    }
+  }
+
+  void onBackRoutes() {
+    var context = Get.context as BuildContext;
+    Navigator.of(context).pop(true);
+  }
+
+}
+
+
+
+
+/* Future fetchData() async {
     // define the types to get
 
 
@@ -83,7 +166,7 @@ class HeartController extends GetxController {
             }
           }
 
-          print("Hello Data: ${heartRate.value}");
+          print("Hello Data1: ${heartRate.value}");
         }
       } catch (error) {
         print("Exception in getHealthDataFromTypes: $error");
@@ -95,9 +178,4 @@ class HeartController extends GetxController {
       print("Authorization not granted");
     }
   }
-
-  void onBackRoutes() {
-    var context = Get.context as BuildContext;
-    Navigator.of(context).pop(true);
-  }
-}
+*/

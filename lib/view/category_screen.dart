@@ -19,7 +19,6 @@ import '../widgets/common_reward_dialog.dart';
 import '../widgets/commontext.dart';
 import '../widgets/custom_text_field.dart';
 
-
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key});
 
@@ -51,45 +50,33 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 10.0, left: 10.0, right: 10.0),
+                                padding: const EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     InkWell(
                                       onTap: () {
                                         value.onBackRoutes();
                                       },
                                       child: Container(
-                                        width: kIsWeb ? screenWidth * .07 :  screenWidth * .1,
-                                        height: kIsWeb ? screenWidth * .07 :  screenWidth * .1,
+                                        width: kIsWeb ? screenWidth * .07 : screenWidth * .1,
+                                        height: kIsWeb ? screenWidth * .07 : screenWidth * .1,
                                         decoration: BoxDecoration(
                                             border: Border.all(
                                               color: ThemeProvider.borderColor,
                                             ),
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(10))),
+                                            borderRadius: const BorderRadius.all(Radius.circular(10))),
                                         child: Padding(
-                                          padding:
-                                              EdgeInsets.all(screenWidth * .02),
-                                          child: SvgPicture.asset(
-                                              AssetPath.back_arrow),
+                                          padding: EdgeInsets.all(screenWidth * .02),
+                                          child: SvgPicture.asset(AssetPath.back_arrow),
                                         ),
                                       ),
                                     ),
-                                    CommonTextWidget(
-                                        lineHeight: 1.3,
-                                        heading: AppString.category,
-                                        fontSize: Dimens.twentyFour,
-                                        color: Colors.black,
-                                        fontFamily: 'bold'),
+                                    CommonTextWidget(lineHeight: 1.3, heading: AppString.category, fontSize: Dimens.twentyFour, color: Colors.black, fontFamily: 'bold'),
                                     InkWell(
                                       onTap: () {},
                                       child: Padding(
-                                        padding:
-                                            EdgeInsets.all(screenWidth * .01),
+                                        padding: EdgeInsets.all(screenWidth * .01),
                                         child: SvgPicture.asset(
                                           AssetPath.setting,
                                           width: screenWidth * .01,
@@ -107,18 +94,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 child: CustomTextField(
                                   hintText: 'Search Categories',
                                   controller: value.searchController,
-                                  textInputStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: Dimens.sixteen,
-                                      fontFamily: 'medium'),
-                                  hintStyle: TextStyle(
-                                      fontSize: Dimens.sixteen,
-                                      fontFamily: 'medium'),
-                                  prefixIcon: Icon(Icons.search,
-                                      color: value.isFocus.value
-                                          ? ThemeProvider.primary
-                                          : ThemeProvider.greyColor,
-                                      size: Dimens.twentyFive),
+                                  textInputStyle: TextStyle(color: Colors.black, fontSize: Dimens.sixteen, fontFamily: 'medium'),
+                                  hintStyle: TextStyle(fontSize: Dimens.sixteen, fontFamily: 'medium'),
+                                  prefixIcon: Icon(Icons.search, color: value.isFocus.value ? ThemeProvider.primary : ThemeProvider.greyColor, size: Dimens.twentyFive),
                                 ),
                               ),
 
@@ -138,11 +116,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                   // Display a "No Data" message
                                   return Expanded(
                                     child: Center(
-                                      child: CommonTextWidget(
-                                          heading: AppString.no_data,
-                                          fontSize: Dimens.sixteen,
-                                          color: Colors.black,
-                                          fontFamily: 'light'),
+                                      child: CommonTextWidget(heading: AppString.no_data, fontSize: Dimens.sixteen, color: Colors.black, fontFamily: 'light'),
                                     ),
                                   );
                                 } else {
@@ -155,41 +129,31 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                           itemBuilder: (context, index) {
                                             return InkWell(
                                               onTap: () {
-                                               if(value.parser.getPlan() == "intermediate" || value.parser.getPlan() == "advance"){
-                                                 value.goToFeatures(value.categories[index].frequency, value.categories[index].name);
-                                               }else{
-                                                 if (StaticValue.rewardPoint > 0) {
-                                                   value.goToFeatures(value.categories[index].frequency, value.categories[index].name);
-                                                 } else {
-                                                   showCommonRewardDialog(context, screenHeight, screenWidth, () {
-                                                     Future.delayed(const Duration(seconds: 1), () {
-                                                       value.showRewardedAd();
-                                                     });
-                                                   });
-                                                 }
-                                               }
-
-
+                                                if (value.parser.getPlan() == "intermediate" || value.parser.getPlan() == "advance") {
+                                                  value.goToFeatures(value.categories[index].frequency, value.categories[index].name);
+                                                } else {
+                                                  if (StaticValue.rewardPoint > 0) {
+                                                    value.goToFeatures(value.categories[index].frequency, value.categories[index].name);
+                                                  } else {
+                                                    showCommonRewardDialog(context, screenHeight, screenWidth, () {
+                                                      Future.delayed(const Duration(seconds: 1), () {
+                                                        value.showRewardedAd();
+                                                      });
+                                                    });
+                                                  }
+                                                }
                                               },
-                                              child: SizedBox(
-                                                height: screenHeight * 0.07,
-                                                child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
-                                                    Padding(padding:kIsWeb   ?  EdgeInsets.symmetric(vertical: 0, horizontal: 10)   : const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                                                      child: CommonTextWidget(textOverflow: TextOverflow
-                                                                  .ellipsis,
-                                                          heading: value
-                                                              .categories[index]
-                                                              .name,
-                                                          fontSize:
-                                                              Dimens.sixteen,
-                                                          color: Colors.black,
-                                                          fontFamily: 'medium'),
-                                                    ),
-                                                    SizedBox(
-                                                        width: screenWidth * .8,
-                                                        child: CustomGradientDivider(height: 1.0, startColor: ThemeProvider.greyColor, endColor: Colors.transparent))
-                                                  ],
-                                                ),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    padding:  kIsWeb ? EdgeInsets.symmetric(vertical: 0, horizontal: 10) : const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                                                    alignment: Alignment.centerLeft,
+                                                    height: screenHeight * 0.07,
+                                                    child: CommonTextWidget(textOverflow: TextOverflow.ellipsis, heading: value.categories[index].name, fontSize: Dimens.sixteen, color: Colors.black, fontFamily: 'medium'),
+                                                  ),
+                                                  SizedBox(width: screenWidth * .8, child: CustomGradientDivider(height: 1.0, startColor: ThemeProvider.greyColor, endColor: Colors.transparent))
+                                                ],
                                               ),
                                             );
                                           },
@@ -201,34 +165,19 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                               width: 50,
                                               alignment: Alignment.bottomCenter,
                                               height: screenHeight * .75,
-                                              child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: value.alphabets.map((alphabet) => InkWell(
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: value.alphabets
+                                                    .map((alphabet) => InkWell(
                                                           onTap: () {
-                                                            value.visibility
-                                                                .value = true;
-                                                            value.scrollToCategoryByAlphabet(
-                                                                alphabet,
-                                                                screenHeight);
-                                                            value.alphabet
-                                                                    .value =
-                                                                alphabet;
-                                                            Future.delayed(
-                                                                const Duration(
-                                                                    seconds: 1),
-                                                                () {
-                                                              value.visibility
-                                                                      .value =
-                                                                  false;
+                                                            value.visibility.value = true;
+                                                            value.scrollToCategoryByAlphabet(alphabet, screenHeight);
+                                                            value.alphabet.value = alphabet;
+                                                            Future.delayed(const Duration(seconds: 1), () {
+                                                              value.visibility.value = false;
                                                             });
                                                           },
-                                                          child: CommonTextWidget(
-                                                              heading: alphabet,
-                                                              fontSize: Dimens
-                                                                  .thrteen,
-                                                              color: ThemeProvider
-                                                                  .alphabatic_gray,
-                                                              fontFamily:
-                                                                  'bold'),
+                                                          child: CommonTextWidget(heading: alphabet, fontSize: Dimens.thrteen, color: ThemeProvider.alphabatic_gray, fontFamily: 'bold'),
                                                         ))
                                                     .toList(),
                                               ),
@@ -236,28 +185,17 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                           ),
                                         ),
                                         Positioned(
-                                            child: Obx(() => value
-                                                    .visibility.value
+                                            child: Obx(() => value.visibility.value
                                                 ? Center(
                                                     child: Material(
                                                       elevation: 10,
                                                       // Adjust the elevation to control the shadow
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                                12.0), // Adjust the value for the desired corner radius
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(12.0), // Adjust the value for the desired corner radius
                                                       ),
                                                       child: Padding(
-                                                        padding: EdgeInsets.all(
-                                                            screenWidth * 0.07),
-                                                        child: CommonTextWidget(
-                                                            heading: value
-                                                                .alphabet.value,
-                                                            fontSize:
-                                                                Dimens.thirty,
-                                                            color: Colors.black,
-                                                            fontFamily: 'bold'),
+                                                        padding: EdgeInsets.all(screenWidth * 0.07),
+                                                        child: CommonTextWidget(heading: value.alphabet.value, fontSize: Dimens.thirty, color: Colors.black, fontFamily: 'bold'),
                                                       ),
                                                     ),
                                                   )
@@ -277,44 +215,28 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                   child: InkWell(
                                       onTap: () {
                                         StaticValue.pauseTimer();
-
-                                        Get.toNamed(
-                                            AppRouter.getFeaturesScreen(),
-                                            arguments: {
-                                              'frequency':
-                                                  StaticValue.frequenciesList[
-                                                      StaticValue
-                                                          .playingIndex.value],
-                                              'frequenciesList':
-                                                  StaticValue.frequenciesList,
-                                              'index': StaticValue
-                                                  .playingIndex.value,
-                                              'name': StaticValue
-                                                  .frequencyName.value,
-                                              'programName':
-                                                  StaticValue.programNameList,
-                                              // Pass the data you want
-                                              'screenName':
-                                                  StaticValue.screenName,
-                                              'type': 'mini_player',
-                                              'isPlaying':
-                                                  StaticValue.isPlaying.value,
-                                              // Pass the data you want
-                                              'currentTimeInSeconds':
-                                                  StaticValue
-                                                      .currentTimeInSeconds
-                                              // Pass the data you want
-                                            });
+                                        Get.toNamed(AppRouter.getFeaturesScreen(), arguments: {
+                                          'frequency': StaticValue.frequenciesList[StaticValue.playingIndex.value],
+                                          'frequenciesList': StaticValue.frequenciesList,
+                                          'index': StaticValue.playingIndex.value,
+                                          'name': StaticValue.frequencyName.value,
+                                          'programName': StaticValue.programNameList,
+                                          // Pass the data you want
+                                          'screenName': StaticValue.screenName,
+                                          'type': 'mini_player',
+                                          'isPlaying': StaticValue.isPlaying.value,
+                                          // Pass the data you want
+                                          'currentTimeInSeconds': StaticValue.currentTimeInSeconds
+                                          // Pass the data you want
+                                        });
                                       },
-                                      child: CustomMiniPlayer(
-                                          screenWidth: screenWidth,
-                                          screenHeight: screenHeight)),
+                                      child: CustomMiniPlayer(screenWidth: screenWidth, screenHeight: screenHeight)),
                                 )
                               : Container()),
                         ],
                       )),
                 )
-              : CommonLoadingWidget(screenHeight: screenHeight,screenWidth: screenWidth)));
+              : CommonLoadingWidget(screenHeight: screenHeight, screenWidth: screenWidth)));
     });
   }
 }

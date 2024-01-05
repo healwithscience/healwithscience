@@ -75,60 +75,35 @@ class _HeartRateScreenState extends State<HeartRateScreen> {
                     ],
                   ),
                   const SizedBox(height: 10),
-                  /*   Expanded(
+                  SizedBox(
+                    width: screenWidth,
+                    height: screenHeight * .8,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        isBPMEnabled
-                            ? dialog = HeartBPMDialog(
-                                context: context,
-                                showTextValues: true,
-                                borderRadius: 10,
-                                onRawData: (value) {
-                                  setState(() {
-                                    if (data.length >= 100) data.removeAt(0);
-                                    data.add(value);
-                                  });
-                                },
-                                onBPM: (value) => setState(() {
-                                  if (bpmValues.length >= 100) bpmValues.removeAt(0);
-                                  bpmValues.add(SensorValue(value: value.toDouble(), time: DateTime.now()));
-                                }),
-                              )
-                            : const SizedBox(),
-                        Center(
-                          child: ElevatedButton.icon(
-                            icon: Icon(Icons.favorite_rounded),
-                            label: Text(isBPMEnabled ? "Stop measurement" : "Measure BPM"),
-                            onPressed: () => setState(() {
-                              if (isBPMEnabled) {
-                                isBPMEnabled = false;
-                                // dialog.
-                              } else
-                                isBPMEnabled = true;
-                            }),
-                          ),
-                        ),
+                        Obx(
+                          () => value.loading.value == '1'
+                              ? CircularProgressIndicator(color: ThemeProvider.primary)
+                              : value.loading.value == '2'
+                                  ? CommonTextWidget(textAlign: TextAlign.center, heading: 'At least two heart rates are required for RMSSD calculation.', fontSize: Dimens.twenty, color: Colors.black, fontFamily: 'regular')
+                                  : Column(
+                                      children: [
+                                        SvgPicture.asset(AssetPath.heart,width: screenWidth * .3,height: screenWidth * .3),
+                                        SizedBox(height: screenHeight * .03),
+                                        CommonTextWidget(heading: value.rmssd.value.toStringAsFixed(2), fontSize: Dimens.twentyFour, color: Colors.black, fontFamily: 'bold'),
+                                        SizedBox(height: 10),
+                                        CommonTextWidget(heading: 'Heart rate variability (HRV)', fontSize: Dimens.twentyFour, color: Colors.black, fontFamily: 'bold')
+                                      ],
+                                    ),
+                        )
 
-                        SizedBox(height: screenHeight * .09),
-
-
-                        CommonTextWidget(
-                            lineHeight: 1.3,
-                            heading: 'Covering the camera lens with the fingertip enables the camera to measure the subtle changes in skin tone. These are proportional to the changes in the blood flow through the arteries just below the skin of the fingertip. This is in-turn correlated to the heart beats. Hence, the variations in the skin tone can be approximated to the instances of heart beats. Measuring the time differences between the peaks provides Beats per Minute.',
-                            fontSize: Dimens.sixteen,
-                            color: Colors.black,
-                            fontFamily: 'light'),
+                        // Obx(() => Expanded(child: healthCard(title: "Heart rate", image: AssetPath.user, data: value.heartRate.value != "null" ? "${value.heartRate.value} bpm" : "", color: const Color(0xFF8d7ffa)))),
+                        // const SizedBox(
+                        //   width: 10,
+                        // ),
                       ],
                     ),
-                  ),*/
-                  Row(
-                    children: [
-                      Obx(() => Expanded(child: healthCard(title: "Heart rate", image: AssetPath.user, data: value.heartRate.value != "null" ? "${value.heartRate.value} bpm" : "", color: const Color(0xFF8d7ffa)))),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                    ],
                   ),
                 ],
               )),

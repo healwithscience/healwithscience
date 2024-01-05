@@ -52,6 +52,9 @@
                 <data android:scheme="http"/>
                 <data android:host="healwithscience.page.link"/>
             </intent-filter>
+            <intent-filter>
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+            </intent-filter>
         </activity>
 
         <activity
