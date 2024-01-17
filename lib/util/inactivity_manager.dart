@@ -11,9 +11,9 @@ class InactivityManager {
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
       startTimeValue = startTimeValue + 1;
       if(startTimeValue < 90){
-        print("HelloTimer====> " + startTimeValue.toString());
+        // print("HelloTimer====> " + startTimeValue.toString());
       }else{
-        print("HelloTimerCancel====> ");
+        // print("HelloTimerCancel====> ");
         showImage.value = true;
         timer.cancel();
       }

@@ -43,24 +43,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
           color: Colors.white,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                GestureDetector(
-                    onTap: (){
-                      value.setSubscriptionType("basic");
-                    },
-                    child: CommonCard(screenWidth: screenWidth, screenHeight: screenHeight, heading: AppString.free_plan, point1: AppString.free_plan_point1, point2: AppString.free_plan_point2, point3: AppString.free_plan_point3, imagePath: AssetPath.free_plan)),
-                GestureDetector(
-                    onTap: (){
-                      value.purchaseProduct("intermediate_plan");
-                    },
-                    child: CommonCard(screenWidth: screenWidth, screenHeight: screenHeight, heading: AppString.paid_plan, point1: AppString.paid_plan_point1, point2: "", point3: AppString.paid_plan_point2, imagePath: AssetPath.pain_plan)),
-                GestureDetector(
-                    onTap: (){
-                      value.purchaseProduct("advanced_plan");
-                    },
-                    child: CommonCard(screenWidth: screenWidth, screenHeight: screenHeight, heading: AppString.featured_plan, point1: AppString.featured_plan_point1, point2: AppString.featured_plan_point2, point3: AppString.featured_plan_point3, imagePath: AssetPath.featured_plan))],
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  GestureDetector(
+                      onTap: (){
+                        value.setSubscriptionType("basic");
+                      },
+                      child: CommonCard(screenWidth: screenWidth, screenHeight: screenHeight, heading: AppString.free_plan, point1: AppString.free_plan_point1, point2: AppString.free_plan_point2, point3: AppString.free_plan_point3, imagePath: AssetPath.free_plan)),
+                  SizedBox(height: screenHeight * .02),
+                  GestureDetector(
+                      onTap: (){
+                        value.purchaseProduct("intermediate_plan");
+                      },
+                      child: CommonCard(screenWidth: screenWidth, screenHeight: screenHeight, heading: AppString.paid_plan, point1: AppString.paid_plan_point1, point2: "", point3: AppString.paid_plan_point2, imagePath: AssetPath.pain_plan)),
+                  SizedBox(height: screenHeight * .02),
+                  GestureDetector(
+                      onTap: (){
+                        value.purchaseProduct("advanced_plan");
+                      },
+                      child: CommonCard(screenWidth: screenWidth, screenHeight: screenHeight, heading: AppString.featured_plan, point1: AppString.featured_plan_point1, point2: AppString.featured_plan_point2, point3: AppString.featured_plan_point3, imagePath: AssetPath.featured_plan))],
+              ),
             ),
           ),
         ),
@@ -200,19 +204,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: InkWell(
                     onTap: () {
                       StaticValue.pauseTimer();
+
                       Get.toNamed(AppRouter.getFeaturesScreen(), arguments: {
-                        'frequency': StaticValue.frequenciesList[StaticValue.playingIndex.value],
-                        'frequenciesList': StaticValue.frequenciesList,
-                        'index': StaticValue.playingIndex.value,
+                        'frequency':StaticValue.frequenciesList[StaticValue.playingIndex.value],
+                        'frequenciesList':StaticValue.frequenciesList,
+                        'index':StaticValue.playingIndex.value,
                         'name': StaticValue.frequencyName.value,
-                        'programName': StaticValue.programNameList,
-                        // Pass the data you want
+                        'programName':StaticValue.programNameList,// Pass the data you want
                         'screenName': StaticValue.screenName,
-                        'type': 'mini_player',
-                        'isPlaying': StaticValue.isPlaying.value,
-                        // Pass the data you want
-                        'currentTimeInSeconds': StaticValue.currentTimeInSeconds
-                        // Pass the data you want
+                        'type':'mini_player',
+                        'isPlaying':StaticValue.isPlaying.value,// Pass the data you want
+                        'currentTimeInSeconds':StaticValue.currentTimeInSeconds,// Pass the data you want
+                        'playingType' : StaticValue.playingType.value,
+                        'playingQueueIndex' : StaticValue.playingQueueIndex.value,
                       });
                     },
                     child: CustomMiniPlayer(screenWidth: screenWidth, screenHeight: screenHeight),

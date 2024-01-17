@@ -86,7 +86,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                   ],
                                 ),
                               ),
-                              //Search Category Field
+                              // Search Category Field
                               Focus(
                                 onFocusChange: (hasFocus) {
                                   value.isFocus.value = hasFocus;
@@ -99,9 +99,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                   prefixIcon: Icon(Icons.search, color: value.isFocus.value ? ThemeProvider.primary : ThemeProvider.greyColor, size: Dimens.twentyFive),
                                 ),
                               ),
-
                               // Category Item listing
                               const SizedBox(height: 10),
+
                               Obx(() {
                                 if (value.isLoading.value) {
                                   return Expanded(
@@ -146,11 +146,41 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  Container(
-                                                    padding:  kIsWeb ? EdgeInsets.symmetric(vertical: 0, horizontal: 10) : const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                                                    alignment: Alignment.centerLeft,
-                                                    height: screenHeight * 0.07,
-                                                    child: CommonTextWidget(textOverflow: TextOverflow.ellipsis, heading: value.categories[index].name, fontSize: Dimens.sixteen, color: Colors.black, fontFamily: 'medium'),
+                                                  Stack(
+                                                    children: [
+                                                      Container(
+                                                        padding:  kIsWeb ? EdgeInsets.symmetric(vertical: 0, horizontal: 10) : const EdgeInsets.only(top: 15,bottom: 15, left: 10,right: 80),
+                                                        alignment: Alignment.centerLeft,
+                                                        height: screenHeight * 0.07,
+                                                        child: CommonTextWidget(textOverflow: TextOverflow.ellipsis, heading: value.categories[index].name, fontSize: Dimens.sixteen, color: Colors.black, fontFamily: 'medium'),
+                                                      ),
+                                                      Positioned(
+                                                        right: 60,
+                                                        child:  PopupMenuButton<String>(
+                                                        offset: const Offset(00, 40),
+                                                        itemBuilder: (context) => [
+                                                          buildPopupMenuItem("Add To Queue", AssetPath.add_queue),
+                                                          buildPopupMenuItem("Remove From Queue", AssetPath.forgot_queue),
+                                                          // Add more options as needed
+                                                        ],
+                                                        onSelected: (selectedValue) {
+                                                          if (selectedValue == "Add To Queue") {
+                                                             value.addListToQueue(value.categories[index].frequency, value.categories[index].name);
+                                                          }else if (selectedValue == "Remove From Queue"){
+                                                             StaticValue.removeAllWithName(value.categories[index].name);
+                                                          }
+                                                        },
+                                                        child: Padding(
+                                                          padding: EdgeInsets.all(
+                                                              screenWidth * .04),
+                                                          child: SvgPicture.asset(
+                                                              AssetPath.setting,
+                                                              width: screenWidth * .008,
+                                                              color: ThemeProvider
+                                                                  .greyColor),
+                                                        ),
+                                                      ),)
+                                                    ],
                                                   ),
                                                   SizedBox(width: screenWidth * .8, child: CustomGradientDivider(height: 1.0, startColor: ThemeProvider.greyColor, endColor: Colors.transparent))
                                                 ],
@@ -215,19 +245,19 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                   child: InkWell(
                                       onTap: () {
                                         StaticValue.pauseTimer();
+
                                         Get.toNamed(AppRouter.getFeaturesScreen(), arguments: {
-                                          'frequency': StaticValue.frequenciesList[StaticValue.playingIndex.value],
-                                          'frequenciesList': StaticValue.frequenciesList,
-                                          'index': StaticValue.playingIndex.value,
+                                          'frequency':StaticValue.frequenciesList[StaticValue.playingIndex.value],
+                                          'frequenciesList':StaticValue.frequenciesList,
+                                          'index':StaticValue.playingIndex.value,
                                           'name': StaticValue.frequencyName.value,
-                                          'programName': StaticValue.programNameList,
-                                          // Pass the data you want
+                                          'programName':StaticValue.programNameList,// Pass the data you want
                                           'screenName': StaticValue.screenName,
-                                          'type': 'mini_player',
-                                          'isPlaying': StaticValue.isPlaying.value,
-                                          // Pass the data you want
-                                          'currentTimeInSeconds': StaticValue.currentTimeInSeconds
-                                          // Pass the data you want
+                                          'type':'mini_player',
+                                          'isPlaying':StaticValue.isPlaying.value,// Pass the data you want
+                                          'currentTimeInSeconds':StaticValue.currentTimeInSeconds,// Pass the data you want
+                                          'playingType' : StaticValue.playingType.value,
+                                          'playingQueueIndex' : StaticValue.playingQueueIndex.value,
                                         });
                                       },
                                       child: CustomMiniPlayer(screenWidth: screenWidth, screenHeight: screenHeight)),
@@ -238,5 +268,25 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 )
               : CommonLoadingWidget(screenHeight: screenHeight, screenWidth: screenWidth)));
     });
+  }
+
+
+  PopupMenuItem<String> buildPopupMenuItem(String text, String path) {
+    return PopupMenuItem<String>(
+      value: text,
+      child: Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: screenWidth * 0.04),
+            child: SvgPicture.asset(path, width: screenWidth * .05,),
+          ),
+          CommonTextWidget(
+              heading: text,
+              fontSize: Dimens.thrteen,
+              color: Colors.black,
+              fontFamily: 'light')
+        ],
+      ),
+    );
   }
 }

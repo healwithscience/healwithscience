@@ -49,6 +49,12 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
           onPanDown: (details){
             InactivityManager.resetTimer();
           },
+            onPanUpdate: (details) {
+              if (details.delta.dy < -40) {
+                // User is swiping up
+                // newShowBottomSheet();
+              }
+            },
           child: SafeArea(
             child:  Scaffold(
               backgroundColor: ThemeProvider.light_white,
@@ -285,7 +291,7 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                               )),
                           
                               SizedBox(
-                                height: screenHeight * .4,
+                                height:kIsWeb ? screenHeight * .7   : screenHeight * .4,
                                 child: PageView(
                                   onPageChanged: (index) {
                                     value.currentIndex.value = index.toDouble();
@@ -359,7 +365,7 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                             value.stopFrequency();
                                                             value.pauseTimer();
                                                           }
-                                                          Future.delayed(const Duration(seconds: 1),() {});
+                                                          // Future.delayed(const Duration(seconds: 1),() {});
                                                         }
                                                       },
                                                       child: RoundButton(
@@ -813,15 +819,17 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                                       InkWell(
                                                                         onTap: () {
                                                                           if(StaticValue.rewardPoint > 0){
+                                                                            value.isButtonPressed.value = true;
                                                                             value.playingIndex.value = index;
                                                                             value.isProcessing.value = true;
                                                                             value.frequencyValue.value = value.frequenciesList[index]!;
                                                                             value.resetTimer();
-                                                                            Future.delayed(const Duration(seconds: 4), ()
+                                                                            Future.delayed(const Duration(seconds: 3),()
                                                                             {
                                                                               value.isProcessing.value = false;
                                                                               value.playFrequency();
                                                                               value.startTime();
+                                                                              value.isButtonPressed.value = false;
                                                                             });
                                                                           }else{
                                                                             showCommonRewardDialog(context ,screenHeight ,screenWidth ,() {
@@ -894,20 +902,34 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                                                   ):Container() : Container() : Container(),
 
                                                                                   (value.screenName == "category" || value.screenName == "frequency") ?
-                                                                                  InkWell(
-                                                                                    onTap: (){
-                                                                                      value.fetchUserPlaylists();
-                                                                                      _showBottomSheet(context, value, value.frequenciesList[index].toString(), value.programName.value.toString());
+                                                                                  PopupMenuButton<String>(
+                                                                                    offset: const Offset(00, 40),
+                                                                                    itemBuilder: (context) => [
+                                                                                      buildPopupMenuItem("Add To Playlist", AssetPath.add_playlist),
+                                                                                      buildPopupMenuItem("Add To Queue", AssetPath.add_queue),
+                                                                                      buildPopupMenuItem("Forgot Present Queue", AssetPath.forgot_queue),
+                                                                                      // Add more options as needed
+                                                                                    ],
+                                                                                    onSelected: (selectedValue) {
+                                                                                      if (selectedValue == "Add To Playlist") {
+                                                                                        value.fetchUserPlaylists();
+                                                                                        _showBottomSheet(context, value, value.frequenciesList[index].toString(), value.programName.value.toString());
+                                                                                      } else if (selectedValue == "Add To Queue") {
+                                                                                        StaticValue.addSongToQueue(double.parse(value.frequenciesList[index].toString()),value.programName.value.toString());
+                                                                                      } else if(selectedValue == "Forgot Present Queue") {
+                                                                                        StaticValue.removeFromQueue(double.parse(value.frequenciesList[index].toString()));
+                                                                                      }
                                                                                     },
                                                                                     child: Padding(
-                                                                                      padding: EdgeInsets.symmetric(vertical:  screenWidth * .04,horizontal:  screenWidth * .08),
+                                                                                      padding: EdgeInsets.all(
+                                                                                          screenWidth * .04),
                                                                                       child: SvgPicture.asset(
                                                                                           AssetPath.setting,
                                                                                           width: screenWidth * .008,
                                                                                           color: ThemeProvider
                                                                                               .greyColor),
                                                                                     ),
-                                                                                  ) : Container(),
+                                                                                  ) : Container()
                                                                                 ],
                                                                               ),
                                                                             ],
@@ -1138,6 +1160,38 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
       });
   }
 
+  PopupMenuItem<String> buildPopupMenuItem(String text, String path) {
+    return PopupMenuItem<String>(
+      value: text,
+      child: Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: screenWidth * 0.04),
+            child: SvgPicture.asset(path, width: screenWidth * .05,),
+          ),
+          CommonTextWidget(
+              heading: text,
+              fontSize: Dimens.thrteen,
+              color: Colors.black,
+              fontFamily: 'light')
+        ],
+      ),
+    );
+  }
+
+  void newShowBottomSheet() {
+    Get.bottomSheet(
+      // Replace the following widget with your desired bottom sheet content
+      Container(
+        height: 200,
+        color: Colors.white,
+        child: Center(
+          child: Text('Your Bottom Sheet Content'),
+        ),
+      ),
+    );
+  }
+
   void _showBottomSheet(BuildContext context, FeaturesController value, String frequency, String programName) {
 
     showModalBottomSheet(
@@ -1174,8 +1228,7 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                 onTap: () {
                   if(value.parser.getPlan() == "advance"){
                     Get.back();
-                    Get.toNamed(
-                      AppRouter.getcreatePlaylistScreen(),
+                    Get.toNamed(AppRouter.getcreatePlaylistScreen(),
                       arguments: {'frequency': frequency, 'name': programName},
                     );
                   }else{

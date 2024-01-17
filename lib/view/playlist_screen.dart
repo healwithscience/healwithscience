@@ -135,7 +135,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                                      padding: EdgeInsets.all(   kIsWeb ? screenWidth * .015  : screenWidth * .04 ),
                                       child: CommonTextWidget(
                                           heading:AppString.biophotonic1,
                                           fontSize: Dimens.sixteen,
@@ -143,9 +143,9 @@ class _PlayListScreenState extends State<PlayListScreen> {
                                           fontFamily: 'bold'),
                                     ),
                                     Obx(() => !value.completePackage1.value ? SizedBox(
-                                      height: screenHeight * .025,
+                                      height: kIsWeb ? screenHeight * .04 : screenHeight * .025,
                                       child: SvgPicture.asset(AssetPath.lock),
-                                    ) : Container())
+                                    ) : SizedBox( height: kIsWeb ? screenHeight * .04 : screenHeight * .025))
 
                                   ],
                                 ),
@@ -172,7 +172,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                                      padding: EdgeInsets.all(   kIsWeb ? screenWidth * .015  : screenWidth * .04 ),
                                       child: CommonTextWidget(
                                           heading:AppString.biophotonic2,
                                           fontSize: Dimens.sixteen,
@@ -180,9 +180,9 @@ class _PlayListScreenState extends State<PlayListScreen> {
                                           fontFamily: 'bold'),
                                     ),
                                     Obx(() => !value.completePackage2.value ? SizedBox(
-                                      height: screenHeight * .025,
+                                      height:  kIsWeb ? screenHeight * .04 : screenHeight * .025,
                                       child: SvgPicture.asset(AssetPath.lock),
-                                    ) : Container())
+                                    ) : SizedBox(height : kIsWeb ? screenHeight * .04 : screenHeight * .025,))
                                   ],
                                 ),
                               ),
@@ -240,11 +240,10 @@ class _PlayListScreenState extends State<PlayListScreen> {
                                             }
                                           },
                                           child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Padding(
-                                                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                                                padding: EdgeInsets.all(   kIsWeb ? screenWidth * .01  : screenWidth * .04 ),
                                                 child: CommonTextWidget(lineHeight: 1.3,
                                                     heading: value.filteredPlaylist[index],
                                                     fontSize: Dimens.sixteen,

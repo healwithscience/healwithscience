@@ -231,11 +231,12 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
                                                     if (selectedValue == "Add To Playlist") {
                                                       value.fetchUserPlaylists();
                                                       _showBottomSheet(context, value, value.filteredfrequencies[index].toString());
-
-                                                      // value.createUserPlaylist("Test1");// Handle Option 1 action
                                                     } else if (selectedValue == "Add To Queue") {
-                                                      // Handle Option 2 action
-                                                    } else {}
+                                                      StaticValue.addSongToQueue(double.parse(value.filteredfrequencies[index].toString()),"");
+                                                    } else if(selectedValue == "Forgot Present Queue") {
+
+                                                      StaticValue.removeFromQueue(double.parse(value.filteredfrequencies[index].toString()));
+                                                    }
                                                   },
                                                   child: Padding(
                                                     padding: EdgeInsets.all(
@@ -286,7 +287,9 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
                           'screenName': StaticValue.screenName,
                           'type':'mini_player',
                           'isPlaying':StaticValue.isPlaying.value,// Pass the data you want
-                          'currentTimeInSeconds':StaticValue.currentTimeInSeconds// Pass the data you want
+                          'currentTimeInSeconds':StaticValue.currentTimeInSeconds,// Pass the data you want
+                          'playingType' : StaticValue.playingType.value,
+                          'playingQueueIndex' : StaticValue.playingQueueIndex.value,
                         });
 
                       },

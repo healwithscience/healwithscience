@@ -14,11 +14,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "1089948969143-9ncdmu2c6udcp8p62tig4pa9536k3fq7.apps.googleusercontent.com",
+          "client_id": "1089948969143-oqtun0651021kpmrum968im7rf53aa39.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.healwithscience",
-            "certificate_hash": "cdc23f486a3f80552fb9fe16946e05c88fbb6d48"
+            "certificate_hash": "17e834de28f45507551afb8f47cc22f7ac35a95b"
+          }
+        },
+        {
+          "client_id": "1089948969143-pqrdc3atadoavtol1rnpui49284i6qc9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.healwithscience",
+            "certificate_hash": "6e427de196d504a15f71d975b6d06fd6c015fc31"
           }
         },
         {

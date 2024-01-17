@@ -1,17 +1,14 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:heal_with_science/backend/parser/category_parser.dart';
 import 'package:heal_with_science/backend/parser/playlist_parser.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import '../backend/helper/app_router.dart';
-import '../model/Category.dart';
 import '../util/all_constants.dart';
 import '../util/extensions/static_values.dart';
 import '../util/inactivity_manager.dart';
@@ -171,7 +168,7 @@ class PlaylistController extends GetxController {
             _numRewardedLoadAttempts = 0;
           },
           onAdFailedToLoad: (LoadAdError error) {
-            showToast('RewardedAd failed to load');
+            // showToast('RewardedAd failed to load');
             _rewardedAd = null;
             _numRewardedLoadAttempts += 1;
             if (_numRewardedLoadAttempts < 3) {

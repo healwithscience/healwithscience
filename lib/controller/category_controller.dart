@@ -171,7 +171,7 @@ class CategoryController extends GetxController {
             _numRewardedLoadAttempts = 0;
           },
           onAdFailedToLoad: (LoadAdError error) {
-            showToast('RewardedAd failed to load');
+           // showToast('RewardedAd failed to load');
             _rewardedAd = null;
             _numRewardedLoadAttempts += 1;
             if (_numRewardedLoadAttempts < 3) {
@@ -211,6 +211,19 @@ class CategoryController extends GetxController {
         });
 
     _rewardedAd = null;
+  }
+
+  Future<void> addListToQueue(String frequency , String name) async {
+
+    List<String> numberStringList = frequency.split('/');
+    List<double> frequencyList = numberStringList
+        .map((str) => double.tryParse(str)) // Use tryParse to handle invalid values
+        .where((value) => value != null && value <= 20000)
+        .cast<double>()
+        .toList();
+
+
+    StaticValue.addListToQueue(frequencyList, name);
   }
 
 

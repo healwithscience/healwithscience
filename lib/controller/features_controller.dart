@@ -94,6 +94,10 @@ class FeaturesController extends GetxController {
 
 
 
+
+  RxInt playingQueueIndex = 0.obs;
+  RxBool playingType = false.obs;
+
   @override
   onInit()  {
     super.onInit();
@@ -126,6 +130,15 @@ class FeaturesController extends GetxController {
       programName.value = programNameList[playingIndex.value] != 'No Name' ?  programNameList[playingIndex.value] : "";
     }
 
+    if(data['playingType'] != null){
+      playingType.value = data['playingType'];
+    }
+
+    if(data['playingQueueIndex'] != null){
+      playingQueueIndex.value = data['playingQueueIndex'];
+    }
+
+
     if(data['type'] != null){
       playerType = data['type'];
       isPlaying.value = data['isPlaying'];
@@ -152,7 +165,6 @@ class FeaturesController extends GetxController {
     // Fetch current theme
     currentTheme.value = parser.getTheme();
   }
-
 
   Future<void> fetchDownloadlist() async {
     categoriesList =  await parser.fetchList();
@@ -328,7 +340,10 @@ class FeaturesController extends GetxController {
   //This function is used to generate sound according to particular frequency value (Native Approach)
   Future<void> playFrequency() async {
 
-    changeProgramName();
+    if(!playingType.value){
+      changeProgramName();
+    }
+
     isPlaying.value = true;
     if(found.kIsWeb){
       //Commented because dart:js not working  only in web . You have to uncomment it if you have to run application in web
@@ -391,16 +406,30 @@ class FeaturesController extends GetxController {
       // frequencyValue.value = frequenciesList[playingIndex.value + 1]!;
       resetTimer();
       isPlaying.value == false;
-      if(playingIndex.value + 1 < frequenciesList.length){
-        playingIndex.value = playingIndex.value + 1;
-        frequencyValue.value = frequenciesList[playingIndex.value] as double;
 
-        print("After Playing Value: ${frequencyValue.value}");
-      }else{
-        frequencyValue.value = frequenciesList[0]!;
-        playingIndex.value = 0;
+      if(playingType.value){
+        playingQueueIndex.value = playingQueueIndex.value + 1;
       }
-      changeProgramName();
+
+      if(StaticValue.queueFrequenciesList.isNotEmpty && playingQueueIndex.value != StaticValue.queueFrequenciesList.length ){
+        playingType.value = true;
+        frequencyValue.value = StaticValue.queueFrequenciesList[playingQueueIndex.value] as double;
+        programName.value = StaticValue.queueProgramNameList[playingQueueIndex.value] != 'No Name' ?  StaticValue.queueProgramNameList[playingQueueIndex.value] : "";
+
+      }else{
+        playingType.value = false;
+        if(playingIndex.value + 1 < frequenciesList.length){
+          playingIndex.value = playingIndex.value + 1;
+          frequencyValue.value = frequenciesList[playingIndex.value] as double;
+
+          print("After Playing Value: ${frequencyValue.value}");
+        }else{
+          frequencyValue.value = frequenciesList[0]!;
+          playingIndex.value = 0;
+        }
+        changeProgramName();
+      }
+
 
       Future.delayed(Duration(seconds: 3), (){
         playFrequency();
@@ -427,6 +456,8 @@ class FeaturesController extends GetxController {
       // frequencyValue.value = frequenciesList[playingIndex.value + 1]!;
       resetTimer();
       isPlaying.value == false;
+
+
       if (playingIndex.value - 1 >= 0) {
         playingIndex.value = playingIndex.value - 1;
         frequencyValue.value = frequenciesList[playingIndex.value] as double;
@@ -501,10 +532,16 @@ class FeaturesController extends GetxController {
   }
 
   void changeProgramName(){
-    print("HelloProgramNameList=====>  "+programNameList.length.toString());
-    if(screenName == "playlist" || screenName == "download" ){
+    final data = Get.arguments;
+    if(screenName == "category"||screenName == "custom_program"){
+      programName.value = data['name'];
+    }else if(screenName == "playlist" || screenName == "download" ){
+      programNameList = data['programName'];
       programName.value = programNameList[playingIndex.value] != 'No Name' ?  programNameList[playingIndex.value] : "";
+    }else{
+      programName.value = "";
     }
+
     StaticValue.frequencyValue.value = frequencyValue.value;
     StaticValue.frequencyName.value = programName.value;
   }
@@ -522,7 +559,7 @@ class FeaturesController extends GetxController {
             _numRewardedLoadAttempts = 0;
           },
           onAdFailedToLoad: (LoadAdError error) {
-            showToast('RewardedAd failed to load');
+          //  showToast('RewardedAd failed to load');
             _rewardedAd = null;
             _numRewardedLoadAttempts += 1;
             if (_numRewardedLoadAttempts < 3) {
@@ -601,6 +638,9 @@ class FeaturesController extends GetxController {
 
     StaticValue.playingIndex.value = playingIndex.value;
     StaticValue.screenName = screenName;
+
+    StaticValue.playingQueueIndex.value = playingQueueIndex.value;
+    StaticValue.playingType.value = playingType.value;
 
     if(isPlaying.value == true){
       StaticValue.startTime();

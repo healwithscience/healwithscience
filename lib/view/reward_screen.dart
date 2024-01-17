@@ -112,27 +112,20 @@ class _rewardScreenState extends State<RewardScreen> {
                               child: InkWell(
                                 onTap: () {
                                   StaticValue.pauseTimer();
-                                  Get.toNamed(AppRouter.getFeaturesScreen(),
-                                      arguments: {
-                                        'frequency':
-                                            StaticValue.frequenciesList[
-                                                StaticValue.playingIndex.value],
-                                        'frequenciesList':
-                                            StaticValue.frequenciesList,
-                                        'index': StaticValue.playingIndex.value,
-                                        'name': StaticValue.frequencyName.value,
-                                        'programName':
-                                            StaticValue.programNameList,
-                                        // Pass the data you want
-                                        'screenName': StaticValue.screenName,
-                                        'type': 'mini_player',
-                                        'isPlaying':
-                                            StaticValue.isPlaying.value,
-                                        // Pass the data you want
-                                        'currentTimeInSeconds':
-                                            StaticValue.currentTimeInSeconds
-                                        // Pass the data you want
-                                      });
+
+                                  Get.toNamed(AppRouter.getFeaturesScreen(), arguments: {
+                                    'frequency':StaticValue.frequenciesList[StaticValue.playingIndex.value],
+                                    'frequenciesList':StaticValue.frequenciesList,
+                                    'index':StaticValue.playingIndex.value,
+                                    'name': StaticValue.frequencyName.value,
+                                    'programName':StaticValue.programNameList,// Pass the data you want
+                                    'screenName': StaticValue.screenName,
+                                    'type':'mini_player',
+                                    'isPlaying':StaticValue.isPlaying.value,// Pass the data you want
+                                    'currentTimeInSeconds':StaticValue.currentTimeInSeconds,// Pass the data you want
+                                    'playingType' : StaticValue.playingType.value,
+                                    'playingQueueIndex' : StaticValue.playingQueueIndex.value,
+                                  });
                                 },
                                 child: CustomMiniPlayer(
                                     screenWidth: screenWidth,

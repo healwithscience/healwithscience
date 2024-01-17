@@ -9,8 +9,6 @@ import '../util/app_assets.dart';
 import '../util/dimens.dart';
 import '../util/string.dart';
 import '../widgets/commontext.dart';
-import 'package:flutter/material.dart';
-import 'package:heart_bpm/chart.dart';
 import 'package:heart_bpm/heart_bpm.dart';
 
 class HeartRateScreen extends StatefulWidget {
@@ -86,12 +84,16 @@ class _HeartRateScreenState extends State<HeartRateScreen> {
                           () => value.loading.value == '1'
                               ? CircularProgressIndicator(color: ThemeProvider.primary)
                               : value.loading.value == '2'
-                                  ? CommonTextWidget(textAlign: TextAlign.center, heading: 'At least two heart rates are required for RMSSD calculation.', fontSize: Dimens.twenty, color: Colors.black, fontFamily: 'regular')
+                                  ? CommonTextWidget(textAlign: TextAlign.center, heading: 'Your should wear smart watch and it should be connect with google fit account for results.', fontSize: Dimens.twenty, color: Colors.black, fontFamily: 'regular')
                                   : Column(
                                       children: [
                                         SvgPicture.asset(AssetPath.heart,width: screenWidth * .3,height: screenWidth * .3),
                                         SizedBox(height: screenHeight * .03),
-                                        CommonTextWidget(heading: value.rmssd.value.toStringAsFixed(2), fontSize: Dimens.twentyFour, color: Colors.black, fontFamily: 'bold'),
+                                        InkWell(
+                                            onTap: (){
+                                              value.goToNext(double.parse(value.rmssd.value.toStringAsFixed(2)));
+                                            },
+                                            child: CommonTextWidget(heading: value.rmssd.value.toStringAsFixed(2), fontSize: Dimens.twentyFour, color: Colors.black, fontFamily: 'bold')),
                                         SizedBox(height: 10),
                                         CommonTextWidget(heading: 'Heart rate variability (HRV)', fontSize: Dimens.twentyFour, color: Colors.black, fontFamily: 'bold')
                                       ],

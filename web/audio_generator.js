@@ -1,43 +1,45 @@
 let oscillator;
+let bufferSource;
 
 function generateAudio(amplitude, frequency, phase, waveType) {
   if (waveType === 1) {
-    generateSineAudio(amplitude, frequency, phase);
+    generateSineAudio(amplitude, frequency, phase,300,22050);
   } else if (waveType === 2) {
     generateSquareAudio(amplitude, frequency, phase);
   } else if (waveType === 3) {
-    generateSawAudio(amplitude, frequency, phase);
+    generateRampWaveAudio(amplitude, frequency, phase,300,22050);
   } else if (waveType === 4) {
-    generateSquareAudio(amplitude, frequency, phase);
+      generateSawAudio(amplitude, frequency, phase);
   } else if (waveType === 5) {
-    generateTriangleAudio(amplitude, frequency, phase);
+     generateTriangleAudio(amplitude, frequency, phase);
   } else if (waveType === 6) {
-    generateSawAudio(amplitude, frequency, phase);
+    generateFibonacciWave(amplitude, frequency, phase,300,22050);
   }else if (waveType === 7) {
-    generateHarmonicWaveAudio(amplitude, frequency, phase);
+    generateAndPlayHarmonicWave(amplitude, frequency, 300,22050);
   }
 }
 
 
-
-function generateSineAudio(amplitude, frequency, phase) {
+function generateSineAudio(amplitude, frequency, phase, durationSeconds, sampleRate) {
   const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  oscillator = audioContext.createOscillator();
-  const gainNode = audioContext.createGain();
+  const bufferSize = durationSeconds * sampleRate;
+  const buffer = audioContext.createBuffer(1, bufferSize, sampleRate);
+  const data = buffer.getChannelData(0);
 
-  oscillator.connect(gainNode);
-  gainNode.connect(audioContext.destination);
+  // Generate the sine wave samples and store in the buffer
+  for (let i = 0; i < bufferSize; i++) {
+    data[i] = amplitude * Math.sin(2 * Math.PI * frequency * i / sampleRate + phase);
+  }
 
-  oscillator.type = 'sine'; // You can change the wave type if needed
-  oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+  // Create a buffer source node and set the buffer
+  bufferSource = audioContext.createBufferSource();
+  bufferSource.buffer = buffer;
 
-  // Set the amplitude using the gain node
-  gainNode.gain.setValueAtTime(amplitude, audioContext.currentTime);
+  // Connect the buffer source to the audio context's destination
+  bufferSource.connect(audioContext.destination);
 
-  // Set the phase using the detune parameter
-  oscillator.detune.setValueAtTime(phase, audioContext.currentTime);
-
-  oscillator.start();
+  // Start playing the buffer source
+  bufferSource.start();
 }
 
 function generateSquareAudio(amplitude, frequency, phase) {
@@ -55,11 +57,42 @@ function generateSquareAudio(amplitude, frequency, phase) {
   gainNode.gain.setValueAtTime(amplitude, audioContext.currentTime);
 
   // Set the phase using the detune parameter
-  oscillator.detune.setValueAtTime(phase, audioContext.currentTime);
+//  oscillator.detune.setValueAtTime(phase, audioContext.currentTime);
 
   oscillator.start();
 }
 
+// Used to generate Ramp Wave
+function generateRampWaveAudio(amplitude, frequency, phase, durationSeconds, sampleRate) {
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  const bufferSize = durationSeconds * sampleRate;
+  const buffer = new Float32Array(bufferSize);
+  const gainNode = audioContext.createGain();
+
+  gainNode.connect(audioContext.destination);
+
+  for (let i = 0; i < bufferSize; i++) {
+    const index = i % (sampleRate / frequency);
+    const value = (index / (sampleRate / frequency)) * 2 * amplitude - amplitude;
+    buffer[i] = value;
+  }
+
+  bufferSource = audioContext.createBufferSource();
+  const audioBuffer = audioContext.createBuffer(1, bufferSize, sampleRate);
+  audioBuffer.getChannelData(0).set(buffer);
+
+  bufferSource.buffer = audioBuffer;
+  bufferSource.connect(gainNode);
+
+  // Set the amplitude using the gain node
+  gainNode.gain.setValueAtTime(amplitude, audioContext.currentTime);
+
+  // Set the phase using the detune parameter
+  bufferSource.detune.setValueAtTime(phase, audioContext.currentTime);
+
+  bufferSource.start();
+
+}
 
 function generateSawAudio(amplitude, frequency, phase) {
   const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -103,139 +136,103 @@ function generateTriangleAudio(amplitude, frequency, phase) {
 }
 
 
-function generateRampWaveAudio(amplitude, frequency, phase) {
-  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  const oscillator = audioContext.createOscillator();
-  const gainNode = audioContext.createGain();
-
-  oscillator.connect(gainNode);
-  gainNode.connect(audioContext.destination);
-
-  // Use 'custom' oscillator type
-  const real = new Float32Array([0, 1]); // Represents a ramp waveform
-  const imag = new Float32Array([0, 0]);
-  const wave = audioContext.createPeriodicWave(real, imag);
-  oscillator.setPeriodicWave(wave);
-
-  oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
-
-  // Set the amplitude using the gain node
-  gainNode.gain.setValueAtTime(amplitude, audioContext.currentTime);
-
-  // Set the phase using the detune parameter
-  oscillator.detune.setValueAtTime(phase, audioContext.currentTime);
-
-  oscillator.start();
-}
 
 
 
-function generateFibonacciWaveAudio(amplitude, baseFrequency) {
-  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  const gainNode = audioContext.createGain();
-  gainNode.connect(audioContext.destination);
 
-  oscillator = audioContext.createOscillator();
-  oscillator.connect(gainNode);
+// Used to generate fabonnacci Waves
+function generateFibonacciWave(amplitude, frequency, phase, durationSeconds,sampleRate) {
 
-  // Set the oscillator type to 'sine'
-  oscillator.type = 'sine';
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    // Calculate Fibonacci sequence values
+    const fibonacciValues = generateFibonacciSequence(durationSeconds);
 
-  // Set the amplitude using the gain node
-  gainNode.gain.setValueAtTime(amplitude, audioContext.currentTime);
+    // Scale the Fibonacci values to fit within the amplitude range
+    const scaledValues = fibonacciValues.map(value => (value / fibonacciValues[fibonacciValues.length - 1]) * amplitude);
 
-  // Set the initial frequency
-  oscillator.frequency.setValueAtTime(baseFrequency, audioContext.currentTime);
+    // Create an audio buffer
+    const bufferSize = durationSeconds * sampleRate;
+    const buffer = audioContext.createBuffer(1, bufferSize, sampleRate);
+    const data = buffer.getChannelData(0);
 
-  // Start the oscillator
-  oscillator.start(audioContext.currentTime);
-
-  // Generate sound based on Fibonacci sequence continuously
-  generateFibonacciSound(baseFrequency, audioContext);
-}
-
-function generateFibonacciSound(baseFrequency, audioContext) {
-  const fibonacciNumbers = [1, 1];
-  let currentIndex = 2;
-
-  function updateFrequency() {
-    // Calculate the next Fibonacci number
-    const nextFibonacci = fibonacciNumbers[currentIndex - 1] + fibonacciNumbers[currentIndex - 2];
-    fibonacciNumbers.push(nextFibonacci);
-
-    // Update the oscillator frequency based on the Fibonacci number
-    oscillator.frequency.setValueAtTime(baseFrequency + nextFibonacci, audioContext.currentTime);
-
-    // Increment the index for the next Fibonacci number
-    currentIndex++;
-
-    // Schedule the next update after a short time
-    setTimeout(updateFrequency, 100);
-  }
-
-  // Start the recursive update
-  updateFrequency();
-}
-
-
-function generateHarmonicWaveAudio(amplitude, baseFrequency,phase) {
-  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  const gainNode = audioContext.createGain();
-  gainNode.connect(audioContext.destination);
-
-  oscillator = audioContext.createOscillator();
-  oscillator.connect(gainNode);
-
-  // Set the oscillator type to 'sine'
-  oscillator.type = 'sine';
-
-  // Set the amplitude using the gain node
-  gainNode.gain.setValueAtTime(amplitude, audioContext.currentTime);
-
-  // Set the initial frequency
-  oscillator.frequency.setValueAtTime(baseFrequency, audioContext.currentTime);
-
-  // Start the oscillator
-  oscillator.start(audioContext.currentTime);
-
-  // Generate sound based on harmonic series
-  generateHarmonicSound(baseFrequency, 5, audioContext);
-}
-
-function generateHarmonicSound(baseFrequency, numHarmonics, audioContext) {
-  let currentHarmonic = 1;
-
-  function updateFrequency() {
-    // Update the oscillator frequency based on the current harmonic
-    const harmonicFrequency = baseFrequency * currentHarmonic;
-    oscillator.frequency.setValueAtTime(harmonicFrequency, audioContext.currentTime);
-
-    // Increment the harmonic for the next iteration
-    currentHarmonic++;
-
-    // Check if we've reached the desired number of harmonics
-    if (currentHarmonic <= numHarmonics) {
-      // Schedule the next update after a short time
-      setTimeout(updateFrequency, 100);
-    } else {
-
+    // Generate the wave based on the scaled Fibonacci values
+    for (let i = 0; i < bufferSize; i++) {
+        const index = (i + phase * sampleRate) % scaledValues.length;
+        data[i] = scaledValues[index];
     }
-  }
 
-  // Start the recursive update
-  updateFrequency();
+    // Create an audio buffer source
+    bufferSource = audioContext.createBufferSource();
+    bufferSource.buffer = buffer;
+
+    // Connect the source to the destination (speakers)
+    bufferSource.connect(audioContext.destination);
+
+    // Start the audio source
+    bufferSource.start();
+}
+
+function generateFibonacciSequence(length) {
+    const fibonacciValues = [0, 1];
+    while (fibonacciValues.length < length) {
+        const nextValue = fibonacciValues[fibonacciValues.length - 1] + fibonacciValues[fibonacciValues.length - 2];
+        fibonacciValues.push(nextValue);
+    }
+    return fibonacciValues.slice(0, length);
 }
 
 
 
 
+// Used to generate harmonic waves
+function generateAndPlayHarmonicWave(fundamentalFrequency, amplitude, durationSeconds, sampleRate) {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const bufferSize = durationSeconds * sampleRate;
+
+    // Check if bufferSize is valid
+    if (bufferSize <= 0) {
+        console.error("Invalid buffer size");
+        return;
+    }
+
+    const buffer = audioContext.createBuffer(1, bufferSize, sampleRate);
+
+    const data = buffer.getChannelData(0);
+
+    for (let i = 0; i < bufferSize; i++) {
+        let sampleValue = 0.0;
+
+        // Add the fundamental frequency
+        sampleValue += Math.sin(2 * Math.PI * fundamentalFrequency * i / sampleRate);
+
+        // Add the harmonics
+        for (let harmonic = 2; harmonic <= 5; harmonic++) {
+            const harmonicFrequency = fundamentalFrequency * harmonic;
+            sampleValue += Math.sin(2 * Math.PI * harmonicFrequency * i / sampleRate) / harmonic;
+        }
+
+        // Scale the sample value by the amplitude
+        sampleValue *= amplitude;
+
+        // Store the sample value in the buffer
+        data[i] = sampleValue;
+    }
+
+    bufferSource = audioContext.createBufferSource();
+    bufferSource.buffer = buffer;
+    bufferSource.connect(audioContext.destination);
+    bufferSource.start();
+}
 
 
 
 
-
+// Used to stop audio
 function stopAudio() {
-  if (oscillator) {
-    oscillator.stop();
+  if (bufferSource) {
+    bufferSource.stop();
   }
+    if (oscillator) {
+      oscillator.stop();
+    }
 }

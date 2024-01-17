@@ -27,6 +27,9 @@ class StaticValue {
   static RxInt playingIndex = 0.obs;
   static String screenName = "";
 
+  static RxInt playingQueueIndex = 0.obs;
+  static RxBool playingType = false.obs;
+
 
   static void startTime() {
     restartTimeInSeconds = totalTimeInSeconds - currentTimeInSeconds;
@@ -124,14 +127,30 @@ class StaticValue {
   static Future<void> playNext() async {
     resetTimer();
     isPlaying.value == false;
-    if (playingIndex.value + 1 < frequenciesList.length) {
-      playingIndex.value = playingIndex.value + 1;
-      frequencyValue.value = frequenciesList[playingIndex.value] as double;
-    } else {
-      frequencyValue.value = frequenciesList[0]!;
-      playingIndex.value = 0;
+
+    if(playingType.value){
+      playingQueueIndex.value = playingQueueIndex.value + 1;
     }
-    changeProgramName();
+
+    if(StaticValue.queueFrequenciesList.isNotEmpty && playingQueueIndex.value != StaticValue.queueFrequenciesList.length ){
+      playingType.value = true;
+      frequencyValue.value = StaticValue.queueFrequenciesList[playingQueueIndex.value] as double;
+      frequencyName.value = StaticValue.queueProgramNameList[playingQueueIndex.value] != 'No Name' ?  StaticValue.queueProgramNameList[playingQueueIndex.value] : "";
+      // frequencyName.value = programNameList[playingIndex.value] != 'No Name' ?  programNameList[playingIndex.value] : "";
+    }else{
+      playingType.value = false;
+      if (playingIndex.value + 1 < frequenciesList.length) {
+        playingIndex.value = playingIndex.value + 1;
+        frequencyValue.value = frequenciesList[playingIndex.value] as double;
+      } else {
+        frequencyValue.value = frequenciesList[0]!;
+        playingIndex.value = 0;
+      }
+      changeProgramName();
+    }
+
+
+
     Future.delayed(Duration(seconds: 3), () {
       playFrequency();
       startTime();
@@ -156,5 +175,77 @@ class StaticValue {
         print("Error getting string: $e");
       }
     // }
+  }
+
+  static RxList<double?> queueFrequenciesList = <double?>[].obs;
+  static List<String> queueProgramNameList = <String>[];
+
+  static Future<void> addSongToQueue(double freq, String name) async {
+
+    if (!queueFrequenciesList.contains(freq)) {
+      queueFrequenciesList.add(freq);
+      if(name == ""){
+        queueProgramNameList.add('No Name');
+      }else{
+        queueProgramNameList.add(name);
+      }
+
+    } else {
+      showToast("Program with frequency $freq already exists in the queue.");
+    }
+     print("HelloQueueList===>"+queueFrequenciesList.toString());
+  }
+
+  static Future<void> removeFromQueue(double freq,) async {
+    int index = queueFrequenciesList.indexOf(freq);
+
+    if (index != -1) {
+      queueFrequenciesList.removeAt(index);
+      queueProgramNameList.removeAt(index);
+      showToast("Program with frequency $freq removed from the queue.");
+    } else {
+      showToast("Program with frequency $freq not found in the queue.");
+    }
+
+    print("HelloQueueList===>" + queueFrequenciesList.toString());
+  }
+
+  static Future<void> addListToQueue(List<double> frequencies, String name) async {
+    for (int i = 0; i < frequencies.length; i++) {
+      double freq = frequencies[i];
+
+      int existingIndex = queueFrequenciesList.indexOf(freq);
+
+      if (existingIndex == -1) {
+        // Frequency does not exist, add it to the queue
+        queueFrequenciesList.add(freq);
+        queueProgramNameList.add(name);
+      } else {
+        // Frequency already exists, replace the program name
+        queueProgramNameList[existingIndex] = name;
+      }
+    }
+    successToast("Program added in the queue successfully.");
+
+  }
+
+  static Future<void> removeAllWithName(String name) async {
+    List<double> removedFrequencies = [];
+
+    for (int i = queueProgramNameList.length - 1; i >= 0; i--) {
+      if (queueProgramNameList[i] == name) {
+        removedFrequencies.add(queueFrequenciesList.removeAt(i)!);
+        queueProgramNameList.removeAt(i);
+      }
+    }
+
+    if (removedFrequencies.isNotEmpty) {
+      successToast("Programs with name '$name' removed from the queue.");
+      print("Removed Frequencies: $removedFrequencies");
+    } else {
+      showToast("No programs with name '$name' found in the queue.");
+    }
+
+    print("HelloQueueList===>$queueFrequenciesList");
   }
 }

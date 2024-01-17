@@ -282,6 +282,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: InkWell(
                       onTap: (){
                         StaticValue.pauseTimer();
+
                         Get.toNamed(AppRouter.getFeaturesScreen(), arguments: {
                           'frequency':StaticValue.frequenciesList[StaticValue.playingIndex.value],
                           'frequenciesList':StaticValue.frequenciesList,
@@ -291,7 +292,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           'screenName': StaticValue.screenName,
                           'type':'mini_player',
                           'isPlaying':StaticValue.isPlaying.value,// Pass the data you want
-                          'currentTimeInSeconds':StaticValue.currentTimeInSeconds// Pass the data you want
+                          'currentTimeInSeconds':StaticValue.currentTimeInSeconds,// Pass the data you want
+                          'playingType' : StaticValue.playingType.value,
+                          'playingQueueIndex' : StaticValue.playingQueueIndex.value,
                         });
                       },
                       child:  CustomMiniPlayer(

@@ -3,11 +3,14 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:heal_with_science/util/all_constants.dart';
 import 'package:health/health.dart';
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../backend/helper/app_router.dart';
 import '../backend/parser/heart_parser.dart';
+import '../util/extensions/static_values.dart';
 
 class HeartController extends GetxController {
   final HealthFactory health = HealthFactory();
@@ -22,7 +25,7 @@ class HeartController extends GetxController {
 
 
   static final types = [HealthDataType.HEART_RATE];
-  final permissions = types.map((e) => HealthDataAccess.READ_WRITE).toList();
+  final permissions = types.map((e) => HealthDataAccess.READ).toList();
 
 
  /* // define the types to get
@@ -81,7 +84,7 @@ class HeartController extends GetxController {
 
       if (healthData.isNotEmpty) {
         List<double> heartRateValues = [];
-
+        // print("List of Heart Rate Values: $healthData");
         for (HealthDataPoint h in healthData) {
           if (h.type == HealthDataType.HEART_RATE) {
             var doubleValue = double.parse('${h.value}');
@@ -90,11 +93,11 @@ class HeartController extends GetxController {
             heartRateValues.add(doubleValue);
           }
         }
-        healthData = HealthFactory.removeDuplicates(healthData);
+        // healthData = HealthFactory.removeDuplicates(healthData);
         print("List of Heart Rate Values: $heartRateValues");
         calculateRMSSD(heartRateValues);
       } else {
-        print("Hello Loading");
+        showToast("At least two heart rates are required for RMSSD calculation");
         loading.value = '2';
       }
     } catch (error) {
@@ -132,6 +135,23 @@ class HeartController extends GetxController {
   void onBackRoutes() {
     var context = Get.context as BuildContext;
     Navigator.of(context).pop(true);
+  }
+
+  void goToNext(double hrv) {
+    StaticValue.resetTimer();
+    RxList<double?> filteredfrequencies = <double?>[].obs;
+    filteredfrequencies.add(hrv);
+
+    Get.toNamed(
+      AppRouter.getFeaturesScreen(),
+      arguments: {
+        'frequency': filteredfrequencies[0],
+        'frequenciesList': filteredfrequencies,
+        'index': 0,
+        'screenName': 'frequency'
+        // Pass the data you want
+      },
+    );
   }
 
 }

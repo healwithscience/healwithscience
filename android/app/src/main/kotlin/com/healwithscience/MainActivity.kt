@@ -282,8 +282,6 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-
-
     private fun getSpikeHeightAndWidth(amplitude: Double, frequency: Double, dutyCycle: Double): Pair<Double, Double> {
         // Generate a random fraction between 0 and 1 for the spike height
         val spikeHeightFraction = Math.random()
