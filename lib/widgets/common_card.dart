@@ -37,77 +37,79 @@ class CommonCard extends StatelessWidget {
         color: ThemeProvider.persianGreen,
         borderRadius: BorderRadius.circular(screenWidth * 0.03),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(
-            width: screenWidth * 0.6,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CommonTextWidget(
-                  heading: heading,
-                  fontSize: Dimens.eighteen,
-                  color: ThemeProvider.whiteColor,
-                  fontFamily: 'bold',
-                ),
-                SizedBox(height: screenHeight * 0.02),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+      child: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              width: screenWidth * 0.62,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CommonTextWidget(
+                    heading: heading,
+                    fontSize: Dimens.eighteen,
+                    color: ThemeProvider.whiteColor,
+                    fontFamily: 'bold',
+                  ),
+                  SizedBox(height: screenHeight * 0.02),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(AssetPath.dot),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: CommonTextWidget(
+                            heading: point1,
+                            fontSize: Dimens.sixteen,
+                            color: ThemeProvider.whiteColor,
+                            fontFamily: 'medium',
+                          ),
+                        ),
+                      ],
+                    ),
+                  SizedBox(height: screenWidth * .02),
+                  Row(
+                    children: [
+                      point2.toString() != "" ?
+                      SvgPicture.asset(AssetPath.dot) : Container(),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: CommonTextWidget(
+                            heading: point2,
+                            fontSize: Dimens.sixteen,
+                            color: ThemeProvider.whiteColor,
+                            fontFamily: 'medium',
+                          ),
+
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: screenWidth * .02),
+                  Row(
                     children: [
                       SvgPicture.asset(AssetPath.dot),
                       const SizedBox(width: 20),
                       Expanded(
                         child: CommonTextWidget(
-                          heading: point1,
-                          fontSize: Dimens.sixteen,
-                          color: ThemeProvider.whiteColor,
-                          fontFamily: 'medium',
+                            heading: point3,
+                            fontSize: Dimens.sixteen,
+                            color: ThemeProvider.whiteColor,
+                            fontFamily: 'medium',
+                          ),
                         ),
-                      ),
+
                     ],
-                  ),
-                SizedBox(height: screenWidth * .01),
-                Row(
-                  children: [
-                    point2.toString() != "" ?
-                    SvgPicture.asset(AssetPath.dot) : Container(),
-                    const SizedBox(width: 20),
-                    Expanded(
-                      child: CommonTextWidget(
-                          heading: point2,
-                          fontSize: Dimens.sixteen,
-                          color: ThemeProvider.whiteColor,
-                          fontFamily: 'medium',
-                        ),
-
-                    ),
-                  ],
-                ),
-                SizedBox(height: screenWidth * .01),
-                Row(
-                  children: [
-                    SvgPicture.asset(AssetPath.dot),
-                    const SizedBox(width: 20),
-                    Expanded(
-                      child: CommonTextWidget(
-                          heading: point3,
-                          fontSize: Dimens.sixteen,
-                          color: ThemeProvider.whiteColor,
-                          fontFamily: 'medium',
-                        ),
-                      ),
-
-                  ],
-                )
-              ],
+                  )
+                ],
+              ),
             ),
-          ),
-          SizedBox(
-            width: screenWidth * 0.25,
-            child: SvgPicture.asset(imagePath),
-          ),
-        ],
+            SizedBox(
+              width: screenWidth * 0.22,
+              child: SvgPicture.asset(imagePath),
+            ),
+          ],
+        ),
       ),
     );
   }

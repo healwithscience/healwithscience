@@ -37,24 +37,22 @@ class FeaturesScreen extends StatefulWidget {
 
 class _FeaturesScreenState extends State<FeaturesScreen> {
   double screenHeight = 0, screenWidth = 0;
-  double currenValue = 0;
 
   @override
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
-    print("HelloScreenWidth"+screenWidth.toString());
+
     return GetBuilder<FeaturesController>(builder: (value) {
         return GestureDetector(
-          onPanDown: (details){
-            InactivityManager.resetTimer();
-          },
+            onPanDown: (details){
+              InactivityManager.resetTimer();
+            },
             onPanUpdate: (details) {
               if (details.delta.dy < -40) {
                 // User is swiping up
-                // newShowBottomSheet();
-              }
-            },
+                queueBottomSheet(value);
+              }},
           child: SafeArea(
             child:  Scaffold(
               backgroundColor: ThemeProvider.light_white,
@@ -818,7 +816,9 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
 
                                                                       InkWell(
                                                                         onTap: () {
+                                                                          print("HelloIamPressed");
                                                                           if(StaticValue.rewardPoint > 0){
+                                                                            value.selectedList.value = 'main';
                                                                             value.isButtonPressed.value = true;
                                                                             value.playingIndex.value = index;
                                                                             value.isProcessing.value = true;
@@ -915,9 +915,17 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                                                         value.fetchUserPlaylists();
                                                                                         _showBottomSheet(context, value, value.frequenciesList[index].toString(), value.programName.value.toString());
                                                                                       } else if (selectedValue == "Add To Queue") {
-                                                                                        StaticValue.addSongToQueue(double.parse(value.frequenciesList[index].toString()),value.programName.value.toString());
+                                                                                        if (value.parser.getPlan() == "advance"){
+                                                                                          StaticValue.addSongToQueue(double.parse(value.frequenciesList[index].toString()),value.programName.value.toString());
+                                                                                        }else{
+                                                                                          showToast('Please upgrade plan to advance to use this feature');
+                                                                                        }
                                                                                       } else if(selectedValue == "Forgot Present Queue") {
-                                                                                        StaticValue.removeFromQueue(double.parse(value.frequenciesList[index].toString()));
+                                                                                        if (value.parser.getPlan() == "advance"){
+                                                                                          StaticValue.removeFromQueue(double.parse(value.frequenciesList[index].toString()));
+                                                                                        }else{
+                                                                                          showToast('Please upgrade plan to advance to use this feature');
+                                                                                        }
                                                                                       }
                                                                                     },
                                                                                     child: Padding(
@@ -1007,9 +1015,6 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
                                                   },
                                                 )),
                                               )
-
-
-
                                             ],
                                           ),
                                           const SizedBox(height: 20),
@@ -1145,7 +1150,26 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
 
                       ],
                     ),
+                    Positioned(
+                      bottom: 16,
+                      left: 0,
+                      right: 0,
+                      child: Column(
+                        children: [
 
+                          Icon(
+                            Icons.arrow_drop_up,
+                            size: 32,
+                            color: ThemeProvider.primary, // Adjust color as needed
+                          ),
+                          CommonTextWidget(
+                              heading: AppString.swipeUp,
+                              fontSize: Dimens.sixteen,
+                              color: ThemeProvider.persianGreen,
+                              fontFamily: 'bold'),
+                        ],
+                      ),
+                    ),
                   ],
                 ) : Image.asset(
                   AssetPath.background,
@@ -1179,16 +1203,118 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
     );
   }
 
-  void newShowBottomSheet() {
+  void queueBottomSheet(FeaturesController value) {
     Get.bottomSheet(
-      // Replace the following widget with your desired bottom sheet content
+      StaticValue.queueFrequenciesList.isNotEmpty ?
       Container(
-        height: 200,
+        width: screenWidth,
         color: Colors.white,
-        child: Center(
-          child: Text('Your Bottom Sheet Content'),
+          child : Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: CommonTextWidget(
+                    heading: AppString.queue,
+                  fontSize: Dimens.twentyFour,
+                  color: Colors.black,
+                  fontFamily: 'bold',),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: StaticValue.queueFrequenciesList.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding:const EdgeInsets.symmetric(horizontal: 15),
+                      child: Column(
+                        children: [
+                          InkWell(
+                            onTap: (){
+                              print("HelloIamPressed Queue");
+                              value.selectedList.value = 'queue';
+
+                              value.isButtonPressed.value = true;
+                              value.playingIndex.value = index;
+                              value.isProcessing.value = true;
+                              value.frequencyValue.value = StaticValue.queueFrequenciesList[index]!;
+                              value.resetTimer();
+                              Future.delayed(const Duration(seconds: 3),()
+                              {
+                                value.isProcessing.value = false;
+                                value.playFrequency();
+                                value.startTime();
+                                value.isButtonPressed.value = false;
+                              });
+                            },
+                            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    RoundButton(
+                                      width: screenWidth * .05,
+                                      height: screenWidth * .05,
+                                      borderColor: ThemeProvider.borderColor,
+                                      padding: screenWidth * .013,
+                                      child: SvgPicture.asset(AssetPath.play),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(screenWidth * .05),
+                                      child: CommonTextWidget(
+                                          heading: "${StaticValue.queueFrequenciesList[index]} HZ",
+                                          fontSize: Dimens.sixteen,
+                                          color: Colors.black,
+                                          fontFamily: 'medium'),
+                                    )
+                                  ],
+                                ),
+                                Obx(() => value.playingIndex.value == index && value.isProcessing.value == true
+                                    ? Padding(
+                                  padding: EdgeInsets.all(screenWidth * .05),
+                                  child: Image.asset(
+                                    AssetPath.loading,
+                                    height: screenWidth * .05,
+                                    width: 25.0,
+                                  ),
+                                )
+                                    : Container())
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                              width: screenWidth * .8,
+                              child: CustomGradientDivider(
+                                  height: 1.0,
+                                  startColor: ThemeProvider.greyColor,
+                                  endColor: Colors.transparent
+                              )
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              )
+            ],
+          ),
+
+
+      ) :
+      Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.0),
+            topRight: Radius.circular(20.0),
+          ),
         ),
-      ),
+        child: Center(
+          child:  CommonTextWidget(
+              lineHeight: 1.3,
+              heading: "No Program Added in the queue",
+              fontSize: Dimens.sixteen,
+              color: Colors.black,
+              fontFamily: 'medium'),
+        ),
+      )
     );
   }
 

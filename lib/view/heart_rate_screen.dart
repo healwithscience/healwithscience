@@ -5,6 +5,186 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:heal_with_science/controller/heart_controller.dart';
 import 'package:heal_with_science/util/theme.dart';
+import 'package:heart_bpm/chart.dart';
+import 'package:heart_bpm/heart_bpm.dart';
+import '../util/app_assets.dart';
+import '../util/dimens.dart';
+import '../util/string.dart';
+import '../widgets/commontext.dart';
+
+class HeartRateScreen extends StatefulWidget {
+  const HeartRateScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HeartRateScreen> createState() => _HeartRateScreenState();
+}
+
+class _HeartRateScreenState extends State<HeartRateScreen> {
+  double screenHeight = 0,
+      screenWidth = 0;
+
+  List<SensorValue> data = [];
+  List<SensorValue> bpmValues = [];
+  //  Widget chart = BPMChart(data);
+
+  bool isBPMEnabled = false;
+  Widget? dialog;
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<HeartController>(builder: (value) {
+       return Scaffold(
+         backgroundColor: Colors.grey.shade100,
+         appBar: AppBar(
+           backgroundColor: Colors.white,
+           title: Text('Heart BPM Demo'),
+         ),
+         body: Column(
+           children: [
+             isBPMEnabled
+                 ? dialog = HeartBPMDialog(
+               context: context,
+               showTextValues: true,
+               borderRadius: 10,
+               onRawData: (value) {
+                 setState(() {
+                   if (data.length >= 100) data.removeAt(0);
+                   data.add(value);
+                 });
+                 // chart = BPMChart(data);
+               },
+               onBPM: (value) =>
+                   setState(() {
+                     if (bpmValues.length >= 100) bpmValues.removeAt(0);
+                     bpmValues.add(SensorValue(
+                         value: value.toDouble(), time: DateTime.now()));
+                   }),
+               // sampleDelay: 1000 ~/ 20,
+               // child: Container(
+               //   height: 50,
+               //   width: 100,
+               //   child: BPMChart(data),
+               // ),
+             )
+                 : SizedBox(),
+             isBPMEnabled && data.isNotEmpty
+                 ? Container(
+               decoration: BoxDecoration(border: Border.all()),
+               height: 180,
+               child: BPMChart(data),
+             )
+                 : SizedBox(),
+             isBPMEnabled && bpmValues.isNotEmpty
+                 ? Container(
+               decoration: BoxDecoration(border: Border.all()),
+               constraints: BoxConstraints.expand(height: 180),
+               child: BPMChart(bpmValues),
+             )
+                 : SizedBox(),
+             Center(
+               child: ElevatedButton.icon(
+                 icon: Icon(Icons.favorite_rounded),
+                 label: Text(isBPMEnabled ? "Stop measurement" : "Measure BPM"),
+                 onPressed: () =>
+                     setState(() {
+                       if (isBPMEnabled) {
+                         isBPMEnabled = false;
+                         // dialog.
+                       } else
+                         isBPMEnabled = true;
+                     }),
+               ),
+             ),
+           ],
+         ),
+       );
+    });
+  }
+
+
+/*  @override
+  Widget build(BuildContext context) {
+    screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
+    return GetBuilder<HeartController>(builder: (value) {
+      return SafeArea(
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          body: Padding(
+              padding: EdgeInsets.all(screenWidth * .04),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          value.onBackRoutes();
+                        },
+                        child: Container(
+                          width: kIsWeb ? screenWidth * .07 : screenWidth * .1,
+                          height: kIsWeb ? screenWidth * .07 : screenWidth * .1,
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                color: ThemeProvider.borderColor,
+                              ),
+                              borderRadius: const BorderRadius.all(Radius.circular(10))),
+                          child: Padding(
+                            padding: EdgeInsets.all(screenWidth * .02),
+                            child: SvgPicture.asset(AssetPath.back_arrow),
+                          ),
+                        ),
+                      ),
+                      CommonTextWidget(lineHeight: 1.3,
+                          heading: AppString.heart_rate,
+                          fontSize: Dimens.twentyFour,
+                          color: Colors.black,
+                          fontFamily: 'bold'),
+                      InkWell(
+                        onTap: () {},
+                        child: Padding(
+                          padding: EdgeInsets.all(screenWidth * .02),
+                          child: SvgPicture.asset(AssetPath.setting, width: screenWidth * .012, color: ThemeProvider.blackColor),
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    height: screenHeight * .7,
+                    alignment: Alignment.center,
+                    child: Center(
+                      child: CommonTextWidget(
+                          heading: AppString.comingSoon,
+                          fontSize: Dimens.sixteen,
+                          color: Colors.black,
+                          fontFamily: 'regular'),
+                    ),
+                  )
+
+                ],
+              )),
+        ),
+      );
+    });
+  }*/
+
+
+}
+
+
+
+
+
+/*
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:heal_with_science/controller/heart_controller.dart';
+import 'package:heal_with_science/util/theme.dart';
 import '../util/app_assets.dart';
 import '../util/dimens.dart';
 import '../util/string.dart';
@@ -75,7 +255,7 @@ class _HeartRateScreenState extends State<HeartRateScreen> {
                   const SizedBox(height: 10),
                   SizedBox(
                     width: screenWidth,
-                    height: screenHeight * .8,
+                    height: screenHeight * .7,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -131,3 +311,4 @@ class _HeartRateScreenState extends State<HeartRateScreen> {
     );
   }
 }
+*/

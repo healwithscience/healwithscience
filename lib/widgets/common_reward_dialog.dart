@@ -10,88 +10,91 @@ void showCommonRewardDialog(BuildContext context,double screenHeight,double scre
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        content: SizedBox(
-          width: screenWidth * 0.1,
-          height: screenHeight * 0.2,
-          child: Column(
-            children: [
-              CommonTextWidget(
-                heading: AppString.reward_Point,
-                fontSize: Dimens.twentyFour,
-                color: Colors.black,
-                fontFamily: 'bold',
-              ),
-              SizedBox(height: screenHeight * 0.02),
-              CommonTextWidget(
-                heading: AppString.no_points,
-                fontSize: Dimens.forteen,
-                color: Colors.black,
-                fontFamily: 'medium',
-              ),
-              SizedBox(height: screenHeight * 0.01),
-              CommonTextWidget(
-                heading: AppString.earn_more,
-                fontSize: Dimens.forteen,
-                color: Colors.black,
-                fontFamily: 'medium',
-              ),
-              SizedBox(height: screenHeight * 0.04),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: SizedBox(
-                      width: screenWidth * 0.2,
-                      height: 40,
-                      child: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            width: 1.0,
-                            color: ThemeProvider.persianGreen,
+        content: Flexible(
+          child: SizedBox(
+            height: screenHeight * 0.2,
+            child: Column(
+              children: [
+                CommonTextWidget(
+                  heading: AppString.reward_Point,
+                  fontSize: Dimens.twentyFour,
+                  color: Colors.black,
+                  fontFamily: 'bold',
+                ),
+                SizedBox(height: screenHeight * 0.02),
+                CommonTextWidget(
+                  heading: AppString.no_points,
+                  fontSize: Dimens.forteen,
+                  color: Colors.black,
+                  fontFamily: 'medium',
+                ),
+                SizedBox(height: screenHeight * 0.01),
+                CommonTextWidget(
+                  heading: AppString.earn_more,
+                  fontSize: Dimens.forteen,
+                  color: Colors.black,
+                  fontFamily: 'medium',
+                ),
+                SizedBox(height: screenHeight * 0.04),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: SizedBox(
+                        width: screenWidth * 0.2,
+                        height: 40,
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              width: 1.0,
+                              color: ThemeProvider.persianGreen,
+                            ),
                           ),
-                        ),
-                        child: CommonTextWidget(
-                          heading: AppString.cancel,
-                          fontSize: Dimens.forteen,
-                          color: Colors.black,
-                          fontFamily: 'bold',
+                          child: CommonTextWidget(
+                            heading: AppString.cancel,
+                            fontSize: Dimens.forteen,
+                            color: Colors.black,
+                            fontFamily: 'bold',
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      onAction();   SizedBox(height: screenHeight * 0.4);
-                    },
-                    child: SizedBox(
-                      width: screenWidth * 0.2,
-                      height: 40,
-                      child: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            width: 1.0,
-                            color: ThemeProvider.persianGreen,
+
+                    SizedBox(width: 20),
+                    InkWell(
+                      onTap: () {
+                        onAction();   SizedBox(height: screenHeight * 0.4);
+                      },
+                      child: SizedBox(
+                        width: screenWidth * 0.2,
+                        height: 40,
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              width: 1.0,
+                              color: ThemeProvider.persianGreen,
+                            ),
                           ),
-                        ),
-                        child: CommonTextWidget(
-                          heading: AppString.warch_ad,
-                          fontSize: Dimens.forteen,
-                          color: Colors.black,
-                          fontFamily: 'bold',
+                          child: CommonTextWidget(
+                            heading: AppString.warch_ad,
+                            fontSize: Dimens.forteen,
+                            color: Colors.black,
+                            fontFamily: 'bold',
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       );

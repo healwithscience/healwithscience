@@ -6,6 +6,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:heal_with_science/controller/frequency_controller.dart';
+import 'package:heal_with_science/util/all_constants.dart';
 import 'package:heal_with_science/util/extensions/static_values.dart';
 import 'package:heal_with_science/widgets/CustomGradientDivider.dart';
 import 'package:heal_with_science/widgets/round_button.dart';
@@ -232,10 +233,15 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
                                                       value.fetchUserPlaylists();
                                                       _showBottomSheet(context, value, value.filteredfrequencies[index].toString());
                                                     } else if (selectedValue == "Add To Queue") {
-                                                      StaticValue.addSongToQueue(double.parse(value.filteredfrequencies[index].toString()),"");
+                                                      if (value.parser.getPlan() == "advance"){
+                                                        StaticValue.addSongToQueue(double.parse(value.filteredfrequencies[index].toString()),"");
+                                                      }else{
+                                                        showToast('Please upgrade plan to advance to use this feature');
+                                                      }
                                                     } else if(selectedValue == "Forgot Present Queue") {
-
-                                                      StaticValue.removeFromQueue(double.parse(value.filteredfrequencies[index].toString()));
+                                                        if (value.parser.getPlan() == "advance"){
+                                                          StaticValue.removeFromQueue(double.parse(value.filteredfrequencies[index].toString()));
+                                                        }
                                                     }
                                                   },
                                                   child: Padding(
@@ -279,7 +285,7 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
                         StaticValue.pauseTimer();
 
                         Get.toNamed(AppRouter.getFeaturesScreen(), arguments: {
-                          'frequency':StaticValue.frequenciesList[StaticValue.playingIndex.value],
+                          'frequency': StaticValue.selectedList == 'main' ? StaticValue.frequenciesList[StaticValue.playingIndex.value] : StaticValue.queueFrequenciesList[StaticValue.playingIndex.value],
                           'frequenciesList':StaticValue.frequenciesList,
                           'index':StaticValue.playingIndex.value,
                           'name': StaticValue.frequencyName.value,
@@ -288,8 +294,7 @@ class _FrequencyScreenState extends State<FrequencyScreen> {
                           'type':'mini_player',
                           'isPlaying':StaticValue.isPlaying.value,// Pass the data you want
                           'currentTimeInSeconds':StaticValue.currentTimeInSeconds,// Pass the data you want
-                          'playingType' : StaticValue.playingType.value,
-                          'playingQueueIndex' : StaticValue.playingQueueIndex.value,
+                          'selectedList':StaticValue.selectedList
                         });
 
                       },

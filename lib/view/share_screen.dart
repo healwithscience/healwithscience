@@ -127,8 +127,7 @@ class _shareScreenState extends State<ShareScreen> {
                                     'type':'mini_player',
                                     'isPlaying':StaticValue.isPlaying.value,// Pass the data you want
                                     'currentTimeInSeconds':StaticValue.currentTimeInSeconds,// Pass the data you want
-                                    'playingType' : StaticValue.playingType.value,
-                                    'playingQueueIndex' : StaticValue.playingQueueIndex.value,
+                                    'selectedList':StaticValue.selectedList
                                   });
                                 },
                                 child: CustomMiniPlayer(screenWidth: screenWidth, screenHeight: screenHeight),

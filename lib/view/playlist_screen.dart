@@ -18,7 +18,6 @@ import '../widgets/common_min_player.dart';
 import '../widgets/common_reward_dialog.dart';
 import '../widgets/commontext.dart';
 import '../widgets/custom_text_field.dart';
-import '../widgets/round_button.dart';
 
 class PlayListScreen extends StatefulWidget {
   const PlayListScreen({super.key});
@@ -242,13 +241,40 @@ class _PlayListScreenState extends State<PlayListScreen> {
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Padding(
-                                                padding: EdgeInsets.all(   kIsWeb ? screenWidth * .01  : screenWidth * .04 ),
-                                                child: CommonTextWidget(lineHeight: 1.3,
-                                                    heading: value.filteredPlaylist[index],
-                                                    fontSize: Dimens.sixteen,
-                                                    color: Colors.black,
-                                                    fontFamily: 'medium'),
+                                              Row(
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Padding(
+                                                    padding: EdgeInsets.all(   kIsWeb ? screenWidth * .01  : screenWidth * .04 ),
+                                                    child: CommonTextWidget(lineHeight: 1.3,
+                                                        heading: value.filteredPlaylist[index],
+                                                        fontSize: Dimens.sixteen,
+                                                        color: Colors.black,
+                                                        fontFamily: 'medium'),
+                                                  ),
+
+                                                   value.parser.getPlan() == "advance" ? PopupMenuButton<String>(
+                                                      offset: const Offset(00, 40),
+                                                      itemBuilder: (context) => [
+                                                        buildPopupMenuItem("Add To Queue", AssetPath.add_queue),
+                                                        // Add more options as needed
+                                                      ],
+                                                      onSelected: (selectedValue) {
+                                                        if (selectedValue == "Add To Queue") {
+                                                          value.addToQueue(value.filteredPlaylist[index]);
+                                                        }
+                                                      },
+                                                      child: Padding(
+                                                        padding: EdgeInsets.symmetric( vertical: screenWidth * .04,horizontal: screenWidth * .07 ),
+                                                        child: SvgPicture.asset(
+                                                            AssetPath.setting,
+                                                            width: screenWidth * .008,
+                                                            color: ThemeProvider
+                                                                .greyColor),
+                                                      ),
+                                                    ) : Container(),
+                                                ],
                                               ),
                                               SizedBox(
                                                   width: screenWidth * .8,
@@ -378,6 +404,25 @@ class _PlayListScreenState extends State<PlayListScreen> {
     );
   }
 
+
+  PopupMenuItem<String> buildPopupMenuItem(String text, String path) {
+    return PopupMenuItem<String>(
+      value: text,
+      child: Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: screenWidth * 0.04),
+            child: SvgPicture.asset(path, width: screenWidth * .05,),
+          ),
+          CommonTextWidget(
+              heading: text,
+              fontSize: Dimens.thrteen,
+              color: Colors.black,
+              fontFamily: 'light')
+        ],
+      ),
+    );
+  }
 
 }
 

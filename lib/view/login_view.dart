@@ -99,6 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         // Password Field
                         SizedBox(height: screenHeight * .01),
+
                         Obx(() => CustomTextField(
                             focusNode: passwordFocusNode,
                             controller: value.passwordController,

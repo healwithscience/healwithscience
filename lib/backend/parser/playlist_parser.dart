@@ -10,4 +10,9 @@ class PlaylistParser {
   String getUserId(){
     return sharedPreferencesManager.getString('uid').toString();
   }
+
+
+  String getPlan(){
+    return sharedPreferencesManager.getString('plan').toString();
+  }
 }

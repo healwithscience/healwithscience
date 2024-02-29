@@ -204,7 +204,7 @@ class _PaidFrequencyScreenState2 extends State<PaidFrequencyScreen2> {
 
 
                                         Get.toNamed(AppRouter.getFeaturesScreen(), arguments: {
-                                          'frequency':StaticValue.frequenciesList[StaticValue.playingIndex.value],
+                                          'frequency': StaticValue.selectedList == 'main' ? StaticValue.frequenciesList[StaticValue.playingIndex.value] : StaticValue.queueFrequenciesList[StaticValue.playingIndex.value],
                                           'frequenciesList':StaticValue.frequenciesList,
                                           'index':StaticValue.playingIndex.value,
                                           'name': StaticValue.frequencyName.value,
@@ -213,8 +213,7 @@ class _PaidFrequencyScreenState2 extends State<PaidFrequencyScreen2> {
                                           'type':'mini_player',
                                           'isPlaying':StaticValue.isPlaying.value,// Pass the data you want
                                           'currentTimeInSeconds':StaticValue.currentTimeInSeconds,// Pass the data you want
-                                          'playingType' : StaticValue.playingType.value,
-                                          'playingQueueIndex' : StaticValue.playingQueueIndex.value,
+                                          'selectedList':StaticValue.selectedList
                                         });
                                       },
                                       child: CustomMiniPlayer(

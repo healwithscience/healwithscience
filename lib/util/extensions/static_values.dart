@@ -26,9 +26,9 @@ class StaticValue {
 
   static RxInt playingIndex = 0.obs;
   static String screenName = "";
+  static String selectedList = "main";
 
-  static RxInt playingQueueIndex = 0.obs;
-  static RxBool playingType = false.obs;
+
 
 
   static void startTime() {
@@ -128,17 +128,7 @@ class StaticValue {
     resetTimer();
     isPlaying.value == false;
 
-    if(playingType.value){
-      playingQueueIndex.value = playingQueueIndex.value + 1;
-    }
-
-    if(StaticValue.queueFrequenciesList.isNotEmpty && playingQueueIndex.value != StaticValue.queueFrequenciesList.length ){
-      playingType.value = true;
-      frequencyValue.value = StaticValue.queueFrequenciesList[playingQueueIndex.value] as double;
-      frequencyName.value = StaticValue.queueProgramNameList[playingQueueIndex.value] != 'No Name' ?  StaticValue.queueProgramNameList[playingQueueIndex.value] : "";
-      // frequencyName.value = programNameList[playingIndex.value] != 'No Name' ?  programNameList[playingIndex.value] : "";
-    }else{
-      playingType.value = false;
+    if(selectedList == "main") {
       if (playingIndex.value + 1 < frequenciesList.length) {
         playingIndex.value = playingIndex.value + 1;
         frequencyValue.value = frequenciesList[playingIndex.value] as double;
@@ -147,9 +137,17 @@ class StaticValue {
         playingIndex.value = 0;
       }
       changeProgramName();
+    }else{
+      if(playingIndex.value + 1 < StaticValue.queueFrequenciesList.length){
+        playingIndex.value = playingIndex.value + 1;
+        frequencyValue.value = StaticValue.queueFrequenciesList[playingIndex.value] as double;
+      }else{
+        selectedList = "main";
+        frequencyValue.value = frequenciesList[0]!;
+        playingIndex.value = 0;
+
+      }
     }
-
-
 
     Future.delayed(Duration(seconds: 3), () {
       playFrequency();
@@ -226,8 +224,28 @@ class StaticValue {
       }
     }
     successToast("Program added in the queue successfully.");
-
   }
+
+  static Future<void> addListWithNameQueue(List<double> frequencies, List<String> names) async {
+
+      for (int i = 0; i < frequencies.length; i++) {
+        double freq = frequencies[i];
+        String name = names[i];
+
+        int existingIndex = queueFrequenciesList.indexOf(freq);
+
+        if (existingIndex == -1) {
+          // Frequency does not exist, add it to the queue
+          queueFrequenciesList.add(freq);
+          queueProgramNameList.add(name);
+        } else {
+          // Frequency already exists, replace the program name
+          queueProgramNameList[existingIndex] = name;
+        }
+      }
+      successToast("Programs added to the queue successfully.");
+  }
+
 
   static Future<void> removeAllWithName(String name) async {
     List<double> removedFrequencies = [];
@@ -248,4 +266,5 @@ class StaticValue {
 
     print("HelloQueueList===>$queueFrequenciesList");
   }
+
 }

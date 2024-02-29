@@ -123,8 +123,7 @@ class _rewardScreenState extends State<RewardScreen> {
                                     'type':'mini_player',
                                     'isPlaying':StaticValue.isPlaying.value,// Pass the data you want
                                     'currentTimeInSeconds':StaticValue.currentTimeInSeconds,// Pass the data you want
-                                    'playingType' : StaticValue.playingType.value,
-                                    'playingQueueIndex' : StaticValue.playingQueueIndex.value,
+                                    'selectedList':StaticValue.selectedList
                                   });
                                 },
                                 child: CustomMiniPlayer(

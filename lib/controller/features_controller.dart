@@ -92,11 +92,7 @@ class FeaturesController extends GetxController {
     nonPersonalizedAds: true,
   );
 
-
-
-
-  RxInt playingQueueIndex = 0.obs;
-  RxBool playingType = false.obs;
+  RxString selectedList = "main".obs;
 
   @override
   onInit()  {
@@ -118,25 +114,31 @@ class FeaturesController extends GetxController {
 
     final data = Get.arguments;
     frequencyValue.value = data['frequency'];
+    print("helloFrequencyValue===> "+frequencyValue.value.toString());
+
     frequenciesList.value = data['frequenciesList'];
     playingIndex.value = data['index'];
     screenName = data['screenName'];
     downloadButtonClickedList.value =  List.filled(frequenciesList.length, 1);
 
-    if(screenName == "category"||screenName == "custom_program"){
-      programName.value = data['name'];
-    }else if(screenName == "playlist" || screenName == "download" ){
-      programNameList = data['programName'];
-      programName.value = programNameList[playingIndex.value] != 'No Name' ?  programNameList[playingIndex.value] : "";
+    if(data['selectedList'] != null){
+      selectedList.value = data['selectedList'];
+    }else{
+      selectedList.value = 'main';
     }
 
-    if(data['playingType'] != null){
-      playingType.value = data['playingType'];
+    if(selectedList.value == 'main'){
+      if(screenName == "category"||screenName == "custom_program"){
+        programName.value = data['name'];
+      }else if(screenName == "playlist" || screenName == "download" ){
+        programNameList = data['programName'];
+        programName.value = programNameList[playingIndex.value] != 'No Name' ?  programNameList[playingIndex.value] : "";
+      }
+    }else{
+      programName.value = StaticValue.queueProgramNameList[playingIndex.value] != 'No Name' ?  StaticValue.queueProgramNameList[playingIndex.value] : "" ;
     }
 
-    if(data['playingQueueIndex'] != null){
-      playingQueueIndex.value = data['playingQueueIndex'];
-    }
+
 
 
     if(data['type'] != null){
@@ -340,11 +342,13 @@ class FeaturesController extends GetxController {
   //This function is used to generate sound according to particular frequency value (Native Approach)
   Future<void> playFrequency() async {
 
-    if(!playingType.value){
-      changeProgramName();
-    }
-
     isPlaying.value = true;
+
+    if(selectedList.value == "main"){
+      changeProgramName();
+    }else{
+      programName.value = StaticValue.queueProgramNameList[playingIndex.value] != 'No Name' ?  StaticValue.queueProgramNameList[playingIndex.value] : "" ;
+    }
     if(found.kIsWeb){
       //Commented because dart:js not working  only in web . You have to uncomment it if you have to run application in web
       // js.context.callMethod('generateAudio', [amplitude.value,frequencyValue.value,phaseControl.value,selectedOption.value]);
@@ -407,29 +411,27 @@ class FeaturesController extends GetxController {
       resetTimer();
       isPlaying.value == false;
 
-      if(playingType.value){
-        playingQueueIndex.value = playingQueueIndex.value + 1;
-      }
-
-      if(StaticValue.queueFrequenciesList.isNotEmpty && playingQueueIndex.value != StaticValue.queueFrequenciesList.length ){
-        playingType.value = true;
-        frequencyValue.value = StaticValue.queueFrequenciesList[playingQueueIndex.value] as double;
-        programName.value = StaticValue.queueProgramNameList[playingQueueIndex.value] != 'No Name' ?  StaticValue.queueProgramNameList[playingQueueIndex.value] : "";
-
-      }else{
-        playingType.value = false;
+      if(selectedList.value == "main"){
         if(playingIndex.value + 1 < frequenciesList.length){
           playingIndex.value = playingIndex.value + 1;
           frequencyValue.value = frequenciesList[playingIndex.value] as double;
-
-          print("After Playing Value: ${frequencyValue.value}");
-        }else{
+        }
+        else{
           frequencyValue.value = frequenciesList[0]!;
           playingIndex.value = 0;
         }
         changeProgramName();
       }
-
+      else{
+        if(playingIndex.value + 1 < StaticValue.queueFrequenciesList.length){
+          playingIndex.value = playingIndex.value + 1;
+          frequencyValue.value = StaticValue.queueFrequenciesList[playingIndex.value] as double;
+        }else{
+          selectedList.value = "main";
+          frequencyValue.value = frequenciesList[0]!;
+          playingIndex.value = 0;
+        }
+      }
 
       Future.delayed(Duration(seconds: 3), (){
         playFrequency();
@@ -458,16 +460,26 @@ class FeaturesController extends GetxController {
       isPlaying.value == false;
 
 
-      if (playingIndex.value - 1 >= 0) {
-        playingIndex.value = playingIndex.value - 1;
-        frequencyValue.value = frequenciesList[playingIndex.value] as double;
-
-      } else {
-        frequencyValue.value = frequenciesList[frequenciesList.length - 1]!;
-        playingIndex.value = frequenciesList.length - 1;
+      if(selectedList.value == "main"){
+        if (playingIndex.value - 1 >= 0) {
+          playingIndex.value = playingIndex.value - 1;
+          frequencyValue.value = frequenciesList[playingIndex.value] as double;
+        } else {
+          frequencyValue.value = frequenciesList[frequenciesList.length - 1]!;
+          playingIndex.value = frequenciesList.length - 1;
+        }
+        changeProgramName();
+      }else{
+        if (playingIndex.value - 1 >= 0) {
+          playingIndex.value = playingIndex.value - 1;
+          frequencyValue.value = StaticValue.queueFrequenciesList[playingIndex.value] as double;
+        } else {
+          frequencyValue.value = StaticValue.queueFrequenciesList[StaticValue.queueFrequenciesList.length - 1]!;
+          playingIndex.value = StaticValue.queueFrequenciesList.length - 1;
+        }
       }
 
-      changeProgramName();
+
 
       Future.delayed(Duration(seconds: 3), (){
         playFrequency();
@@ -618,6 +630,8 @@ class FeaturesController extends GetxController {
   }
 
   void setMiniPlayerValue() {
+    print("helloFrequencyValue===> "+frequencyValue.value.toString());
+
     StaticValue.miniPlayer.value = true;
     StaticValue.dutyCycle = dutyCycle.value;
     StaticValue.amplitude = amplitude.value;
@@ -638,13 +652,12 @@ class FeaturesController extends GetxController {
 
     StaticValue.playingIndex.value = playingIndex.value;
     StaticValue.screenName = screenName;
-
-    StaticValue.playingQueueIndex.value = playingQueueIndex.value;
-    StaticValue.playingType.value = playingType.value;
+    StaticValue.selectedList = selectedList.value;
 
     if(isPlaying.value == true){
       StaticValue.startTime();
     }
+
   }
 }
 

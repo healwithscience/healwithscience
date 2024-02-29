@@ -147,6 +147,38 @@ class PlaylistController extends GetxController {
     }
   }
 
+
+  Future<void> addToQueue(String playlistName) async {
+    frequencyList.clear();
+    programName.clear();
+    final firestoreInstance = FirebaseFirestore.instance;
+    var userId = parser.getUserId();
+
+    try {
+      final playlistDoc = await firestoreInstance.collection('users').doc(userId).collection('playlists').doc(playlistName).get();
+
+      if (playlistDoc.exists) {
+        StaticValue.resetTimer();
+        // Assuming the frequency array is stored as a field named 'frequency' within the playlist document.
+        List<Map<String, dynamic>> playlistObjects = List.from(playlistDoc.data()?['playlist']);
+        for (var playlistObject in playlistObjects) {
+          String name = playlistObject['name'];
+          String frequency = playlistObject['frequency'];
+          frequencyList.add(double.parse(frequency));
+          programName.add(name);
+        }
+
+
+        List<double> nonNullableFrequencies = frequencyList.where((element) => element != null).cast<double>().toList();
+        StaticValue.addListWithNameQueue(nonNullableFrequencies , programName);
+
+      }
+    } catch (e) {
+      print('Error fetching frequency array for $playlistName: $e');
+      // Handle the error as per your requirements.
+    }
+  }
+
   // Function used to handle mini player status and back press
   void onBackRoutes() {
     if (StaticValue.miniPlayer.value) {

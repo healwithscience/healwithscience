@@ -4,12 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:heal_with_science/controller/profile_controller.dart';
 import 'package:heal_with_science/widgets/common_menu.dart';
-
 import '../backend/helper/app_router.dart';
-import '../controller/frequency_controller.dart';
 import '../util/app_assets.dart';
 import '../util/dimens.dart';
 import '../util/extensions/static_values.dart';
@@ -284,7 +281,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         StaticValue.pauseTimer();
 
                         Get.toNamed(AppRouter.getFeaturesScreen(), arguments: {
-                          'frequency':StaticValue.frequenciesList[StaticValue.playingIndex.value],
+                          'frequency': StaticValue.selectedList == 'main' ? StaticValue.frequenciesList[StaticValue.playingIndex.value] : StaticValue.queueFrequenciesList[StaticValue.playingIndex.value],
                           'frequenciesList':StaticValue.frequenciesList,
                           'index':StaticValue.playingIndex.value,
                           'name': StaticValue.frequencyName.value,
@@ -293,8 +290,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           'type':'mini_player',
                           'isPlaying':StaticValue.isPlaying.value,// Pass the data you want
                           'currentTimeInSeconds':StaticValue.currentTimeInSeconds,// Pass the data you want
-                          'playingType' : StaticValue.playingType.value,
-                          'playingQueueIndex' : StaticValue.playingQueueIndex.value,
+                          'selectedList':StaticValue.selectedList
                         });
                       },
                       child:  CustomMiniPlayer(

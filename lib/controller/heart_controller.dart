@@ -13,42 +13,29 @@ import '../backend/parser/heart_parser.dart';
 import '../util/extensions/static_values.dart';
 
 class HeartController extends GetxController {
-  final HealthFactory health = HealthFactory();
+  // final HealthFactory health = HealthFactory();
   final HeartParser parser;
 
   HeartController({required this.parser});
 
-  RxString heartRate = "".obs;
-  RxDouble rmssd = 0.0.obs;
-  RxString loading = '1'.obs;
-  List<HealthDataPoint> healthData = [];
+  // RxString heartRate = "".obs;
+  // RxDouble rmssd = 0.0.obs;
+  // RxString loading = '1'.obs;
+  // List<HealthDataPoint> healthData = [];
+  //
+  //
+  // static final types = [HealthDataType.HEART_RATE];
+  // final permissions = types.map((e) => HealthDataAccess.READ).toList();
 
-
-  static final types = [HealthDataType.HEART_RATE];
-  final permissions = types.map((e) => HealthDataAccess.READ).toList();
-
-
- /* // define the types to get
-  final types = [
-    HealthDataType.HEART_RATE
-  ];
-
-  // with coresponsing permissions
-  final permissions = [
-    HealthDataAccess.READ_WRITE,
-    // HealthDataAccess.READ,
-  ];*/
-
-
-  bool? hasPermissions = false;
+  // bool? hasPermissions = false;
 
   @override
   Future<void> onInit() async {
     super.onInit();
-    await _checkPermissionsAndFetchData();
+    // await _checkPermissionsAndFetchData();
   }
 
-  Future<void> _checkPermissionsAndFetchData() async {
+ /* Future<void> _checkPermissionsAndFetchData() async {
     hasPermissions = await health.hasPermissions(types);
 
     if (hasPermissions!) {
@@ -132,11 +119,6 @@ class HeartController extends GetxController {
     }
   }
 
-  void onBackRoutes() {
-    var context = Get.context as BuildContext;
-    Navigator.of(context).pop(true);
-  }
-
   void goToNext(double hrv) {
     StaticValue.resetTimer();
     RxList<double?> filteredfrequencies = <double?>[].obs;
@@ -152,6 +134,11 @@ class HeartController extends GetxController {
         // Pass the data you want
       },
     );
+  }*/
+
+  void onBackRoutes() {
+    var context = Get.context as BuildContext;
+    Navigator.of(context).pop(true);
   }
 
 }

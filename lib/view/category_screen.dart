@@ -156,7 +156,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                       ),
                                                       Positioned(
                                                         right: 60,
-                                                        child:  PopupMenuButton<String>(
+                                                        child: value.parser.getPlan() == "advance" ? PopupMenuButton<String>(
                                                         offset: const Offset(00, 40),
                                                         itemBuilder: (context) => [
                                                           buildPopupMenuItem("Add To Queue", AssetPath.add_queue),
@@ -179,7 +179,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                               color: ThemeProvider
                                                                   .greyColor),
                                                         ),
-                                                      ),)
+                                                      ) : Container(),)
                                                     ],
                                                   ),
                                                   SizedBox(width: screenWidth * .8, child: CustomGradientDivider(height: 1.0, startColor: ThemeProvider.greyColor, endColor: Colors.transparent))
@@ -245,9 +245,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                   child: InkWell(
                                       onTap: () {
                                         StaticValue.pauseTimer();
-
                                         Get.toNamed(AppRouter.getFeaturesScreen(), arguments: {
-                                          'frequency':StaticValue.frequenciesList[StaticValue.playingIndex.value],
+                                          'frequency': StaticValue.selectedList == 'main' ? StaticValue.frequenciesList[StaticValue.playingIndex.value] : StaticValue.queueFrequenciesList[StaticValue.playingIndex.value],
                                           'frequenciesList':StaticValue.frequenciesList,
                                           'index':StaticValue.playingIndex.value,
                                           'name': StaticValue.frequencyName.value,
@@ -256,8 +255,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                           'type':'mini_player',
                                           'isPlaying':StaticValue.isPlaying.value,// Pass the data you want
                                           'currentTimeInSeconds':StaticValue.currentTimeInSeconds,// Pass the data you want
-                                          'playingType' : StaticValue.playingType.value,
-                                          'playingQueueIndex' : StaticValue.playingQueueIndex.value,
+                                          'selectedList':StaticValue.selectedList
                                         });
                                       },
                                       child: CustomMiniPlayer(screenWidth: screenWidth, screenHeight: screenHeight)),
