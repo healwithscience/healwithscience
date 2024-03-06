@@ -8,4 +8,7 @@ class HeartParser {
 
   HeartParser({required this.sharedPreferencesManager, required this.apiService});
 
+  String getUserId(){
+    return sharedPreferencesManager.getString('uid').toString();
+  }
 }

@@ -49,7 +49,7 @@ class _FeaturesScreenState extends State<FeaturesScreen> {
               InactivityManager.resetTimer();
             },
             onPanUpdate: (details) {
-              if (details.delta.dy < -40) {
+              if (details.delta.dy < -10) {
                 // User is swiping up
                 queueBottomSheet(value);
               }},
