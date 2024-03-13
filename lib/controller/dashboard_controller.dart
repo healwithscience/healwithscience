@@ -52,7 +52,8 @@ class DashboardController extends GetxController {
     rewardPoint();
     parser.saveReferralUser("");
     // getCollectionSize();
-    // populateDB();
+
+   /* populateDB();*/
   }
 
   Future<void> logout() async {
@@ -338,11 +339,11 @@ class DashboardController extends GetxController {
     }
   }*/
 
-  Future<void> populateDB() async {
+/*  Future<void> populateDB() async {
     print("Hello I am here");
     try {
       // Read the text file from the assets
-      ByteData data = await rootBundle.load('assets/spooky_data.txt');
+      ByteData data = await rootBundle.load('assets/new_frequency.txt');
       List<int> bytes = data.buffer.asUint8List();
       String fileContent = String.fromCharCodes(bytes);
 
@@ -354,32 +355,35 @@ class DashboardController extends GetxController {
 
       for (String line in lines) {
         List<String> split2 = line.split(':');
-        categories.add(Category(name: split2[0].trim(), frequency: split2[1].trim()));
-        print("HelloPrintLineSize====>  ${split2[0].trim()}");
-        print("HelloPrintLineSize====>  ${split2[1].trim()}");
+
+        String newString = split2[1].trim().replaceAll(',', '/');
+        categories.add(Category(name: split2[0].trim(), frequency: newString));
+        // print("HelloPrintLineSize====>  ${split2[0].trim()}");
+        // print("HelloPrintLineSize====>  ${split2[1].trim()}");
+        print("HelloPrintLineSize====>  ${newString}");
       }
 
       print("HelloBioPhotonic====>  ${lines.length}");
 
-
-      try {
-        // Get a reference to the Firestore collection
-        CollectionReference categoriesCollection =
-        FirebaseFirestore.instance.collection('biophotonic2');
-
-        // Loop through the list of Category objects and add them to Firestore
-        for (Category category in categories) {
-          print('HelloCategoriesadd===>'+category.name.toString());
-          await categoriesCollection.add(category.toMap());
-        }
-
-        print('Categories added to Firestore successfully');
-      } catch (e) {
-        print('Error adding categories to Firestore: $e');
-      }
+      //
+      // try {
+      //   // Get a reference to the Firestore collection
+      //   CollectionReference categoriesCollection =
+      //   FirebaseFirestore.instance.collection('biophotonic2');
+      //
+      //   // Loop through the list of Category objects and add them to Firestore
+      //   for (Category category in categories) {
+      //     print('HelloCategoriesadd===>'+category.name.toString());
+      //     await categoriesCollection.add(category.toMap());
+      //   }
+      //
+      //   print('Categories added to Firestore successfully');
+      // } catch (e) {
+      //   print('Error adding categories to Firestore: $e');
+      // }
 
     } catch (e) {
       print('Error: $e');
     }
-  }
+  }*/
 }

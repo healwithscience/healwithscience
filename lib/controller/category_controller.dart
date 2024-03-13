@@ -53,15 +53,17 @@ class CategoryController extends GetxController {
       InactivityManager.resetTimer();
     }
 
+    fetchCategories();
+
     if(connectivityResult.value == ConnectivityResult.wifi || connectivityResult.value == ConnectivityResult.mobile) {
-      fetchCategories();
+
       if(parser.getPlan() == "basic"){
         loadRewardedAd();
       }
       StaticValue.rewardPoint = await Utils.getRewardPoints(parser.getUserId());
 
     }else{
-      isLoading.value = false;
+      // isLoading.value = false;
       showToast("No Internet Connection");
     }
 
@@ -76,11 +78,12 @@ class CategoryController extends GetxController {
   //Function use to fetch category list and their frequency from firebase
   Future<void> fetchCategories() async {
     fetchedCategories.clear();
+
     try {
       final firestoreInstance = FirebaseFirestore.instance;
-     /* const settings = Settings(persistenceEnabled: false);
+      const settings = Settings(persistenceEnabled: false);
       firestoreInstance.settings = settings;
-*/
+
     CollectionReference categoriesCollection = firestoreInstance.collection('categories');
       // CollectionReference categoriesCollection = firestoreInstance.collection('new_categories');
 

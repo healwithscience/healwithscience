@@ -52,13 +52,15 @@ class PlaylistController extends GetxController {
     if (StaticValue.miniPlayer.value) {
       InactivityManager.resetTimer();
     }
+
+    getCompletePackageStatus();
+    fetchUserPlaylists();
     if (connectivityResult.value == ConnectivityResult.wifi || connectivityResult.value == ConnectivityResult.mobile) {
-      getCompletePackageStatus();
-      fetchUserPlaylists();
+
       loadRewardedAd();
       StaticValue.rewardPoint = await Utils.getRewardPoints(parser.getUserId());
     } else {
-      isLoading.value = false;
+      // isLoading.value = false;
       showToast("No Internet Connection");
     }
   }
@@ -267,7 +269,9 @@ class PlaylistController extends GetxController {
 
   //Function used to get the status of purchase packages
   Future<void> getCompletePackageStatus() async {
-    var firestoreInstance = FirebaseFirestore.instance;
+    final firestoreInstance = FirebaseFirestore.instance;
+    const settings = Settings(persistenceEnabled: false);
+    firestoreInstance.settings = settings;
 
     String userId = parser.getUserId();
     // Create a reference to the document for the specified user

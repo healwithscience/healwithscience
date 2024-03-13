@@ -53,18 +53,19 @@ class FrequencyController extends GetxController {
       InactivityManager.resetTimer();
     }
 
+
+    fetchFrequencies();
+    fetchDownloadlist();
+
     if(connectivityResult.value == ConnectivityResult.wifi || connectivityResult.value == ConnectivityResult.mobile){
       getSubscriptionStatus();
-      fetchDownloadlist();
-      fetchFrequencies();
-
 
       if(parser.getPlan() == "basic"){
         loadRewardedAd();
       }
       StaticValue.rewardPoint = await Utils.getRewardPoints(parser.getUserId());
     }else{
-      isLoading.value = false;
+      // isLoading.value = false;
       showToast("No Internet Connection");
     }
   }

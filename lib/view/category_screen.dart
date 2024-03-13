@@ -143,47 +143,50 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                   }
                                                 }
                                               },
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Stack(
-                                                    children: [
-                                                      Container(
-                                                        padding:  kIsWeb ? EdgeInsets.symmetric(vertical: 0, horizontal: 10) : const EdgeInsets.only(top: 15,bottom: 15, left: 10,right: 80),
-                                                        alignment: Alignment.centerLeft,
-                                                        height: screenHeight * 0.07,
-                                                        child: CommonTextWidget(textOverflow: TextOverflow.ellipsis, heading: value.categories[index].name, fontSize: Dimens.sixteen, color: Colors.black, fontFamily: 'medium'),
-                                                      ),
-                                                      Positioned(
-                                                        right: 60,
-                                                        child: value.parser.getPlan() == "advance" ? PopupMenuButton<String>(
-                                                        offset: const Offset(00, 40),
-                                                        itemBuilder: (context) => [
-                                                          buildPopupMenuItem("Add To Queue", AssetPath.add_queue),
-                                                          buildPopupMenuItem("Remove From Queue", AssetPath.forgot_queue),
-                                                          // Add more options as needed
-                                                        ],
-                                                        onSelected: (selectedValue) {
-                                                          if (selectedValue == "Add To Queue") {
-                                                             value.addListToQueue(value.categories[index].frequency, value.categories[index].name);
-                                                          }else if (selectedValue == "Remove From Queue"){
-                                                             StaticValue.removeAllWithName(value.categories[index].name);
-                                                          }
-                                                        },
-                                                        child: Padding(
-                                                          padding: EdgeInsets.all(
-                                                              screenWidth * .04),
-                                                          child: SvgPicture.asset(
-                                                              AssetPath.setting,
-                                                              width: screenWidth * .008,
-                                                              color: ThemeProvider
-                                                                  .greyColor),
+                                              child: SizedBox(
+                                                height:  screenHeight * 0.07,
+                                                child:  Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Stack(
+                                                      children: [
+                                                        Container(
+                                                          padding:  kIsWeb ? const EdgeInsets.symmetric(horizontal: 10) : const EdgeInsets.only(left: 10,right: 80),
+                                                          alignment: Alignment.centerLeft,
+                                                          height: screenHeight * 0.065,
+                                                          child: CommonTextWidget(textOverflow: TextOverflow.ellipsis, heading: value.categories[index].name, fontSize: Dimens.sixteen, color: Colors.black, fontFamily: 'medium'),
                                                         ),
-                                                      ) : Container(),)
-                                                    ],
-                                                  ),
-                                                  SizedBox(width: screenWidth * .8, child: CustomGradientDivider(height: 1.0, startColor: ThemeProvider.greyColor, endColor: Colors.transparent))
-                                                ],
+                                                        Positioned(
+                                                          right: 60,
+                                                          child: value.parser.getPlan() == "advance" ? PopupMenuButton<String>(
+                                                            offset: const Offset(00, 40),
+                                                            itemBuilder: (context) => [
+                                                              buildPopupMenuItem("Add To Queue", AssetPath.add_queue),
+                                                              buildPopupMenuItem("Remove From Queue", AssetPath.forgot_queue),
+                                                              // Add more options as needed
+                                                            ],
+                                                            onSelected: (selectedValue) {
+                                                              if (selectedValue == "Add To Queue") {
+                                                                value.addListToQueue(value.categories[index].frequency, value.categories[index].name);
+                                                              }else if (selectedValue == "Remove From Queue"){
+                                                                StaticValue.removeAllWithName(value.categories[index].name);
+                                                              }
+                                                            },
+                                                            child: Padding(
+                                                              padding: EdgeInsets.all(
+                                                                  screenWidth * .04),
+                                                              child: SvgPicture.asset(
+                                                                  AssetPath.setting,
+                                                                  width: screenWidth * .008,
+                                                                  color: ThemeProvider
+                                                                      .greyColor),
+                                                            ),
+                                                          ) : Container(),)
+                                                      ],
+                                                    ),
+                                                    SizedBox(width: screenWidth * .8, child: CustomGradientDivider(height: 1.0, startColor: ThemeProvider.greyColor, endColor: Colors.transparent))
+                                                  ],
+                                                ),
                                               ),
                                             );
                                           },
